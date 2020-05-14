@@ -20,8 +20,3 @@ D:\ZProject\TTNew\TT V2\QuickFIXn\bin\Debug\QuickFixTT.dll
 D:\ZProject\TTNew\TT V2\QuickFIXn\bin\Debug\QuickFixTT.pdb
 D:\ZProject\TTNew\TT V2\QuickFIXn\obj\Debug\QuickFixTT.dll
 D:\ZProject\TTNew\TT V2\QuickFIXn\obj\Debug\QuickFixTT.pdb
-D:\fancky\Git\Project\zd\C#\TT V2\QuickFIXn\bin\Debug\QuickFixTT.dll
-D:\fancky\Git\Project\zd\C#\TT V2\QuickFIXn\bin\Debug\QuickFixTT.pdb
-D:\fancky\Git\Project\zd\C#\TT V2\QuickFIXn\obj\Debug\QuickFixV15.csprojAssemblyReference.cache
-D:\fancky\Git\Project\zd\C#\TT V2\QuickFIXn\obj\Debug\QuickFixTT.dll
-D:\fancky\Git\Project\zd\C#\TT V2\QuickFIXn\obj\Debug\QuickFixTT.pdb
