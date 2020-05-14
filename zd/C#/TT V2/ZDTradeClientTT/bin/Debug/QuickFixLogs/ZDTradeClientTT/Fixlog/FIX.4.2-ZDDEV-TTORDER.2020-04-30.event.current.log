@@ -1,8 +1,0 @@
-20200430-07:09:32.052 : Created session
-20200430-07:09:32.088 : Connecting to 127.0.0.1 on port 11702
-20200430-07:09:32.127 : Connection succeeded
-20200430-07:09:32.162 : Initiated logon request
-20200430-07:09:47.948 : Received logon
-20200430-07:25:24.553 : Initiated logout request
-20200430-07:25:24.641 : Received logout response
-20200430-07:25:24.642 : Session FIX.4.2:ZDDEV->TTORDER disconnecting: Received logout response
