@@ -1,8 +1,8 @@
 .vs/
-bin/debug/*.dll
-bin/release/
-obj/
-debug/*.dll
+/bin/debug/*.dll
+/bin/release/
+/obj/
+/debug/*.dll
 debug/*.pdb
 debug/*.xml
 release/
