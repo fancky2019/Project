@@ -1,0 +1,22 @@
+D:\ZProject\connamara-quickfixn-2d35bed-TT\TTMarketAdapter\bin\Debug\QuickFixTT.dll
+D:\ZProject\connamara-quickfixn-2d35bed-TT\TTMarketAdapter\bin\Debug\QuickFixTT.pdb
+D:\ZProject\connamara-quickfixn-2d35bed-TT\QuickFIXn\bin\Debug\QuickFixTT.dll
+D:\ZProject\connamara-quickfixn-2d35bed-TT\QuickFIXn\bin\Debug\QuickFixTT.pdb
+D:\ZProject\connamara-quickfixn-2d35bed-TT\QuickFIXn\obj\Debug\QuickFixV15.csproj.CoreCompileInputs.cache
+D:\ZProject\connamara-quickfixn-2d35bed-TT\QuickFIXn\obj\Debug\QuickFixTT.dll
+D:\ZProject\connamara-quickfixn-2d35bed-TT\QuickFIXn\obj\Debug\QuickFixTT.pdb
+D:\ZProject\TTNew\QuickFIXn\bin\Debug\QuickFixTT.dll
+D:\ZProject\TTNew\QuickFIXn\bin\Debug\QuickFixTT.pdb
+D:\ZProject\TTNew\QuickFIXn\obj\Debug\QuickFixV15.csprojResolveAssemblyReference.cache
+D:\ZProject\TTNew\QuickFIXn\obj\Debug\QuickFixV15.csproj.CoreCompileInputs.cache
+D:\ZProject\TTNew\QuickFIXn\obj\Debug\QuickFixTT.dll
+D:\ZProject\TTNew\QuickFIXn\obj\Debug\QuickFixTT.pdb
+D:\ZProject\TTNew\connamara-quickfixn-2d35bed-TT V2\QuickFIXn\bin\Debug\QuickFixTT.dll
+D:\ZProject\TTNew\connamara-quickfixn-2d35bed-TT V2\QuickFIXn\bin\Debug\QuickFixTT.pdb
+D:\ZProject\TTNew\connamara-quickfixn-2d35bed-TT V2\QuickFIXn\obj\Debug\QuickFixV15.csproj.CoreCompileInputs.cache
+D:\ZProject\TTNew\connamara-quickfixn-2d35bed-TT V2\QuickFIXn\obj\Debug\QuickFixTT.dll
+D:\ZProject\TTNew\connamara-quickfixn-2d35bed-TT V2\QuickFIXn\obj\Debug\QuickFixTT.pdb
+D:\ZProject\TTNew\TT V2\QuickFIXn\bin\Debug\QuickFixTT.dll
+D:\ZProject\TTNew\TT V2\QuickFIXn\bin\Debug\QuickFixTT.pdb
+D:\ZProject\TTNew\TT V2\QuickFIXn\obj\Debug\QuickFixTT.dll
+D:\ZProject\TTNew\TT V2\QuickFIXn\obj\Debug\QuickFixTT.pdb

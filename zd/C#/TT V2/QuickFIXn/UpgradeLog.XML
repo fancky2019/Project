@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="FixMessages">
+</Property><Property Name="解决方案文件" Value="E:\workspace2\Source\connamara-quickfixn-2d35bed-TT\QuickFIXn\FixMessages.sln">
+</Property><Property Name="Date" Value="2015年10月15日">
+</Property><Property Name="Time" Value="15:28:42">
+</Property></Properties><Event ErrorLevel="0" Project="FixMessages" Source="FixMessages.csproj" Description="项目已成功转换">
+</Event><Event ErrorLevel="3" Project="FixMessages" Source="FixMessages.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="FixMessages" Source="FixMessages.csproj" Description="扫描完成: 项目文件不需要升级。">
+</Event></UpgradeLog>

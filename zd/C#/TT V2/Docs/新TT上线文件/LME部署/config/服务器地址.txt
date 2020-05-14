@@ -1,0 +1,13 @@
+陔TT腔蟈諉ㄩ
+103.196.142.4:11702
+
+
+FiX Session 每 DA-Int
+Type 每 Order Routing
+Comp ID 每 daintorder
+Password 每 Summer2018&
+ 
+Fix Session 每 DA-intMD
+Type 每 Market data and security
+Comp ID 每 daintmd
+Password 每 Summer2018&

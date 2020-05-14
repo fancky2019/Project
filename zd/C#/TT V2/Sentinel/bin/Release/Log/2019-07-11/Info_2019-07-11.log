@@ -1,0 +1,7 @@
+2019-07-11 09:42:15,694 [4] INFO Sentinel.FrmSentinel - TTMarketAdapter:关闭。
+2019-07-11 09:43:15,737 [4] INFO Sentinel.FrmSentinel - TTMarketAdapter:外部已启动。
+2019-07-11 09:43:28,368 [5] INFO Sentinel.FrmSentinel - TTMarketAdapter:关闭。
+2019-07-11 09:44:28,550 [5] INFO Sentinel.FrmSentinel - TTMarketAdapter:恢复启动。
+2019-07-11 09:55:18,301 [4] INFO Sentinel.FrmSentinel - TTMarketAdapter:关闭。
+2019-07-11 09:56:18,733 [4] INFO Sentinel.FrmSentinel - TTMarketAdapter:恢复启动。
+2019-07-11 09:56:22,075 [4] INFO Sentinel.FrmSentinel - TTMarketAdapter:关闭。

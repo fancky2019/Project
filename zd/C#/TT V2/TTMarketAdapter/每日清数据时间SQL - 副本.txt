@@ -1,0 +1,335 @@
+CREATE TABLE dbo.TNewDayTime ( 
+    ExchgName      	varchar(50) NOT NULL,
+    ProductCode       	varchar(50) NULL,
+    OffsetMinute 	int NOT NULL
+)
+GO
+
+
+insert into TNewDayTime	(	ExchgName	,	ProductCode	,	OffsetMinute	       )	VALUES	('CME','GC',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','SI',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','HG',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','MGC',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('eCBOT','YG',-32)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('eCBOT','YI',-32)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','PL',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','PA',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','GCK',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','ZNC',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','TIO',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('LME','CA',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('LME','AH',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('LME','PB',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('LME','ZS',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('LME','NI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('LME','SN',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('DGCX','DG',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','FEM',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','FEQ',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','LRA',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','LRC',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','LRZ',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','LRN',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','LRS',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','LRP',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','GDR',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','GDU',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('DME','OQD',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('ICE','BRN',-7)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('ICE','WBS',-7)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('ICE','GAS',-7)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','CL',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','QM',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','HO',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','NG',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','QG',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','BZ',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','RB',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('ICE_SG','BM',-7)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('ICE_SG','GM',-7)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('ICE_SG','TM',-7)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','ZT',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','ZF',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','ZN',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','ZB',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','JB',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','TN',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','UB',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','JB',-12)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','ED',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','HTF',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','6C',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','6A',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','6S',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','6E',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','6J',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','6B',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','6M',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','6N',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','M6A',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','M6E',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','J7',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','M6B',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','BDI',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','RMB',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','RP',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','ZC',-137)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','ZS',-137)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','ZM',-137)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','ZL',-137)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','ZW',-137)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','ZR',-137)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','ZO',-137)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','XC',-137)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','XW',-137)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME_CBT','XK',-137)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','GF',-152)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','LE',-152)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','HE',-152)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','LBS',-182)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('TOCOM','JRU',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('BMD','FCPO',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('BMD','FPOL',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('NYBOT','CC',-527)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('NYBOT','KC',-527)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('NYBOT','CT',-92)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('NYBOT','SB',-452)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('NYBOT','OJ',-722)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('ICE','W',-467)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','YM',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','ES',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','NQ',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','RS1',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','RSV',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','RSG',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','FT5',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','RTY',-17)
+Go
+
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('NYBOT','DX',-32)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CME','NKD',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FESX',-22)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FDAX',-22)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FGBM',-32)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FGBL',-32)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FDXM',-22)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FVS',-22)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('ICE','C',-512)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('Liffe','L-Z',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FCA',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','TW',-12)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','NK',-12)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','CN',-12)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','CH',-27)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','IN',-12)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','FEF',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','TF',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','UC',-12)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','CY',-42)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','SGP',-12)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','MY',-47)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','HHI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','HSI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','MHI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','MCH',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','GTI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','MBI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','MPI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','MOI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','SSI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','ITI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','MCI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','CHH',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','CUS',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','CEU',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','CJP',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','CAU',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('HKEX','UCN',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SFE','AP',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SFE','IB',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('TFEX','S50',-32)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('CBOE','VX',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SFE','IR',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SFE','YT',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SFE','XT',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SFE','XX',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('BMD','FKLI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FBTP',-32)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FOAT',-32)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FBON',-32)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FESB',-22)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FSTB',-22)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','CRQF',-23)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('JPX','TOPIX',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('JPX','Mini NK',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('JPX','NK225 ',-17)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FRDX',-22)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('NYBOT','MME',-32)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FTI',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('XEurex','FDXM',-22)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('SGXQ','ID',-47)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('TAIFEX','TE',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('TAIFEX','T-TF',-2)
+Go
+insert into TNewDayTime(ExchgName,ProductCode,OffsetMinute       )VALUES('TAIFEX','TX',-2)
+Go

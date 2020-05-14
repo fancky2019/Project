@@ -1,0 +1,6 @@
+2020-05-12 19:53:07.6710 ERROR System.ArgumentOutOfRangeException: 长度不能小于 0。
+参数名: length
+   在 System.String.Substring(Int32 startIndex, Int32 length)
+   在 TTMarketAdapter.Utilities.TTMarketAdapterCommon.GetZDProduct(String contract, SecurityTypeEnum securityType) 位置 D:\ZProject\TTNew\TT V2\TTMarketAdapter\Utilities\TTMarketAdapterCommon.cs:行号 191
+   在 TTMarketAdapter.Utilities.TTMarketAdapterCommon.GetOrderModel(String contract) 位置 D:\ZProject\TTNew\TT V2\TTMarketAdapter\Utilities\TTMarketAdapterCommon.cs:行号 234
+   在 ZDTradeClientTT.TTCommunication.PlaceOrder(NetInfo obj) 位置 D:\ZProject\TTNew\TT V2\ZDTradeClientTT\TTCommunication.cs:行号 1362

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Message\FIX42\Heartbeat.cs" />
+    <Compile Include="Message\FIX42\Logon.cs" />
+    <Compile Include="Message\FIX42\TestRequest.cs" />
+    <Compile Include="Message\FIX42\ResendRequest.cs" />
+    <Compile Include="Message\FIX42\Reject.cs" />
+    <Compile Include="Message\FIX42\SequenceReset.cs" />
+    <Compile Include="Message\FIX42\Logout.cs" />
+    <Compile Include="Message\FIX42\Advertisement.cs" />
+    <Compile Include="Message\FIX42\News.cs" />
+    <Compile Include="Message\FIX42\Email.cs" />
+    <Compile Include="Message\FIX42\QuoteRequest.cs" />
+    <Compile Include="Message\FIX42\Quote.cs" />
+    <Compile Include="Message\FIX42\QuoteCancel.cs" />
+    <Compile Include="Message\FIX42\QuoteStatusRequest.cs" />
+    <Compile Include="Message\FIX42\MarketDataRequest.cs" />
+    <Compile Include="Message\FIX42\MarketDataSnapshotFullRefresh.cs" />
+    <Compile Include="Message\FIX42\MarketDataIncrementalRefresh.cs" />
+    <Compile Include="Message\FIX42\MarketDataRequestReject.cs" />
+    <Compile Include="Message\FIX42\SecurityDefinitionRequest.cs" />
+    <Compile Include="Message\FIX42\SecurityDefinition.cs" />
+    <Compile Include="Message\FIX42\SecurityStatusRequest.cs" />
+    <Compile Include="Message\FIX42\SecurityStatus.cs" />
+    <Compile Include="Message\FIX42\TradingSessionStatusRequest.cs" />
+    <Compile Include="Message\FIX42\TradingSessionStatus.cs" />
+    <Compile Include="Message\FIX42\NewOrderSingle.cs" />
+    <Compile Include="Message\FIX42\ExecutionReport.cs" />
+    <Compile Include="Message\FIX42\DontKnowTrade.cs" />
+    <Compile Include="Message\FIX42\OrderCancelReplaceRequest.cs" />
+    <Compile Include="Message\FIX42\OrderCancelRequest.cs" />
+    <Compile Include="Message\FIX42\OrderCancelReject.cs" />
+    <Compile Include="Message\FIX42\OrderStatusRequest.cs" />
+    <Compile Include="Message\FIX42\Allocation.cs" />
+    <Compile Include="Message\FIX42\AllocationACK.cs" />
+    <Compile Include="Message\FIX42\SettlementInstructions.cs" />
+    <Compile Include="Message\FIX42\BidRequest.cs" />
+    <Compile Include="Message\FIX42\BidResponse.cs" />
+    <Compile Include="Message\FIX42\NewOrderList.cs" />
+    <Compile Include="Message\FIX42\ListStrikePrice.cs" />
+    <Compile Include="Message\FIX42\ListStatus.cs" />
+    <Compile Include="Message\FIX42\ListExecute.cs" />
+    <Compile Include="Message\FIX42\ListCancelRequest.cs" />
+    <Compile Include="Message\FIX42\ListStatusRequest.cs" />
+    <Compile Include="Message\FIX42\BusinessMessageReject.cs" />
+    <Compile Include="Message\FIX42\MessageFactory.cs" />
+    <Compile Include="Message\FIX42\Message.cs" />
+    <Compile Include="Message\FIX42\PositionReport.cs" />
+    <Compile Include="Message\FIX42\RequestForPosition.cs" />
+    <Compile Include="Message\FIX42\GatewayStatusRequest.cs" />
+    <Compile Include="Message\FIX42\GatewayStatus.cs" />
+  </ItemGroup>
+</Project>

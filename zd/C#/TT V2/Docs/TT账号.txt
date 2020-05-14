@@ -1,0 +1,27 @@
+
+注意：quickfix和exe.config都要改
+
+Oeder Routing:
+开发、认证测试：<add key="SessionAndPsw" value="ZDDEV,12345678" />
+测试：<add key="SessionAndPsw" value="ZDDEV2,12345678" />
+MD:
+测试：
+     <add key="SessionAndPsw" value="ZDDEV_SD2,12345678" />
+     TargetCompID=ZDDEV_SD2
+开发、认证测试：
+    <add key="SessionAndPsw" value="ZDDEV_SD,12345678" />
+    TargetCompID=TT_PRICE
+
+
+TT控制台：
+
+两个链接的账号密码都是下面的
+
+看价格：https://setup-uat.trade.tt/ext-uat-cert#user
+
+
+https://ttcert-uat.trade.tt/conductor/user/lirui%40shzdsoft.com
+
+账号：lirui@shzdsoft.com
+
+密码：lrZd123456789

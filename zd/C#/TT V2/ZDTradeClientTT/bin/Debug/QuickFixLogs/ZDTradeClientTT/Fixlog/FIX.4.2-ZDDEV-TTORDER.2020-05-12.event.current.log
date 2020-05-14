@@ -1,0 +1,59 @@
+20200512-11:52:16.192 : Session FIX.4.2:ZDDEV->TTORDER already disconnected: Resetting...
+20200512-11:52:16.264 : Session reset: New session
+20200512-11:52:16.265 : Created session
+20200512-11:52:16.315 : Connecting to 127.0.0.1 on port 11702
+20200512-11:52:16.355 : Connection succeeded
+20200512-11:52:16.419 : Initiated logon request
+20200512-11:52:24.130 : Received logon
+20200512-12:01:16.077 : Created session
+20200512-12:01:16.141 : Connecting to 127.0.0.1 on port 11702
+20200512-12:01:16.181 : Connection succeeded
+20200512-12:01:16.206 : Initiated logon request
+20200512-12:01:22.119 : Received logon
+20200512-12:01:22.120 : MsgSeqNum too high, expecting 14 but received 15
+20200512-12:01:22.122 : Sent ResendRequest FROM: 14 TO: 14
+20200512-12:01:26.542 : ResendRequest for messages FROM: 14 TO: 14 has been satisfied.
+20200512-12:01:26.542 : Received SequenceReset FROM: 14 TO: 15
+20200512-12:01:26.543 : Processing queued message: 15
+20200512-12:03:57.409 : Created session
+20200512-12:03:57.434 : Connecting to 127.0.0.1 on port 11702
+20200512-12:03:57.488 : Connection succeeded
+20200512-12:03:57.509 : Initiated logon request
+20200512-12:04:02.916 : Received logon
+20200512-12:10:10.431 : Created session
+20200512-12:10:10.454 : Connecting to 127.0.0.1 on port 11702
+20200512-12:10:10.483 : Connection succeeded
+20200512-12:10:10.505 : Initiated logon request
+20200512-12:10:15.959 : Received logon
+20200512-12:10:57.109 : Initiated logout request
+20200512-12:10:57.188 : Received logout response
+20200512-12:10:57.189 : Session FIX.4.2:ZDDEV->TTORDER disconnecting: Received logout response
+20200512-12:11:33.424 : Created session
+20200512-12:11:33.494 : Connecting to 127.0.0.1 on port 11702
+20200512-12:11:33.528 : Connection succeeded
+20200512-12:11:33.598 : Initiated logon request
+20200512-12:11:39.020 : Received logon
+20200512-12:14:05.019 : Initiated logout request
+20200512-12:14:05.108 : Received logout response
+20200512-12:14:05.111 : Session FIX.4.2:ZDDEV->TTORDER disconnecting: Received logout response
+20200512-12:15:18.839 : Created session
+20200512-12:15:18.902 : Connecting to 127.0.0.1 on port 11702
+20200512-12:15:18.939 : Connection succeeded
+20200512-12:15:19.018 : Initiated logon request
+20200512-12:15:24.440 : Received logon
+20200512-12:16:40.472 : Initiated logout request
+20200512-12:16:40.561 : Received logout response
+20200512-12:16:40.562 : Session FIX.4.2:ZDDEV->TTORDER disconnecting: Received logout response
+20200512-12:17:27.051 : Created session
+20200512-12:17:27.114 : Connecting to 127.0.0.1 on port 11702
+20200512-12:17:27.147 : Connection succeeded
+20200512-12:17:27.210 : Initiated logon request
+20200512-12:17:32.869 : Received logon
+20200512-12:19:45.560 : Initiated logout request
+20200512-12:19:45.636 : Received logout response
+20200512-12:19:45.638 : Session FIX.4.2:ZDDEV->TTORDER disconnecting: Received logout response
+20200512-12:21:16.727 : Created session
+20200512-12:21:16.737 : Connecting to 127.0.0.1 on port 11702
+20200512-12:21:16.776 : Connection succeeded
+20200512-12:21:16.777 : Initiated logon request
+20200512-12:21:22.219 : Received logon

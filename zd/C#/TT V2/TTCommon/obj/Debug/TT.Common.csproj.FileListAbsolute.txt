@@ -1,0 +1,15 @@
+D:\ZProject\TTNew\TT V2\TTCommon\bin\Debug\log4net.config
+D:\ZProject\TTNew\TT V2\TTCommon\bin\Debug\NLog.config
+D:\ZProject\TTNew\TT V2\TTCommon\bin\Debug\TT.Common.dll
+D:\ZProject\TTNew\TT V2\TTCommon\bin\Debug\TT.Common.pdb
+D:\ZProject\TTNew\TT V2\TTCommon\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\ZProject\TTNew\TT V2\TTCommon\bin\Debug\log4net.dll
+D:\ZProject\TTNew\TT V2\TTCommon\bin\Debug\Newtonsoft.Json.dll
+D:\ZProject\TTNew\TT V2\TTCommon\bin\Debug\NLog.dll
+D:\ZProject\TTNew\TT V2\TTCommon\bin\Debug\log4net.xml
+D:\ZProject\TTNew\TT V2\TTCommon\bin\Debug\Newtonsoft.Json.xml
+D:\ZProject\TTNew\TT V2\TTCommon\bin\Debug\NLog.xml
+D:\ZProject\TTNew\TT V2\TTCommon\obj\Debug\TT.Common.csprojAssemblyReference.cache
+D:\ZProject\TTNew\TT V2\TTCommon\obj\Debug\TT.Common.csproj.CopyComplete
+D:\ZProject\TTNew\TT V2\TTCommon\obj\Debug\TT.Common.dll
+D:\ZProject\TTNew\TT V2\TTCommon\obj\Debug\TT.Common.pdb

@@ -1,0 +1,7 @@
+1、TTSetup：拓展--管理拓展--安装插件："Microsoft Visual Studio Installer Projects"
+2、Sentinel:守护进程，如果程序没有启动就启动该程序。
+3、TTMarketAdapter:TT行情程序。运行程序：A、运行对应环境(UAT、实盘)配置的stunnel（加密中间件）。
+                                         B、启动TTMarketAdapter。
+4、ZDTradeClientTT:TT交易程序。运行程序：A、运行HistoryGate.exe。TT交易从HistoryGate获取开盘时间。
+                                         B、运行对应环境(UAT、实盘)配置的stunnel（加密中间件）。
+										 C、启动ZDTradeClientTT。
