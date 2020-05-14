@@ -12,7 +12,8 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/
+[Dd]ebug/*
+!Debug/config
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -23,7 +24,6 @@ bld/
 [Oo]bj/
 [Ll]og/
 packages/
-!/TTMarketAdapter/bin/Debug/config/
 # Visual Studio 2015 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the
