@@ -26,10 +26,9 @@ namespace TTMarketAdapter
             }
         }
 
-        public static bool IsCompatibleOption(string optionContract, out string newOptionContract)
+        public static bool IsCompatibleOption(string optionContract, ref string newOptionContract)
         {
             var zdProduct = TTMarketAdapterCommon.GetZDProduct(optionContract, SecurityTypeEnum.OPT);
-            newOptionContract = "";
             //SB_P2010 14
             var tt = Configurations.GetTTProductExchange(zdProduct, SecurityTypeEnum.OPT);
             if (_compatibleOption.Exists(p => p.TTExchange == tt.TTExchange && p.TTProduct == tt.TTProduct))

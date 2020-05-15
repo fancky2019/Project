@@ -58,13 +58,11 @@
     <ApplicationIcon>de.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AuthCommon, Version=1.9.18.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\AuthCommon.dll</HintPath>
+    <Reference Include="AuthCommon">
+      <HintPath>..\outLib\AuthCommon.dll</HintPath>
     </Reference>
-    <Reference Include="CommonClassLib, Version=1.9.37.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\CommonClassLib.dll</HintPath>
+    <Reference Include="CommonClassLib">
+      <HintPath>..\outLib\CommonClassLib.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
