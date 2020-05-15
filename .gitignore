@@ -34,4 +34,4 @@ packages/
 *.csv
 !FIX42.xml
 !handle64.exe
-
+QuickFixLogs/

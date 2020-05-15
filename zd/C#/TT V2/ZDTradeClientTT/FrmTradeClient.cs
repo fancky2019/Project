@@ -222,11 +222,11 @@ namespace ZDTradeClientTT
         {
             string contract = "DX_P2010 14.10";
             string newOptionConstract = "";
-            CompatibleOptionCodeConverter.IsCompatibleOption(contract, out newOptionConstract);
+            CompatibleOptionCodeConverter.IsCompatibleOption(contract, ref newOptionConstract);
             contract = "DX_P2010 14.1";
-            CompatibleOptionCodeConverter.IsCompatibleOption(contract, out newOptionConstract);
+            CompatibleOptionCodeConverter.IsCompatibleOption(contract, ref newOptionConstract);
             contract = "DX_P2010 14.00";
-            CompatibleOptionCodeConverter.IsCompatibleOption(contract, out newOptionConstract);
+            CompatibleOptionCodeConverter.IsCompatibleOption(contract, ref newOptionConstract);
             return;
             NLogUtility.Debug("Debug1");
             NLogUtility.Info("NLogDemo info ");

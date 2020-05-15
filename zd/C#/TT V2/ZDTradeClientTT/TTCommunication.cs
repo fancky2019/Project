@@ -1347,7 +1347,7 @@ namespace ZDTradeClientTT
                     var securityType = TTMarketAdapterCommon.GetSecurityType(info.code);
                     if(securityType==SecurityTypeEnum.OPT)
                     {
-                        CompatibleOptionCodeConverter.IsCompatibleOption(info.code, out newCode);
+                        CompatibleOptionCodeConverter.IsCompatibleOption(info.code, ref newCode);
                     }
 
 
