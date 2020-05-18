@@ -220,12 +220,21 @@ namespace ZDTradeClientTT
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            string contract = "DX_P2010 14.10";
+            string contract = "DX_P2010 14.1000";
             string newOptionConstract = "";
+            CompatibleOptionCodeConverter.IsCompatibleOption(contract, ref newOptionConstract);
+            contract = "DX_P2010 14.15";
+
+            CompatibleOptionCodeConverter.IsCompatibleOption(contract, ref newOptionConstract);
+            contract = "DX_P2010 14.10";
+
+            CompatibleOptionCodeConverter.IsCompatibleOption(contract, ref newOptionConstract);
+            contract = "DX_P2010 14.1010";
+      
             CompatibleOptionCodeConverter.IsCompatibleOption(contract, ref newOptionConstract);
             contract = "DX_P2010 14.1";
             CompatibleOptionCodeConverter.IsCompatibleOption(contract, ref newOptionConstract);
-            contract = "DX_P2010 14.00";
+            contract = "DX_P2010 14.0000";
             CompatibleOptionCodeConverter.IsCompatibleOption(contract, ref newOptionConstract);
             return;
             NLogUtility.Debug("Debug1");

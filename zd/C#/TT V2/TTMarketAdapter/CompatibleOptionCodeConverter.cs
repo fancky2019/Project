@@ -31,11 +31,16 @@ namespace TTMarketAdapter
             var zdProduct = TTMarketAdapterCommon.GetZDProduct(optionContract, SecurityTypeEnum.OPT);
             //SB_P2010 14
             var tt = Configurations.GetTTProductExchange(zdProduct, SecurityTypeEnum.OPT);
-            if (_compatibleOption.Exists(p => p.TTExchange == tt.TTExchange && p.TTProduct == tt.TTProduct))
+
+            var compatibleOption = _compatibleOption.FirstOrDefault(p => p.TTExchange == tt.TTExchange && p.TTProduct == tt.TTProduct);
+            if (!string.IsNullOrEmpty(compatibleOption.TTExchange) && !string.IsNullOrEmpty(compatibleOption.TTProduct))
             {
                 var array = optionContract.Split(' ');
                 float strikePrice = float.Parse(array[1]);
-                var newStrikePrice = strikePrice.ToString("0.##");
+                //.##表示最多保留2位有效数字
+                StringBuilder formatStr = new StringBuilder();
+                formatStr.Append('#', compatibleOption.Decimal);
+                var newStrikePrice = strikePrice.ToString($"0.{formatStr.ToString()}");
                 newOptionContract = $"{array[0]} {newStrikePrice}";
                 return true;
             }
