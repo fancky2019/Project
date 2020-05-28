@@ -35,7 +35,7 @@ namespace ZDTradeClientTT
         /// <summary>
         /// tag 1
         /// </summary>
-        public static string SenderSubID;
+        public static string Account;
         
 
         public static string SessionAndPsw;
@@ -119,7 +119,7 @@ namespace ZDTradeClientTT
                 ApplicationSystemName = configuration.AppSettings.Settings["ApplicationSystemName"]?.Value;
                 TradingSystemVersion = configuration.AppSettings.Settings["TradingSystemVersion"]?.Value;
                 ApplicationSystemVendor = configuration.AppSettings.Settings["ApplicationSystemVendor"]?.Value;
-                SenderSubID = configuration.AppSettings.Settings["SenderSubID"]?.Value;
+                Account = configuration.AppSettings.Settings["Account"]?.Value;
                 OnBehalfOfSubID = configuration.AppSettings.Settings["OnBehalfOfSubID"]?.Value;
                 SessionAndPsw= configuration.AppSettings.Settings["SessionAndPsw"]?.Value;
                 ManualOrderIndicator= configuration.AppSettings.Settings["ManualOrderIndicator"]?.Value;

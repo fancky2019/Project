@@ -1472,7 +1472,8 @@ namespace ZDTradeClientTT
 
                 // Tag1  上手号
                 newOrderSingle.Account = new Account(obj.accountNo);
-
+                // SenderSubID(Tag50 ID)
+                //newOrderSingle.SetField(new SenderSubID(obj.todayCanUse));
 
                 ////Tag582
                 //newOrderSingle.CustOrderCapacity = new CustOrderCapacity(4);
@@ -1576,7 +1577,7 @@ namespace ZDTradeClientTT
                         //case "CME":
                         //    //"BMD":
                         //    break;
-                        case "HKFE":
+                        case "HKEX":
                             //Tag 16557
                             newOrderSingle.TextB = new TextB(p_Fxd_Clis_Ac_Ref);
                             //Tag 16558

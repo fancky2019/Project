@@ -96,7 +96,7 @@ namespace ZDTradeClientTT
             obj.code = CommandCode.ORDER;
             //上手号
             //obj.accountNo = "ZD_001";
-            obj.accountNo = ZDTradeClientTTConfiurations.SenderSubID;
+            obj.accountNo = ZDTradeClientTTConfiurations.Account;
             obj.systemCode = "system1";
             obj.todayCanUse = tbTag50ID.Text;
 
@@ -197,7 +197,7 @@ namespace ZDTradeClientTT
             CommonClassLib.CancelInfo info = new CommonClassLib.CancelInfo();
 
             obj.code = CommandCode.CANCEL;
-            obj.accountNo = ZDTradeClientTTConfiurations.SenderSubID;
+            obj.accountNo = ZDTradeClientTTConfiurations.Account;
             obj.systemCode = "system1";
             obj.todayCanUse = tbTag50ID.Text;
 
@@ -368,7 +368,7 @@ namespace ZDTradeClientTT
             CommonClassLib.ModifyInfo info = new CommonClassLib.ModifyInfo();
 
             obj.code = CommandCode.MODIFY;
-            obj.accountNo = ZDTradeClientTTConfiurations.SenderSubID;
+            obj.accountNo = ZDTradeClientTTConfiurations.Account;
             obj.systemCode = "system1";
             obj.todayCanUse = tbTag50ID.Text;
             info.orderPrice = tbPrice.Text;
