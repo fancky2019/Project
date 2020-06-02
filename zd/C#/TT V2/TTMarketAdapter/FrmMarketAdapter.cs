@@ -321,6 +321,8 @@ namespace TTMarketAdapter
                                 getOpenTimeProductCode = $"{getOpenTimeProductCode}_P";
                             }
                             var marketTime = ProfileService.GetProductOpenTime(getOpenTimeProductCode);
+                            TT.Common.NLogUtility.Info($"{getOpenTimeProductCode} - MarketTime:{marketTime}");
+
                             //获取交易时间并减去偏移量得到更新时间
                             p.MarketTime = marketTime.Add(new TimeSpan(0, p.OffsetMinute, 0));
 
@@ -940,6 +942,8 @@ namespace TTMarketAdapter
         }
         private void btnTest_Click(object sender, EventArgs e)
         {
+            UpdateMarketData();
+            return;
             //DateTime contractDate = DateTime.ParseExact(str, "yyyyMM", CultureInfo.InvariantCulture);
             //var strrrr1 = string.Format("{0:00}", "7");
             //var strrrr = string.Format("{0:D2}", "7");
@@ -2113,7 +2117,7 @@ namespace TTMarketAdapter
                             //{
 
                             //}
-                         
+
                             var optionFutureMonthSubDic = Configurations.OptionFutureMonthDic[u];
                             var futureMonth = optionFutureMonthSubDic.First(d => d.Value.Contains(monthStr)).Key;
                             futuresContract = year + int.Parse(futureMonth).ToString("D2");
