@@ -416,7 +416,6 @@
             this.cbDebugMode.TabIndex = 5;
             this.cbDebugMode.Text = "调试模式";
             this.cbDebugMode.UseVisualStyleBackColor = true;
-            this.cbDebugMode.Visible = false;
             // 
             // btnStart
             // 
