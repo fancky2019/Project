@@ -75,9 +75,7 @@
     <Compile Include="Zip.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="log4net.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="log4net.config" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

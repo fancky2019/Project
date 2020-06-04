@@ -1482,12 +1482,12 @@ namespace ZDTradeClientTT
                 //GHF 要求使用116，Phillip除了ICE之外不用
                 if (!string.IsNullOrEmpty(ZDTradeClientTTConfiurations.OnBehalfOfSubID))
                 {
-                    if (ZDTradeClientTTConfiurations.Company.ToUpper() == "GHF")
+                    if (ZDTradeClientTTConfiurations.ClearFirm.ToUpper() == "GHF")
                     {
                         //Tag 116  
                         newOrderSingle.OnBehalfOfSubID = new OnBehalfOfSubID(ZDTradeClientTTConfiurations.OnBehalfOfSubID);
                     }
-                    else if (ZDTradeClientTTConfiurations.Company.ToUpper() == "PHILLIP")
+                    else if (ZDTradeClientTTConfiurations.ClearFirm.ToUpper() == "PHILLIP")
                     {
                         //phillip ice 加tag116
                         if (securityExchange == "ICE")
@@ -1511,7 +1511,7 @@ namespace ZDTradeClientTT
 
 
                 #region GHF Tag
-                if (ZDTradeClientTTConfiurations.Company == "GHF")
+                if (ZDTradeClientTTConfiurations.ClearFirm == "GHF")
                 {
                     string p_Fxd_Clis_Ac_Ref = ZDTradeClientTTConfiurations.Prefix + obj.todayCanUse;
                     //string p_Fxd_Clis_Ac_Ref = "ZD123456";
@@ -1651,6 +1651,7 @@ namespace ZDTradeClientTT
             }
         }
 
+        #region  old 版本 PlaceOrder
         /// <summary>  
         /// old 版本  通过合约文件取合约信息（合约的ID）
         /// </summary>
@@ -2017,6 +2018,8 @@ namespace ZDTradeClientTT
         //        Logger.Error(ex.ToString());
         //    }
         //}
+
+        #endregion
 
         /// <summary>
         /// 撤单

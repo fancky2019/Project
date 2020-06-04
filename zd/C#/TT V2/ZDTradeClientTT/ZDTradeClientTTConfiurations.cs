@@ -16,21 +16,6 @@ namespace ZDTradeClientTT
         public static readonly string SecurityDefinitionOption;
         public static string SecurityDefFile;
 
-        public static string HeartbeatInterval;
-        
-
-        public static string SenderLocationID;
-        
-
-        public static string ApplicationSystemName;
-       
-
-        public static string TradingSystemVersion;
-       
-
-        public static string ApplicationSystemVendor;
-        
-
 
         /// <summary>
         /// tag 1
@@ -41,32 +26,17 @@ namespace ZDTradeClientTT
         public static string SessionAndPsw;
         
 
-        public static string ManualOrderIndicator;
-
         public static string Order_ID_Scope;
 
         public static long MinClOrderID;
 
         public static long MaxClOrderID;
-
-        public static string ClOrderID;
-       
-
+      
         public static string GTCOrderFile;
        
 
         public static string DayOrderFile;
         
-
-        public static string DailyRestartTime;
-       
-
-        //ClearFirm
-        public static string ClearFirm;
-        
-
-        //OtherSettings
-        public static string OtherSettings;
         
 
         /// <summary>
@@ -94,7 +64,7 @@ namespace ZDTradeClientTT
         /// <summary>
         ///FCStone、GHF
         /// </summary>
-        public static readonly string Company;//=> ConfigFile.AppSettings.Settings["Company"]?.Value;
+        public static readonly string ClearFirm;//=> ConfigFile.AppSettings.Settings["Company"]?.Value;
 
         #endregion
 
@@ -115,19 +85,19 @@ namespace ZDTradeClientTT
                 FIX42 = configuration.AppSettings.Settings["FIX42"]?.Value;
                 SecurityDefinitionFuture = configuration.AppSettings.Settings["SecurityDefinitionFuture"]?.Value;
                 SecurityDefinitionOption= configuration.AppSettings.Settings["SecurityDefinitionOption"]?.Value;
-                SenderLocationID = configuration.AppSettings.Settings["SenderLocationID"]?.Value;
-                ApplicationSystemName = configuration.AppSettings.Settings["ApplicationSystemName"]?.Value;
-                TradingSystemVersion = configuration.AppSettings.Settings["TradingSystemVersion"]?.Value;
-                ApplicationSystemVendor = configuration.AppSettings.Settings["ApplicationSystemVendor"]?.Value;
+
+  
+       
+           
                 Account = configuration.AppSettings.Settings["Account"]?.Value;
                 OnBehalfOfSubID = configuration.AppSettings.Settings["OnBehalfOfSubID"]?.Value;
                 SessionAndPsw= configuration.AppSettings.Settings["SessionAndPsw"]?.Value;
-                ManualOrderIndicator= configuration.AppSettings.Settings["ManualOrderIndicator"]?.Value;
+       
 
                 SecurityDefFile = configuration.AppSettings.Settings["SECURITY_DEF_FILE"]?.Value;
                 GTCOrderFile = configuration.AppSettings.Settings["GTC_ORDER_FILE"]?.Value;
                 DayOrderFile= configuration.AppSettings.Settings["DAY_ORDER_FILE"]?.Value;
-                HeartbeatInterval= configuration.AppSettings.Settings["HEATBEAT_INTERVAL"]?.Value;
+          
 
                 Order_ID_Scope = configuration.AppSettings.Settings["Order_ID_Scope"]?.Value;
 
@@ -137,23 +107,7 @@ namespace ZDTradeClientTT
                 }
                 MinClOrderID = long.Parse(Order_ID_Scope.Split(',')[0]);
                 MaxClOrderID = long.Parse(Order_ID_Scope.Split(',')[1]);
-                ClOrderID = configuration.AppSettings.Settings["CL_ORDER_ID"]?.Value;
-
-                //// 0: no mirror(no fault tolearance) 1:mirror server 2: mirror client
-                //ConfigFile.AppSettings.Settings.Add("FAULT_TOLERANCE", "0");
-                //ConfigFile.AppSettings.Settings.Add("FT_SERVER_IP", "192.168.1.59");
-                //ConfigFile.AppSettings.Settings.Add("FT_SERVER_PORT", "9001");
-
-
-                //ConfigFile.AppSettings.Settings.Add("MAIL_SERVER_NAME", "smtp.shanghaizhida.com");
-                //ConfigFile.AppSettings.Settings.Add("MAIL_FROM", "jingxiaohui@shanghaizhida.com");
-                //ConfigFile.AppSettings.Settings.Add("MAIL_TO", "jingxiaohui@shanghaizhida.com");
-                //ConfigFile.AppSettings.Settings.Add("MAIL_SUBJECT", "System Generate Mail");
-
-                DailyRestartTime = configuration.AppSettings.Settings["DailyRestartTime"]?.Value;
-                ClearFirm =configuration.AppSettings.Settings["ClearFirm"]?.Value;
-                //FFT2&FFT3
-                OtherSettings = configuration.AppSettings.Settings["OtherSettings"]?.Value;
+            
 
 
                 Gate_FUT_IP = configuration.AppSettings.Settings["Gate_FUT_IP"]?.Value;
@@ -168,7 +122,7 @@ namespace ZDTradeClientTT
                 CME_SMPID = configuration.AppSettings.Settings["CME_SMPID"]?.Value;
                 CME_Instruction = configuration.AppSettings.Settings["CME_Instruction"]?.Value;
                 SGX_ClearingAccountOverride = configuration.AppSettings.Settings["SGX_ClearingAccountOverride"]?.Value;
-                Company = configuration.AppSettings.Settings["Company"]?.Value;
+                ClearFirm = configuration.AppSettings.Settings["ClearFirm"]?.Value;
             }
             catch (Exception ex)
             {
