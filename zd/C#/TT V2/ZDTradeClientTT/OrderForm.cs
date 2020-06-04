@@ -98,6 +98,7 @@ namespace ZDTradeClientTT
             //obj.accountNo = "ZD_001";
             obj.accountNo = ZDTradeClientTTConfiurations.Account;
             obj.systemCode = "system1";
+            //tag 50  < add key = "SenderSubID" value = "ZD_123456" />
             obj.todayCanUse = tbTag50ID.Text;
 
             info.exchangeCode = tbSymbol.Text;
