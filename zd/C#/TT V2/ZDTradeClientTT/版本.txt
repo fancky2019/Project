@@ -44,5 +44,7 @@
 二、修改港交所名称错误造成GHG tag错误问题。
 2.0.3.7（未上线）
 一、整理无用配置项。
-一、待整理FAK。
+二、整理Stop Market,FAK
+    FOK:要么都成交，要么都撤销。(TT-FOK = CME-FAK)
+    IOC：成交剩余的部分被撤销。(TT-IOC = CME-FOK)
 

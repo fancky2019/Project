@@ -1444,21 +1444,28 @@ namespace ZDTradeClientTT
                 }
 
                 timeInForce = ConvertToTTTimeInForce(timeInForce);
-
+                /*
+                 * CME官网：Fill and Kill (FAK) and Fill or Kill (FOK) - 
+                 *          order is immediately executed against any available quantity and any remaining quantity is eliminated (FAK)
+                 *          or order is filled completely or else eliminated (FOK).
+                 * FOK:要么都成交，要么都撤销。(TT-FOK = CME-FAK)
+                 * IOC：成交剩余的部分被撤销。(TT-IOC = CME-FOK)
+                 */
                 //FAK =IOC，此处待修改
                 if (timeInForce == "3")
                 {
                     //我们系统要把一下注释放开
                     if (info.MinQty == info.orderNumber)
                     {
-                        timeInForce = "4";
+                        timeInForce = "4";//FOK
                     }
-                    else
-                    {
-                        string msg = $"not support FAK order!";
-                        TT.Common.NLogUtility.Info(msg);
-                        throw new Exception(msg);
-                    }
+                    //else
+                    //{
+                    //   // FAK=IOC  
+                    //    string msg = $"not support FAK order!";
+                    //    TT.Common.NLogUtility.Info(msg);
+                    //    throw new Exception(msg);
+                    //}
                     string minQty = info.MinQty;
                     if (minQty != "0")
                         newOrderSingle.SetField(new MinQty(decimal.Parse(minQty)));
@@ -2385,6 +2392,8 @@ namespace ZDTradeClientTT
             TradeServerFacade.SendString(obj);
         }
 
+        #region    old  注释
+
         //public void CancelReplaceOrder(NetInfo obj, ModifyInfo info, string timeInForce)
         //public void CancelReplaceOrder(NetInfo obj, ModifyInfo info)
         //{
@@ -2659,7 +2668,7 @@ namespace ZDTradeClientTT
         //    }
         //}
 
-
+        #endregion
 
 
         private Side QuerySide(string zdSide)
@@ -2710,6 +2719,7 @@ namespace ZDTradeClientTT
                     zdOrdType = "3";
                     break;
                 case "3":
+                    zdOrdType = "4";
                     break;
                 case "":
                     break;
@@ -2734,6 +2744,7 @@ namespace ZDTradeClientTT
                     ttOrderType = "4";
                     break;
                 case "4":
+                    ttOrderType = "3";
                     break;
                 default:
                     throw new Exception($"Unsupported OrdType Value :{zdOrdType}");

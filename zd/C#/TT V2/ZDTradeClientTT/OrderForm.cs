@@ -151,6 +151,17 @@ namespace ZDTradeClientTT
             //        info.validDate = "5";
             //        break;
             //}
+
+
+
+
+
+
+
+
+
+
+
             info.priceType = globexCommu.ConvertToZDOrdType(info.priceType);
             info.validDate = globexCommu.ConvertToZDTimeInForce(info.validDate);
             obj.infoT = info.MyToString();
@@ -168,12 +179,15 @@ namespace ZDTradeClientTT
             //ni.MyReadString(netInfoStr);
             //globexCommu.PlaceOrder(ni);
 
-            //string netInfoStr1 ="ORDER001@20190806000001@0002640946000001@000363@@ZD_001@ICE@@000363@&zdtmifid@@ZD_001@zdtmifid@C@ICE@BRN1912@1@1@59.25@@1@@@0.0@1@1@@0@0@BRN@1912";
+            //string netInfoStr1 = "ORDER001@20190806000001@0002640946000001@000363@@ZD_001@ICE@@000363@&zdtmifid@@ZD_001@zdtmifid@C@ICE@BRN1912@1@1@59.25@@1@@@0.0@1@1@@0@0@BRN@1912";
             //NetInfo ni = new NetInfo();
             //ni.MyReadString(netInfoStr1);
             //globexCommu.PlaceOrder(ni);
 
-
+            //string netInfoStr1 = "ORDER001@00055257I9000002@00064055U9000952@006380@@LME30225@XEurex@@006380@&FCS_C_TT_B@003656@LME30225@888888@C@XEurex@FDXM2006@1@1@0.0@@4@@@12726@1@1@@0@0@FDXM@2006@@@@@@@@@@@@@";
+            //NetInfo ni = new NetInfo();
+            //ni.MyReadString(netInfoStr1);
+            //globexCommu.PlaceOrder(ni);
         }
 
         public void lbMsgs_addItem(string args)
