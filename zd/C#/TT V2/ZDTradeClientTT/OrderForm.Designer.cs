@@ -159,7 +159,7 @@
             this.tbSymbol.Name = "tbSymbol";
             this.tbSymbol.Size = new System.Drawing.Size(121, 21);
             this.tbSymbol.TabIndex = 10;
-            this.tbSymbol.Text = "ICE";
+            this.tbSymbol.Text = "Eurex";
             // 
             // txtContract
             // 
@@ -167,7 +167,7 @@
             this.txtContract.Name = "txtContract";
             this.txtContract.Size = new System.Drawing.Size(121, 21);
             this.txtContract.TabIndex = 11;
-            this.txtContract.Text = "DX_P2012 75.5";
+            this.txtContract.Text = "FDXM2006";
             // 
             // tbQty
             // 
@@ -263,7 +263,7 @@
             this.tbPrice.Name = "tbPrice";
             this.tbPrice.Size = new System.Drawing.Size(121, 21);
             this.tbPrice.TabIndex = 22;
-            this.tbPrice.Text = "0.595";
+            this.tbPrice.Text = "12842";
             // 
             // label11
             // 
@@ -368,7 +368,7 @@
             this.txtTriggerPrice.Name = "txtTriggerPrice";
             this.txtTriggerPrice.Size = new System.Drawing.Size(121, 21);
             this.txtTriggerPrice.TabIndex = 33;
-            this.txtTriggerPrice.Text = "59.30";
+            this.txtTriggerPrice.Text = "12726";
             // 
             // label12
             // 
