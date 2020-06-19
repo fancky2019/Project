@@ -28,7 +28,6 @@ packages/
 **/debug/*.pdb
 **/debug/*.xml
 *.config
-*.txt
 *.exe
 *.dat
 *.csv

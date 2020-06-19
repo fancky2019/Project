@@ -1,0 +1,7 @@
+The new TT order routing session using the information below:
+SenderCompID 每 ZDDEV2 (This value is seen in the RemoteCompID section of the FIX session setup)
+TargetCompID 每 ZD can choose any value
+Password 每 12345678
+DNS Address - fixorderrouting-ext-uat-cert.trade.tt
+Port 每 11502
+ 
