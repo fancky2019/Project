@@ -63,7 +63,6 @@
     <Compile Include="BufferLog.cs" />
     <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="FileUsing.cs" />
-    <Compile Include="InterLockedExtention.cs" />
     <Compile Include="JsonDemo.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="Log4NetUtility.cs" />

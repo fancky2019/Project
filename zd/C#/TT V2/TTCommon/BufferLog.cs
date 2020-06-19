@@ -16,7 +16,7 @@ namespace TT.Common
     /// </summary>
     public class BufferLog
     {
-
+        static SpinLock _spinLock;
         private static ConcurrentQueue<string> _logBuffer;
         /// <summary>
         /// 缓冲区大小。默认500。
@@ -46,6 +46,7 @@ namespace TT.Common
         static StreamWriter _sw = null;
         static BufferLog()
         {
+            _spinLock = new SpinLock(false);
             BufferSize = 500;
             Interval = 1;
             _logBuffer = new ConcurrentQueue<string>();
@@ -64,23 +65,18 @@ namespace TT.Common
 
                     while (true)
                     {
-                        if (InterLockedExtention.Acquire())
-                        {
-                            _createLogTime = DateTime.Now;
-                            //_logChanged = true;
-                            _sw.Close();
+                        var lockToken = false;
+                        _spinLock.Enter(ref lockToken);
+                        _createLogTime = DateTime.Now;
+                        //_logChanged = true;
+                        _sw.Close();
 
 
-                            _sw = new StreamWriter(FilePath, true, System.Text.Encoding.UTF8);
-                            //_logChanged = false;
-                            InterLockedExtention.Release();
-                            break;
-                        }
-                        else
-                        {
-                            SpinWait spinWait = default(SpinWait);
-                            spinWait.SpinOnce();
-                        }
+                        _sw = new StreamWriter(FilePath, true, System.Text.Encoding.UTF8);
+                        //_logChanged = false;
+                        _spinLock.Exit();
+                        break;
+
                     }
                 }
             }, null, 1000, 1000);
@@ -101,21 +97,19 @@ namespace TT.Common
             while (true)
             {
                 Thread.Sleep(Interval * 1000);
-                if (InterLockedExtention.Acquire())
+                var lockToken = false;
+                _spinLock.Enter(ref lockToken);
+                var duration = DateTime.Now - _lastLogTime;
+                //如果当前间隔小于Interval不刷盘，这样有可能造成接近2*Interval时间内不刷盘，
+                //假设Interval=10，duration.TotalSeconds=9，之后数据不活跃继续等10s,就造成
+                //duration.TotalSeconds+10=19s没有刷盘，因为要设置合理的Interval避免这种极端情况。
+                if (duration.TotalSeconds <= Interval)
                 {
-
-                    var duration = DateTime.Now - _lastLogTime;
-                    //如果当前间隔小于Interval不刷盘，这样有可能造成接近2*Interval时间内不刷盘，
-                    //假设Interval=10，duration.TotalSeconds=9，之后数据不活跃继续等10s,就造成
-                    //duration.TotalSeconds+10=19s没有刷盘，因为要设置合理的Interval避免这种极端情况。
-                    if (duration.TotalSeconds <= Interval)
-                    {
-                        continue;
-                    }
-
-                    WriteLog();
-                    InterLockedExtention.Release();
+                    continue;
                 }
+
+                WriteLog();
+                _spinLock.Exit();
             }
         }
 
@@ -128,26 +122,24 @@ namespace TT.Common
         {
             while (true)
             {
-                if (InterLockedExtention.Acquire())
+                var lockToken = false;
+                _spinLock.Enter(ref lockToken);
+
+                while (_logBuffer.Count >= BufferSize)
                 {
+                    _lastLogTime = DateTime.Now;
 
-                    while (_logBuffer.Count >= BufferSize)
+                    for (int i = 0; i < BufferSize; i++)
                     {
-                        _lastLogTime = DateTime.Now;
-
-                        for (int i = 0; i < BufferSize; i++)
+                        if (_logBuffer.TryDequeue(out string content))
                         {
-                            if (_logBuffer.TryDequeue(out string content))
-                            {
-                                _sw.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} {content}");
-                            }
+                            _sw.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} {content}");
                         }
-                        _sw.Flush();
                     }
-
-                    InterLockedExtention.Release();
+                    _sw.Flush();
                 }
-                Thread.Sleep(1);
+
+                _spinLock.Exit();
             }
         }
 
