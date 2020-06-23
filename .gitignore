@@ -27,11 +27,12 @@ packages/
 **/debug/*.dll
 **/debug/*.pdb
 **/debug/*.xml
-*.config
+**/debug/*.config
 *.exe
 *.dat
 *.csv
 *.txt
+*.data
 !FIX42.xml
 !handle64.exe
 QuickFixLogs/
