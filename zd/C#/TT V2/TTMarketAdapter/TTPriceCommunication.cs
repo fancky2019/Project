@@ -38,7 +38,7 @@ namespace TTMarketAdapter
         private string lastFuturesReqID = null;
         private string lastSpreadsReqID = null;
         private string lastOptionsReqID = null;
-
+        public int FiltedMonths { get; set; }
         // private const string _configFile = @"config\Quickfix_TTMarketAdapter.cfg";
 
 
@@ -68,7 +68,7 @@ namespace TTMarketAdapter
         /// <param name="isTestMode"></param>
         /// <param name="initCompleted">登录成功，初始化合约完成回调</param>
         /// <param name="updateContract"></param>
-        public TTPriceCommunication(bool isTestMode, Action initCompleted, bool updateContract = false)
+        public TTPriceCommunication(bool isTestMode, Action initCompleted, bool updateContract = false, int filtedMonths = 50)
         {
             try
             {
@@ -77,11 +77,12 @@ namespace TTMarketAdapter
                 this._updateContract = updateContract;
                 _downLoadSecurityDefinition = new List<SecurityDefinition>();
 
-
+                this.FiltedMonths = filtedMonths;
                 if (_isTestMode)
                 {
                     LoadSecurityDefinitionFromFile();
                 }
+
                 #region  TT配置
                 // FIX app settings and related
                 QuickFix.SessionSettings settings = new QuickFix.SessionSettings(Configurations.QuickFixConfig);
@@ -971,14 +972,14 @@ namespace TTMarketAdapter
 
             //Server.MapPath("/")    返回路径为：E:\wwwroot
             List<SecurityDefinition> mathchSpreadList = new List<SecurityDefinition>();
-            List<SecurityDefinition> mathchOptList = new List<SecurityDefinition>();
+            List<SecurityDefinition> mathchOptList = optionList;// new List<SecurityDefinition>();
 
             //int addMonth = (int)nudMonths.Value;
-            int addMonth = 20;
-            DateTime later = DateTime.Now.AddMonths(addMonth);
+
+            DateTime later = DateTime.Now.AddMonths(FiltedMonths);
 
             //过滤spread
-            int spreadLaterMonth = addMonth;
+            int spreadLaterMonth = FiltedMonths;
             while (true)
             {
                 mathchSpreadList = GetSpecifyMonthContracts(spreadList);
@@ -993,8 +994,8 @@ namespace TTMarketAdapter
             }
 
             //过滤opt
-            later = DateTime.Now.AddMonths(addMonth + 20);
-            int optLaterMonth = addMonth;
+            later = DateTime.Now.AddMonths(FiltedMonths);
+            int optLaterMonth = FiltedMonths;
             while (true)
             {
                 mathchOptList = GetSpecifyMonthContracts(optionList);
@@ -1012,6 +1013,8 @@ namespace TTMarketAdapter
             List<SecurityDefinition> GetSpecifyMonthContracts(List<SecurityDefinition> sourceList)
             {
                 List<SecurityDefinition> mathchList = new List<SecurityDefinition>();
+                //排序，防止接收到的合约是不是按照合约到期日排序的
+                sourceList = sourceList.OrderBy(p => p.GetField(Tags.MaturityMonthYear)).ToList();
                 foreach (SecurityDefinition sd in sourceList)
                 {
 
@@ -1076,7 +1079,7 @@ namespace TTMarketAdapter
                 }
             }
             TT.Common.NLogUtility.Info("Saving filtrated contracts  completed......");
-         
+
             //  System.Diagnostics.Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config"));
         }
         #endregion

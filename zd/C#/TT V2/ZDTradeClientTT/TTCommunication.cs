@@ -69,12 +69,12 @@ namespace ZDTradeClientTT
         {
             try
             {
-                if (!string.IsNullOrEmpty(ZDTradeClientTTConfiurations.Gate_FUT_IP) &&!string.IsNullOrEmpty(ZDTradeClientTTConfiurations.Gate_FUT_Port))
+                if (!string.IsNullOrEmpty(ZDTradeClientTTConfiurations.Gate_FUT_IP) && !string.IsNullOrEmpty(ZDTradeClientTTConfiurations.Gate_FUT_Port))
                 {
                     //获取T+1时间
                     TPlusOneHelper.GetTPlusOneData();
                 }
-          
+
 
 
 
@@ -462,7 +462,7 @@ namespace ZDTradeClientTT
 
             try
             {
-      
+
                 OrderModel.SaveToFile(GlobalData.OrderModelList);
 
             }
@@ -484,7 +484,7 @@ namespace ZDTradeClientTT
                 TT.Common.NLogUtility.Error(ex.ToString());
             }
 
-           
+
         }
 
         /// <summary>
@@ -776,7 +776,10 @@ namespace ZDTradeClientTT
             //info.origOrderNo = info.orderNo;
             //OrderID 是GUID,长度过长，改赋值ClOrdID
             info.origOrderNo = info.orderNo;
-
+            //if (execReport.IsSetField(Tags.SecondaryClOrdID))
+            //{
+            //    info.origOrderNo = execReport.GetString(Tags.SecondaryClOrdID);
+            //}
             info.orderMethod = "1";
             info.htsType = "";
 
@@ -1161,7 +1164,7 @@ namespace ZDTradeClientTT
             //info.exchangeCode = codeBean.zdExchg;
             var zd = Configurations.GetZDExchangeProduct(strSymbol);
             info.exchangeCode = zd.ZDExchange;
-      
+
             info.buySale = QuerySide(execReport.Side);
             info.tradeType = "1";
 
@@ -1342,7 +1345,7 @@ namespace ZDTradeClientTT
                     //
                     var newCode = info.code;
                     var securityType = TTMarketAdapterCommon.GetSecurityType(info.code);
-                    if(securityType==SecurityTypeEnum.OPT)
+                    if (securityType == SecurityTypeEnum.OPT)
                     {
                         CompatibleOptionCodeConverter.IsCompatibleOption(info.code, ref newCode);
                     }
@@ -1523,7 +1526,7 @@ namespace ZDTradeClientTT
                             newOrderSingle.ClearingAccountOverride = new ClearingAccountOverride(p_Fxd_Clis_Ac_Ref);
                             //Tag 16558
                             newOrderSingle.TextTT = new TextTT(p_Fxd_Clis_Ac_Ref);
-                            
+
                             break;
                         case "ICE":
                         case "ICE_L":
@@ -1586,7 +1589,7 @@ namespace ZDTradeClientTT
                             newOrderSingle.TextA = new TextA(obj.todayCanUse);
                             //Tag 16558
                             newOrderSingle.TextTT = new TextTT(obj.todayCanUse);
-                        
+
                             break;
                         case "SGX":
                             //Tag 16999
@@ -1807,10 +1810,10 @@ namespace ZDTradeClientTT
 
                     if (!ret)
                     {
-          
+
                         OrderCancelReplaceException(obj, "can not connect to TT server!");
                     }
- 
+
                 }
                 else
                 {
