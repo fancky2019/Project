@@ -48,4 +48,6 @@
     FOK:要么都成交，要么都撤销。(TT-FOK = CME-FAK)
     IOC：成交剩余的部分被撤销。(TT-IOC = CME-FOK)
 2.0.3.8（未上线）
+一、origOrderNo=tag526.
+二、TT接收客户端下单指令、发送执行结果log记录。
 

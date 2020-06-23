@@ -150,7 +150,7 @@ namespace ZDTradeClientTT
                 GTCOrderMgr.loadGTCOrder(ZDTradeClientTTConfiurations.GTCOrderFile, _xReference, _downReference);
                 NonGTCOrderMgr.loadNonGTCOrder(ZDTradeClientTTConfiurations.DayOrderFile, _xReference, _downReference);
 
-                ClOrderIDGen.setXRef(_xReference);
+                ClOrderIDGen.XReference=_xReference;
                 //UnexpectedExceptionHandler.globexCommunication = this;
 
 
@@ -445,26 +445,11 @@ namespace ZDTradeClientTT
 
         public void shutdown()
         {
-            //ZDTradeClientTT.CfgManager cfgInstance = ZDTradeClientTT.CfgManager.getInstance("ZDTradeClientTT.exe");
-
-            //分开try 避免一个异常而影响其他
-            try
-            {
-                GTCOrderMgr.persistGTCOrder();
-                //OrderModel.SaveToFile(GlobalData.OrderModelList);
-                //ClOrderIDGen.saveOrderId();
-            }
-            catch (Exception ex)
-            {
-                TT.Common.NLogUtility.Error("persistGTCOrder() 异常。");
-                TT.Common.NLogUtility.Error(ex.ToString());
-            }
+            PersistUnFilledOrders();
 
             try
             {
-
                 OrderModel.SaveToFile(GlobalData.OrderModelList);
-
             }
             catch (Exception ex)
             {
@@ -475,8 +460,7 @@ namespace ZDTradeClientTT
 
             try
             {
-
-                ClOrderIDGen.saveOrderId();
+                ClOrderIDGen.SaveOrderId();
             }
             catch (Exception ex)
             {
@@ -488,10 +472,35 @@ namespace ZDTradeClientTT
         }
 
         /// <summary>
-        /// rainer 壳调用
+        /// 保存未成交的单子
+        /// </summary>
+        private void  PersistUnFilledOrders()
+        {
+            persistDayRefObj();
+
+            //分开try 避免一个异常而影响其他
+            try
+            {
+                //保存未成交的GTC单
+                GTCOrderMgr.persistGTCOrder();
+                //OrderModel.SaveToFile(GlobalData.OrderModelList);
+                //ClOrderIDGen.saveOrderId();
+            }
+            catch (Exception ex)
+            {
+                TT.Common.NLogUtility.Error("persistGTCOrder() 异常。");
+                TT.Common.NLogUtility.Error(ex.ToString());
+
+            }
+        }
+        /// <summary>
+        ///如果rainer壳勾选了“交易日中紧急停止”CheckBox，调用此方法。
+        /// 
+        /// 保存未成交的日单
         /// </summary>
         public void persistDayRefObj()
         {
+
             try
             {
                 NonGTCOrderMgr.persistNonGTCOrder();
@@ -776,10 +785,11 @@ namespace ZDTradeClientTT
             //info.origOrderNo = info.orderNo;
             //OrderID 是GUID,长度过长，改赋值ClOrdID
             info.origOrderNo = info.orderNo;
-            //if (execReport.IsSetField(Tags.SecondaryClOrdID))
-            //{
-            //    info.origOrderNo = execReport.GetString(Tags.SecondaryClOrdID);
-            //}
+            //盘房和TT对单用，关联字段。
+            if (execReport.IsSetField(Tags.SecondaryClOrdID))
+            {
+                info.origOrderNo = execReport.GetString(Tags.SecondaryClOrdID);
+            }
             info.orderMethod = "1";
             info.htsType = "";
 
@@ -1297,18 +1307,24 @@ namespace ZDTradeClientTT
         }
 
 
-        //不用tag48
-        //https://library.tradingtechnologies.com/tt-fix/InstrumentBlock_Request.html
-        //Section：When specifying by alternate security ID  
-
+        /// <summary>
+        /// 不用tag48
+        /// https://library.tradingtechnologies.com/tt-fix/InstrumentBlock_Request.html
+        /// Section：When specifying by alternate security ID  
+        /// 
+        /// rainer 壳调用下单入口
+        /// </summary>
+        /// <param name="obj"></param>
         public void PlaceOrder(NetInfo obj)
         {
             try
             {
+                TT.Common.NLogUtility.Info($"Receive from Client - {obj.MyToString()}");
+
                 OrderInfo info = new OrderInfo();
                 info.MyReadString(obj.infoT);
 
-                long clOrdID = ClOrderIDGen.getNextClOrderID();
+                long clOrdID = ClOrderIDGen.GetNextClOrderID();
                 QuickFix.FIX42.NewOrderSingle newOrderSingle = new QuickFix.FIX42.NewOrderSingle();
                 // Tag11
                 newOrderSingle.ClOrdID = new ClOrdID(clOrdID.ToString());
@@ -1334,13 +1350,9 @@ namespace ZDTradeClientTT
 
                     securityExchange = sd.SecurityExchange.getValue();
                     #endregion
-                    //var symbol = sd.Symbol;
-                    //var securityID = sd.SecurityID;
                 }
                 else
                 {
-                    //或者
-
                     #region When specifying by alternate security ID
                     //
                     var newCode = info.code;
@@ -1440,33 +1452,25 @@ namespace ZDTradeClientTT
                  * FOK:要么都成交，要么都撤销。(TT-FOK = CME-FAK)
                  * IOC：成交剩余的部分被撤销。(TT-IOC = CME-FOK)
                  */
-                //FAK =IOC，此处待修改
-                if (timeInForce == "3")
+                if (timeInForce == "3")//IOC
                 {
+                    //根据MinQty和订单数量大小判断是FOK还是IOC
+                    //FOK
                     if (info.MinQty == info.orderNumber)
                     {
                         timeInForce = "4";//FOK
                     }
-                    //else
-                    //{
-                    //   // FAK=IOC  
-                    //    string msg = $"not support FAK order!";
-                    //    TT.Common.NLogUtility.Info(msg);
-                    //    throw new Exception(msg);
-                    //}
-                    string minQty = info.MinQty;
-                    if (minQty != "0")
-                        newOrderSingle.SetField(new MinQty(decimal.Parse(minQty)));
+                    //IOC:info.MinQty < info.orderNumber
+                    if (!string.IsNullOrEmpty(info.MinQty) && info.MinQty != "0")
+                        newOrderSingle.SetField(new MinQty(decimal.Parse(info.MinQty)));
                 }
 
-                //////tag 59
-                //newOrderSingle.TimeInForce = QueryTimeInForce(info.validDate);
                 //tag 59
                 newOrderSingle.TimeInForce = new TimeInForce(char.Parse(timeInForce));
 
-
                 // Tag1  上手号
                 newOrderSingle.Account = new Account(obj.accountNo);
+
                 // SenderSubID(Tag50 ID)
                 //newOrderSingle.SetField(new SenderSubID(obj.todayCanUse));
 
@@ -1502,8 +1506,6 @@ namespace ZDTradeClientTT
                         newOrderSingle.DisplayQty = new DisplayQty(displayQty);
                     }
                 }
-
-
 
                 #region GHF Tag
                 if (ZDTradeClientTTConfiurations.ClearFirm == "GHF")
@@ -1648,6 +1650,8 @@ namespace ZDTradeClientTT
 
         /// <summary>
         /// 撤单
+        /// 
+        /// rainer 壳调用撤单入口
         /// </summary>
         /// <param name="obj"></param>
         public void CancelOrder(NetInfo obj)
@@ -1655,6 +1659,8 @@ namespace ZDTradeClientTT
 
             try
             {
+                TT.Common.NLogUtility.Info($"Receive from Client - {obj.MyToString()}");
+
                 CancelInfo info = new CancelInfo();
                 info.MyReadString(obj.infoT);
 
@@ -1670,7 +1676,7 @@ namespace ZDTradeClientTT
 
                     //Tag 11
                     //long clOrdID = ClOrderIDGen.getNextClOrderID();
-                    orderCancelRequest.ClOrdID = new ClOrdID(ClOrderIDGen.getNextClOrderID().ToString());
+                    orderCancelRequest.ClOrdID = new ClOrdID(ClOrderIDGen.GetNextClOrderID().ToString());
 
                     string lastClOrdID = string.Empty;
                     var last = refObj.fromClient.Last();
@@ -1691,18 +1697,11 @@ namespace ZDTradeClientTT
 
                     //Tag 41
                     orderCancelRequest.OrigClOrdID = new OrigClOrdID(lastClOrdID);
-
-
-
                     refObj.addClientReq(orderCancelRequest);
-
-
                     ret = tradeApp.Send(orderCancelRequest);
 
                     if (!ret)
                     {
-
-
                         CancelOrderException(obj, "can not connect to TT server!");
                     }
                 }
@@ -1724,6 +1723,8 @@ namespace ZDTradeClientTT
 
         /// <summary>
         /// 改单
+        /// 
+        /// rainer 壳调用改单入口
         /// </summary>
         /// <param name="obj"></param>
         public void CancelReplaceOrder(NetInfo obj)
@@ -1731,6 +1732,8 @@ namespace ZDTradeClientTT
 
             try
             {
+                TT.Common.NLogUtility.Info($"Receive from Client - {obj.MyToString()}");
+
                 ModifyInfo info = new ModifyInfo();
                 info.MyReadString(obj.infoT);
 
@@ -1763,7 +1766,7 @@ namespace ZDTradeClientTT
                     //Tag 41
                     ocrr.OrigClOrdID = new OrigClOrdID(lastClOrdID);
                     //Tag 11
-                    long newClOrdID = ClOrderIDGen.getNextClOrderID();
+                    long newClOrdID = ClOrderIDGen.GetNextClOrderID();
                     ocrr.ClOrdID = new ClOrdID(newClOrdID.ToString());
                     // Tag1
                     ocrr.Account = new Account(obj.accountNo);

@@ -12,15 +12,16 @@ namespace ZDTradeClientTT
     {
         private static object synLock = new object();
         public static long lastOrderID;
-        private static ConcurrentDictionary<long, RefObj> xReference = new ConcurrentDictionary<long, RefObj>();
-
+        public static ConcurrentDictionary<long, RefObj> XReference { get; set; }
         public static long beginOrderId;
         public static long endOrderId;
 
-        public const string ORDER_ID_FILE = "config/OrderID.txt";
+        public const string ORDER_ID_FILE = "config/OrderID.data";
 
         static ClOrderIDGen()
         {
+            XReference = new ConcurrentDictionary<long, RefObj>();
+
             beginOrderId = ZDTradeClientTTConfiurations.MinClOrderID;
             endOrderId = ZDTradeClientTTConfiurations.MaxClOrderID;
             lastOrderID = beginOrderId;
@@ -36,30 +37,30 @@ namespace ZDTradeClientTT
         }
 
 
-        public static void setXRef(ConcurrentDictionary<long, RefObj> reference)
-        {
-            xReference = reference;
-        }
+        //public static void setXRef(ConcurrentDictionary<long, RefObj> reference)
+        //{
+        //    XReference = reference;
+        //}
 
-        public static long getNextClOrderID()
+        public static long GetNextClOrderID()
         {
             lock (synLock)
             {
                 lastOrderID++;
                 lastOrderID = lastOrderID <= beginOrderId ? beginOrderId + 1 : lastOrderID;
                 lastOrderID = lastOrderID >= endOrderId ? beginOrderId + 1 : lastOrderID;
-                if (ClOrderIDGen.xReference != null)
+                if (ClOrderIDGen.XReference != null)
                 {
-                    if (xReference.ContainsKey(lastOrderID))
+                    if (XReference.ContainsKey(lastOrderID))
                     {
-                        getNextClOrderID();
+                        GetNextClOrderID();
                     }
                 }
                 return lastOrderID;
             }
         }
 
-        public static void saveOrderId()
+        public static void SaveOrderId()
         {
             using (StreamWriter sWriter = new StreamWriter(File.Open(ORDER_ID_FILE, FileMode.Create, FileAccess.Write), System.Text.Encoding.ASCII))
             {
