@@ -26,7 +26,7 @@ namespace TTMarketAdapter
         /// </summary>
         public Dictionary<string, Decimal> TradingVolumeDic = null;
 
-
+        public const string OrderBookAllData = @"config\OrderBookAllData.data";
 
         static OrderBookMgr()
         {
@@ -146,7 +146,7 @@ namespace TTMarketAdapter
 
         }
 
-        public const string OrderBookAllData = @"config\OrderBookAllData.txt";
+
         public void LoadOrderBookAllData()
         {
             try
