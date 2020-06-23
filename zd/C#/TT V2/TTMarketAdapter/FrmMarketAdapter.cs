@@ -41,6 +41,9 @@ namespace TTMarketAdapter
         /// 避免多次注册job事件
         /// </summary>
         private bool _registerJob;
+        string _preveTodaySett = @"config/PreveTodaySett.data";
+        string _tradeVolumeData = @"config/TradeVolumeData.txt";
+
         #endregion
 
         public FrmMarketAdapter()
@@ -873,7 +876,7 @@ namespace TTMarketAdapter
             //fancky  add  2017-12-12  写入昨今结算价
             if (OrderBookMgr.Instance?.orderBookDict?.Keys.Count > 0)
             {
-                string path = Path.Combine(Application.StartupPath, @"config/PreveTodaySett.txt");
+                string path = Path.Combine(Application.StartupPath, _preveTodaySett);
                 using (StreamWriter sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), System.Text.Encoding.ASCII))
                 {
                     foreach (string key in OrderBookMgr.Instance.orderBookDict.Keys)
@@ -890,7 +893,7 @@ namespace TTMarketAdapter
         {
             if (OrderBookMgr.Instance?.TradingVolumeDic?.Keys.Count > 0)
             {
-                string path = Path.Combine(Application.StartupPath, @"config/TradeVolumeData.txt");
+                string path = Path.Combine(Application.StartupPath, _tradeVolumeData);
                 using (StreamWriter sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), System.Text.Encoding.ASCII))
                 {
                     foreach (string key in OrderBookMgr.Instance.TradingVolumeDic.Keys)

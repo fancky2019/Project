@@ -31,6 +31,7 @@ packages/
 *.exe
 *.dat
 *.csv
+*.txt
 !FIX42.xml
 !handle64.exe
 QuickFixLogs/
