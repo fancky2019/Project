@@ -138,7 +138,7 @@ namespace ZDTradeClientTT
 
         public void FromAdmin(QuickFix.Message message, QuickFix.SessionID sessionID)
         {
-            TT.Common.NLogUtility.Debug("## FromAdmin: " + message.ToString());
+            //TT.Common.NLogUtility.Debug("## FromAdmin: " + message.ToString());
             string msgType = message.Header.GetField(Tags.MsgType);
             if (QuickFix.Fields.MsgType.LOGON == msgType ||
                 QuickFix.Fields.MsgType.LOGOUT == msgType ||
@@ -159,7 +159,7 @@ namespace ZDTradeClientTT
                 AddLogonField(message);
 
             }
-            TT.Common.NLogUtility.Debug("## ToAdmin: " + message.ToString());
+            //TT.Common.NLogUtility.Debug("## ToAdmin: " + message.ToString());
         }
         private void AddLogonField(QuickFix.Message message)
         {

@@ -33,8 +33,7 @@ namespace ZDTradeClientTT
         /// <param name="obj"></param>
         public static void SendString(NetInfo obj)
         {
-            TT.Common.NLogUtility.Info(obj.MyToString());
-
+            TT.Common.NLogUtility.Info($"Send to Clinet - {obj.MyToString()}");
             server.SendString(obj);
         }
     }
