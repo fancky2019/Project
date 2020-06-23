@@ -149,7 +149,7 @@ namespace TTMarketAdapter
 
                  btnExportOperations_Click(null, null);
 
-             }, this.cbUpdateContract.Checked);
+             }, this.cbUpdateContract.Checked, (int)nudMonths.Value);
             cbDebugMode.Enabled = false;
 
             //连接TT服务器
@@ -1720,7 +1720,11 @@ namespace TTMarketAdapter
         #endregion
 
         #region 导出期权合约文件
-
+        /// <summary>
+        /// 生成合约定义文件前进行了合约条数过滤
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnExportOperations_Click(object sender, EventArgs e)
         {
             if (this.InvokeRequired)

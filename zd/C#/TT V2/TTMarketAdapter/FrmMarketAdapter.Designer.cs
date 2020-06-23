@@ -154,7 +154,7 @@
             this.nudMonths.Size = new System.Drawing.Size(73, 21);
             this.nudMonths.TabIndex = 20;
             this.nudMonths.Value = new decimal(new int[] {
-            18,
+            50,
             0,
             0,
             0});
