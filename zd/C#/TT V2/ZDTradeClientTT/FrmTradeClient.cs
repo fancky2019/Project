@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -220,6 +221,12 @@ namespace ZDTradeClientTT
 
         private void btnTest_Click(object sender, EventArgs e)
         {
+            // 52 = 20200623 - 05:05:55.931
+            var timeStr = "20200623-05:05:55.931";
+            DateTime contractDate = DateTime.ParseExact(timeStr, "yyyyMMdd-HH:mm:ss.fff", CultureInfo.InvariantCulture);
+            contractDate = contractDate.AddHours(8);
+            var da = contractDate.Date;
+            return;
             string contract = "DX_P2010 14.1000";
             string newOptionConstract = "";
             CompatibleOptionCodeConverter.IsCompatibleOption(contract, ref newOptionConstract);
