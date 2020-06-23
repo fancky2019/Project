@@ -5,9 +5,14 @@ using System.Text;
 using System.IO;
 using System.Collections.Concurrent;
 using AuthCommon;
+using QuickFix.Fields;
+using System.Globalization;
 
 namespace ZDTradeClientTT
 {
+    /// <summary>
+    /// 以后可以将GTC单和日单持久化在一个文件中。
+    /// </summary>
     public class GTCOrderMgr
     {
         private static string fileName = null;
@@ -17,7 +22,7 @@ namespace ZDTradeClientTT
 
         public static void loadGTCOrder(string fileName, ConcurrentDictionary<long, RefObj> xReference, ConcurrentDictionary<string, RefObj> downReference)
         {
-     
+
             GTCOrderMgr.fileName = fileName;
             GTCOrderMgr.xReference = xReference;
             GTCOrderMgr.downReference = downReference;
@@ -35,6 +40,9 @@ namespace ZDTradeClientTT
 
     }
 
+    /// <summary>
+    /// 以后可以将GTC单和日单持久化在一个文件中。
+    /// </summary>
     public class NonGTCOrderMgr
     {
         private static string fileName = null;
@@ -193,12 +201,39 @@ namespace ZDTradeClientTT
                     {
                         if (orderCategory == OrderCategory.GTCOrder)
                         {
+                            //GTC文件只保存GTC单
                             if (refObj.newOrderSingle.TimeInForce.getValue() != QuickFix.Fields.TimeInForce.GOOD_TILL_CANCEL) continue;
                         }
                         else if (orderCategory == OrderCategory.Non_GTCOrder)
                         {
+                            //日单文件不保存GTC单
                             if (refObj.newOrderSingle.TimeInForce.getValue() == QuickFix.Fields.TimeInForce.GOOD_TILL_CANCEL) continue;
+
+                            //日单-只保存当日的
+                            //Time, in UTC, the message was sent.52=20200623-05:05:55.931
+                            string sendingTimeStr = refObj.newOrderSingle.Header.GetField(Tags.SendingTime);
+                            var sendingTime = DateTime.ParseExact(sendingTimeStr, "yyyyMMdd-HH:mm:ss.fff", CultureInfo.InvariantCulture);
+                            sendingTime = sendingTime.AddHours(8);
+                            if(sendingTime.Date!=DateTime.Now.Date)
+                            {
+                                continue;
+                            }
                         }
+
+                        //以后可以将GTC单和日单持久化在一个文件中。
+                        //if(refObj.newOrderSingle.TimeInForce.getValue() != QuickFix.Fields.TimeInForce.GOOD_TILL_CANCEL)
+                        //{
+                        //    //日单-只保存当日的
+                        //    //Time, in UTC, the message was sent.52=20200623-05:05:55.931
+                        //    string sendingTimeStr = refObj.newOrderSingle.GetField(Tags.SendingTime);
+                        //    var sendingTime = DateTime.ParseExact(sendingTimeStr, "yyyyMMdd-HH:mm:ss.fff", CultureInfo.InvariantCulture);
+                        //    sendingTime = sendingTime.AddHours(8);
+                        //    if (sendingTime.Date != DateTime.Now.Date)
+                        //    {
+                        //        continue;
+                        //    }
+                        //}
+
 
                         sWriter.WriteLine("[Entry Begin]");
                         sWriter.WriteLine("[ClinetOrderID]:" + key);
@@ -210,7 +245,7 @@ namespace ZDTradeClientTT
                         StringBuilder sb = new StringBuilder("[xRef]:");
                         for (int i = 0; i < refObj.strArray.Length; i++)
                         {
-                            if (i != refObj.strArray.Length-1)
+                            if (i != refObj.strArray.Length - 1)
                             {
                                 sb.Append($"{refObj.strArray[i]},");
                             }
@@ -238,7 +273,7 @@ namespace ZDTradeClientTT
                     catch (Exception ex)
                     {
                         if (refObj.newOrderSingle != null)
-                            TT.Common.NLogUtility.Error( "For debug:" + refObj.newOrderSingle.ToString());
+                            TT.Common.NLogUtility.Error("For debug:" + refObj.newOrderSingle.ToString());
 
                         try
                         {
@@ -248,7 +283,7 @@ namespace ZDTradeClientTT
                         {
                         }
 
-                        TT.Common.NLogUtility.Error( ex.ToString());
+                        TT.Common.NLogUtility.Error(ex.ToString());
                     }
                 }
             }
