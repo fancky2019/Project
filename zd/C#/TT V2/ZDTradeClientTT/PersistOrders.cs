@@ -1,98 +1,21 @@
-﻿using System;
+﻿using QuickFix.Fields;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
-using System.Collections.Concurrent;
-using AuthCommon;
-using QuickFix.Fields;
-using System.Globalization;
+using System.Threading.Tasks;
 
 namespace ZDTradeClientTT
 {
-    /// <summary>
-    /// 以后可以将GTC单和日单持久化在一个文件中。
-    /// </summary>
-    public class GTCOrderMgr
+    public class PersistOrders
     {
-        private static string fileName = null;
-        private static ConcurrentDictionary<long, RefObj> xReference = null;
-        private static ConcurrentDictionary<string, RefObj> downReference = null;
 
-
-        public static void loadGTCOrder(string fileName, ConcurrentDictionary<long, RefObj> xReference, ConcurrentDictionary<string, RefObj> downReference)
+        public static void LoadOrder(ConcurrentDictionary<long, RefObj> xReference, ConcurrentDictionary<string, RefObj> downReference)
         {
-
-            GTCOrderMgr.fileName = fileName;
-            GTCOrderMgr.xReference = xReference;
-            GTCOrderMgr.downReference = downReference;
-
-            OrderRefMgr.prepareFile(fileName);
-            OrderRefMgr.loadOrder(fileName, xReference, downReference);
-        }
-
-        public static void persistGTCOrder()
-        {
-            if (GTCOrderMgr.fileName == null || GTCOrderMgr.xReference == null) return;
-            OrderRefMgr.prepareFile(fileName);
-            OrderRefMgr.persistOrder(fileName, OrderCategory.GTCOrder, xReference);
-        }
-
-    }
-
-    /// <summary>
-    /// 以后可以将GTC单和日单持久化在一个文件中。
-    /// </summary>
-    public class NonGTCOrderMgr
-    {
-        private static string fileName = null;
-        private static ConcurrentDictionary<long, RefObj> xReference = null;
-        private static ConcurrentDictionary<string, RefObj> downReference = null;
-
-        public static void loadNonGTCOrder(string fileName, ConcurrentDictionary<long, RefObj> xReference, ConcurrentDictionary<string, RefObj> downReference)
-        {
-            NonGTCOrderMgr.fileName = fileName;
-            NonGTCOrderMgr.xReference = xReference;
-            NonGTCOrderMgr.downReference = downReference;
-
-            OrderRefMgr.prepareFile(fileName);
-            OrderRefMgr.loadOrder(fileName, xReference, downReference);
-
-            if (File.Exists(fileName))
-                File.Delete(fileName);
-        }
-
-        public static void persistNonGTCOrder()
-        {
-            if (NonGTCOrderMgr.fileName == null || NonGTCOrderMgr.xReference == null) return;
-            OrderRefMgr.prepareFile(fileName);
-            OrderRefMgr.persistOrder(fileName, OrderCategory.Non_GTCOrder, xReference);
-        }
-
-    }
-
-
-
-    public enum OrderCategory
-    {
-        GTCOrder,
-        Non_GTCOrder
-    }
-
-    class OrderRefMgr
-    {
-        public static void prepareFile(string fileName)
-        {
-            int idx = fileName.LastIndexOf(@"\");
-            string path = fileName.Substring(0, idx);
-            //string actualFileName = fileName.Substring(idx + 1);
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-        }
-
-        public static void loadOrder(string fileName, ConcurrentDictionary<long, RefObj> xReference, ConcurrentDictionary<string, RefObj> downReference)
-        {
+            var fileName = ZDTradeClientTTConfiurations.PersistOrders;
             if (File.Exists(fileName))
             {
                 using (StreamReader sReader = new StreamReader(File.Open(fileName, FileMode.Open), System.Text.Encoding.ASCII))
@@ -188,10 +111,16 @@ namespace ZDTradeClientTT
             }
         }
 
-        public static void persistOrder(string fileName, OrderCategory orderCategory, ConcurrentDictionary<long, RefObj> xReference)
+        public static void PersistOrder(ConcurrentDictionary<long, RefObj> xReference)
         {
+            var fileName = ZDTradeClientTTConfiurations.PersistOrders;
+            var directory = Path.GetDirectoryName(fileName);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
 
-            using (StreamWriter sWriter = new StreamWriter(File.Open(fileName, FileMode.Create, FileAccess.Write), System.Text.Encoding.ASCII))
+            using (StreamWriter sWriter = new StreamWriter(File.Open(fileName, FileMode.Create, FileAccess.ReadWrite), System.Text.Encoding.UTF8))
             {
                 foreach (long key in xReference.Keys)
                 {
@@ -199,40 +128,19 @@ namespace ZDTradeClientTT
 
                     try
                     {
-                        if (orderCategory == OrderCategory.GTCOrder)
+                        //将GTC单和日单持久化在一个文件中。
+                        if (refObj.newOrderSingle.TimeInForce.getValue() != QuickFix.Fields.TimeInForce.GOOD_TILL_CANCEL)
                         {
-                            //GTC文件只保存GTC单
-                            if (refObj.newOrderSingle.TimeInForce.getValue() != QuickFix.Fields.TimeInForce.GOOD_TILL_CANCEL) continue;
-                        }
-                        else if (orderCategory == OrderCategory.Non_GTCOrder)
-                        {
-                            //日单文件不保存GTC单
-                            if (refObj.newOrderSingle.TimeInForce.getValue() == QuickFix.Fields.TimeInForce.GOOD_TILL_CANCEL) continue;
-
                             //日单-只保存当日的
                             //Time, in UTC, the message was sent.52=20200623-05:05:55.931
                             string sendingTimeStr = refObj.newOrderSingle.Header.GetField(Tags.SendingTime);
                             var sendingTime = DateTime.ParseExact(sendingTimeStr, "yyyyMMdd-HH:mm:ss.fff", CultureInfo.InvariantCulture);
                             sendingTime = sendingTime.AddHours(8);
-                            if(sendingTime.Date!=DateTime.Now.Date)
+                            if (sendingTime.Date != DateTime.Now.Date)
                             {
                                 continue;
                             }
                         }
-
-                        //以后可以将GTC单和日单持久化在一个文件中。
-                        //if(refObj.newOrderSingle.TimeInForce.getValue() != QuickFix.Fields.TimeInForce.GOOD_TILL_CANCEL)
-                        //{
-                        //    //日单-只保存当日的
-                        //    //Time, in UTC, the message was sent.52=20200623-05:05:55.931
-                        //    string sendingTimeStr = refObj.newOrderSingle.GetField(Tags.SendingTime);
-                        //    var sendingTime = DateTime.ParseExact(sendingTimeStr, "yyyyMMdd-HH:mm:ss.fff", CultureInfo.InvariantCulture);
-                        //    sendingTime = sendingTime.AddHours(8);
-                        //    if (sendingTime.Date != DateTime.Now.Date)
-                        //    {
-                        //        continue;
-                        //    }
-                        //}
 
 
                         sWriter.WriteLine("[Entry Begin]");
@@ -272,21 +180,13 @@ namespace ZDTradeClientTT
                     }
                     catch (Exception ex)
                     {
-                        if (refObj.newOrderSingle != null)
-                            TT.Common.NLogUtility.Error("For debug:" + refObj.newOrderSingle.ToString());
-
-                        try
-                        {
-                            TT.Common.NLogUtility.Error("refObj.strArray:" + refObj.strArray.ToString());
-                        }
-                        catch (Exception iex)
-                        {
-                        }
-
+                        TT.Common.NLogUtility.Error("refObj.newOrderSingle:" + refObj.newOrderSingle?.ToString());
+                        TT.Common.NLogUtility.Error("refObj.strArray:" + refObj.strArray?.ToString());
                         TT.Common.NLogUtility.Error(ex.ToString());
                     }
                 }
             }
         }
+
     }
 }

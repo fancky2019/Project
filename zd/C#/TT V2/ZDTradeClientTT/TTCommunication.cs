@@ -60,6 +60,7 @@ namespace ZDTradeClientTT
         {
             init(isTestMode);
         }
+
         /// <summary>
         /// rainer 壳调用
         /// </summary>
@@ -146,13 +147,7 @@ namespace ZDTradeClientTT
                 tradeApp.LogonEvent += logonEventHandler;
                 tradeApp.LogoutEvent += TradeApp_LogoutEvent;
 
-
-                GTCOrderMgr.loadGTCOrder(ZDTradeClientTTConfiurations.GTCOrderFile, _xReference, _downReference);
-                NonGTCOrderMgr.loadNonGTCOrder(ZDTradeClientTTConfiurations.DayOrderFile, _xReference, _downReference);
-
-                ClOrderIDGen.XReference=_xReference;
-                //UnexpectedExceptionHandler.globexCommunication = this;
-
+                PersistOrders.LoadOrder(_xReference, _downReference);
 
                 //load期货数据
                 if (File.Exists(ZDTradeClientTTConfiurations.SecurityDefinitionFuture))
@@ -445,7 +440,17 @@ namespace ZDTradeClientTT
 
         public void shutdown()
         {
-            PersistUnFilledOrders();
+            //PersistUnFilledOrders();
+
+            try
+            {
+                PersistOrders.PersistOrder(_xReference);
+            }
+            catch (Exception ex)
+            {
+                TT.Common.NLogUtility.Error("SaveToFile() 异常。");
+                TT.Common.NLogUtility.Error(ex.ToString());
+            }
 
             try
             {
@@ -471,28 +476,29 @@ namespace ZDTradeClientTT
 
         }
 
-        /// <summary>
-        /// 保存未成交的单子
-        /// </summary>
-        private void  PersistUnFilledOrders()
-        {
-            persistDayRefObj();
+        ///// <summary>
+        ///// 保存未成交的单子
+        ///// </summary>
+        //private void  PersistUnFilledOrders()
+        //{
+        //    //persistDayRefObj();
 
-            //分开try 避免一个异常而影响其他
-            try
-            {
-                //保存未成交的GTC单
-                GTCOrderMgr.persistGTCOrder();
-                //OrderModel.SaveToFile(GlobalData.OrderModelList);
-                //ClOrderIDGen.saveOrderId();
-            }
-            catch (Exception ex)
-            {
-                TT.Common.NLogUtility.Error("persistGTCOrder() 异常。");
-                TT.Common.NLogUtility.Error(ex.ToString());
+        //    //分开try 避免一个异常而影响其他
+        //    try
+        //    {
+        //        //保存未成交的GTC单
+        //        GTCOrderMgr.persistGTCOrder();
+        //        //OrderModel.SaveToFile(GlobalData.OrderModelList);
+        //        //ClOrderIDGen.saveOrderId();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        TT.Common.NLogUtility.Error("persistGTCOrder() 异常。");
+        //        TT.Common.NLogUtility.Error(ex.ToString());
 
-            }
-        }
+        //    }
+        //}
+
         /// <summary>
         ///如果rainer壳勾选了“交易日中紧急停止”CheckBox，调用此方法。
         /// 
@@ -501,14 +507,14 @@ namespace ZDTradeClientTT
         public void persistDayRefObj()
         {
 
-            try
-            {
-                NonGTCOrderMgr.persistNonGTCOrder();
-            }
-            catch (Exception ex)
-            {
-                TT.Common.NLogUtility.Error(ex.ToString());
-            }
+            //try
+            //{
+            //    NonGTCOrderMgr.persistNonGTCOrder();
+            //}
+            //catch (Exception ex)
+            //{
+            //    TT.Common.NLogUtility.Error(ex.ToString());
+            //}
         }
 
         /// <summary>
@@ -1324,7 +1330,7 @@ namespace ZDTradeClientTT
                 OrderInfo info = new OrderInfo();
                 info.MyReadString(obj.infoT);
 
-                long clOrdID = ClOrderIDGen.GetNextClOrderID();
+                long clOrdID = ClOrderIDGen.GetNextClOrderID(_xReference);
                 QuickFix.FIX42.NewOrderSingle newOrderSingle = new QuickFix.FIX42.NewOrderSingle();
                 // Tag11
                 newOrderSingle.ClOrdID = new ClOrdID(clOrdID.ToString());
@@ -1676,7 +1682,7 @@ namespace ZDTradeClientTT
 
                     //Tag 11
                     //long clOrdID = ClOrderIDGen.getNextClOrderID();
-                    orderCancelRequest.ClOrdID = new ClOrdID(ClOrderIDGen.GetNextClOrderID().ToString());
+                    orderCancelRequest.ClOrdID = new ClOrdID(ClOrderIDGen.GetNextClOrderID(_xReference).ToString());
 
                     string lastClOrdID = string.Empty;
                     var last = refObj.fromClient.Last();
@@ -1766,7 +1772,7 @@ namespace ZDTradeClientTT
                     //Tag 41
                     ocrr.OrigClOrdID = new OrigClOrdID(lastClOrdID);
                     //Tag 11
-                    long newClOrdID = ClOrderIDGen.GetNextClOrderID();
+                    long newClOrdID = ClOrderIDGen.GetNextClOrderID(_xReference);
                     ocrr.ClOrdID = new ClOrdID(newClOrdID.ToString());
                     // Tag1
                     ocrr.Account = new Account(obj.accountNo);

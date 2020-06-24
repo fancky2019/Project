@@ -21,23 +21,19 @@ namespace ZDTradeClientTT
         /// tag 1
         /// </summary>
         public static string Account;
-        
+
 
         public static string SessionAndPsw;
-        
+
 
         public static string Order_ID_Scope;
 
         public static long MinClOrderID;
-
         public static long MaxClOrderID;
-      
-        public static string GTCOrderFile;
-       
+        public static string OrderID;
+        public static string PersistOrders;
 
-        public static string DayOrderFile;
-        
-        
+
 
         /// <summary>
         /// tag 116
@@ -48,7 +44,7 @@ namespace ZDTradeClientTT
         public static string Gate_FUT_IP;
 
         public static string Gate_FUT_Port;
-       
+
 
         #region  THG Tags
         /// <summary>
@@ -84,20 +80,20 @@ namespace ZDTradeClientTT
                 QuickFixConfig = configuration.AppSettings.Settings["QuickFixConfig"]?.Value;
                 FIX42 = configuration.AppSettings.Settings["FIX42"]?.Value;
                 SecurityDefinitionFuture = configuration.AppSettings.Settings["SecurityDefinitionFuture"]?.Value;
-                SecurityDefinitionOption= configuration.AppSettings.Settings["SecurityDefinitionOption"]?.Value;
+                SecurityDefinitionOption = configuration.AppSettings.Settings["SecurityDefinitionOption"]?.Value;
 
-  
-       
-           
+
+
+
                 Account = configuration.AppSettings.Settings["Account"]?.Value;
                 OnBehalfOfSubID = configuration.AppSettings.Settings["OnBehalfOfSubID"]?.Value;
-                SessionAndPsw= configuration.AppSettings.Settings["SessionAndPsw"]?.Value;
-       
+                SessionAndPsw = configuration.AppSettings.Settings["SessionAndPsw"]?.Value;
+
 
                 SecurityDefFile = configuration.AppSettings.Settings["SECURITY_DEF_FILE"]?.Value;
-                GTCOrderFile = configuration.AppSettings.Settings["GTC_ORDER_FILE"]?.Value;
-                DayOrderFile= configuration.AppSettings.Settings["DAY_ORDER_FILE"]?.Value;
-          
+                OrderID = configuration.AppSettings.Settings["OrderID"]?.Value;
+                PersistOrders = configuration.AppSettings.Settings["PersistOrders"]?.Value;
+
 
                 Order_ID_Scope = configuration.AppSettings.Settings["Order_ID_Scope"]?.Value;
 
@@ -107,7 +103,7 @@ namespace ZDTradeClientTT
                 }
                 MinClOrderID = long.Parse(Order_ID_Scope.Split(',')[0]);
                 MaxClOrderID = long.Parse(Order_ID_Scope.Split(',')[1]);
-            
+
 
 
                 Gate_FUT_IP = configuration.AppSettings.Settings["Gate_FUT_IP"]?.Value;
@@ -130,7 +126,7 @@ namespace ZDTradeClientTT
             }
         }
 
-       public static void UpdateConfig(string configPath, string nodeName, string nodeValue)
+        public static void UpdateConfig(string configPath, string nodeName, string nodeValue)
         {
             //var v = ConfigurationManager.AppSettings["CL_ORDER_ID"].ToString();
 

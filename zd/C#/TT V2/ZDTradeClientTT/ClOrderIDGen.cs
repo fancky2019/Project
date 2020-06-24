@@ -5,67 +5,56 @@ using System.Text;
 using System.Threading;
 using System.Collections.Concurrent;
 using System.IO;
+using TT.Common;
 
 namespace ZDTradeClientTT
 {
+    /// <summary>
+    /// tag 11 的生成类
+    /// </summary>
     public class ClOrderIDGen
     {
-        private static object synLock = new object();
-        public static long lastOrderID;
-        public static ConcurrentDictionary<long, RefObj> XReference { get; set; }
-        public static long beginOrderId;
-        public static long endOrderId;
-
-        public const string ORDER_ID_FILE = "config/OrderID.data";
+        private static object _synLock =null;
+        private static long _lastOrderID;
+        private static long _beginOrderId;
+        private static long _endOrderId;
 
         static ClOrderIDGen()
         {
-            XReference = new ConcurrentDictionary<long, RefObj>();
+            _synLock = new object();
+            _beginOrderId = ZDTradeClientTTConfiurations.MinClOrderID;
+            _endOrderId = ZDTradeClientTTConfiurations.MaxClOrderID;
+            _lastOrderID = _beginOrderId;
 
-            beginOrderId = ZDTradeClientTTConfiurations.MinClOrderID;
-            endOrderId = ZDTradeClientTTConfiurations.MaxClOrderID;
-            lastOrderID = beginOrderId;
-
-            if (File.Exists(ORDER_ID_FILE))
+            var datas = TxtFile.ReadTxtFile(ZDTradeClientTTConfiurations.OrderID);
+            if(datas.Count>0)
             {
-                using (StreamReader sReader = new StreamReader(File.Open(ORDER_ID_FILE, FileMode.Open), System.Text.Encoding.ASCII))
-                {
-                    string oneLine = sReader.ReadLine().Trim();
-                    lastOrderID = long.Parse(oneLine);
-                }
+                _lastOrderID = long.Parse(datas[0]);
             }
         }
 
 
-        //public static void setXRef(ConcurrentDictionary<long, RefObj> reference)
-        //{
-        //    XReference = reference;
-        //}
-
-        public static long GetNextClOrderID()
+        public static long GetNextClOrderID(ConcurrentDictionary<long, RefObj> xReference=null)
         {
-            lock (synLock)
+            lock (_synLock)
             {
-                lastOrderID++;
-                lastOrderID = lastOrderID <= beginOrderId ? beginOrderId + 1 : lastOrderID;
-                lastOrderID = lastOrderID >= endOrderId ? beginOrderId + 1 : lastOrderID;
-                if (ClOrderIDGen.XReference != null)
+                _lastOrderID++;
+                _lastOrderID = _lastOrderID <= _beginOrderId ? _beginOrderId + 1 : _lastOrderID;
+                _lastOrderID = _lastOrderID >= _endOrderId ? _beginOrderId + 1 : _lastOrderID;
+                if (xReference != null)
                 {
-                    if (XReference.ContainsKey(lastOrderID))
+                    if (xReference.ContainsKey(_lastOrderID))
                     {
-                        GetNextClOrderID();
+                        GetNextClOrderID(xReference);
                     }
                 }
-                return lastOrderID;
+                return _lastOrderID;
             }
         }
 
         public static void SaveOrderId()
         {
-            using (StreamWriter sWriter = new StreamWriter(File.Open(ORDER_ID_FILE, FileMode.Create, FileAccess.Write), System.Text.Encoding.ASCII))
-            {
-                sWriter.WriteLine(lastOrderID.ToString());
-            }
+            TxtFile.SaveTxtFile(ZDTradeClientTTConfiurations.OrderID, new List<string> { _lastOrderID.ToString() });
         }
     }
 
