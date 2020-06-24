@@ -8,7 +8,7 @@ using QuickFix.Fields;
 namespace ZDTradeClientTT
 {
     /// <summary>
-    /// Added by Rainer on 20120323
+    /// rainer 壳调用了
     /// </summary>
     public class CMEFixStrategy : ICustomFixStrategy
     {

@@ -20,11 +20,6 @@ namespace ZDTradeClientTT
             TradeServerFacade.server = server;
         }
 
-        //public static void writeLog(int logLevel, string logContent)
-        //{
-        //    server.writeLog(logLevel, logContent);
-        //}
-
 
         /// <summary>
         /// 壳注册：发送到XX的服务器
