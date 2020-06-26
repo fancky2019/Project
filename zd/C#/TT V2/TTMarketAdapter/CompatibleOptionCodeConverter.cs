@@ -26,6 +26,14 @@ namespace TTMarketAdapter
             }
         }
 
+        /// <summary>
+        /// 兼容老TT有多余零的合约，将老TT有多余零给去除
+        /// 
+        /// DX_P2010 14.10-->DX_P2010 14.1
+        /// </summary>
+        /// <param name="optionContract"></param>
+        /// <param name="newOptionContract">去零后的合约</param>
+        /// <returns></returns>
         public static bool IsCompatibleOption(string optionContract, ref string newOptionContract)
         {
             var zdProduct = TTMarketAdapterCommon.GetZDProduct(optionContract, SecurityTypeEnum.OPT);
