@@ -1002,6 +1002,8 @@ namespace ZDTradeClientTT
         public NetInfo replyCancelled(QuickFix.FIX42.ExecutionReport execReport)
         {
             CancelResponseInfo info = new CancelResponseInfo();
+
+
             string strSymbol = execReport.Symbol.getValue();
             //CodeBean codeBean = CodeTransfer_TT.getZDCodeInfoByUpperCode(execReport.SecurityID.getValue());
             //info.exchangeCode = codeBean.zdExchg;
@@ -1175,6 +1177,19 @@ namespace ZDTradeClientTT
         public NetInfo replyReplaced(QuickFix.FIX42.ExecutionReport execReport)
         {
             OrderResponseInfo info = new OrderResponseInfo();
+
+            //info.orderNo = execReport.ClOrdID.getValue();
+
+            //string OrderID = execReport.OrderID.getValue();
+            //info.origOrderNo = info.orderNo;
+            //OrderID 是GUID,长度过长，改赋值ClOrdID
+            info.origOrderNo = execReport.ClOrdID.getValue();
+            //盘房和TT对单用，关联字段。
+            if (execReport.IsSetField(Tags.SecondaryClOrdID))
+            {
+                info.origOrderNo = execReport.GetString(Tags.SecondaryClOrdID);
+            }
+
             string strSymbol = execReport.Symbol.getValue();
             //CodeBean codeBean = CodeTransfer_TT.getZDCodeInfoByUpperCode(execReport.SecurityID.getValue());
             //info.exchangeCode = codeBean.zdExchg;
@@ -1365,17 +1380,8 @@ namespace ZDTradeClientTT
                     var securityType = TTMarketAdapterCommon.GetSecurityType(info.code);
                     if (securityType == SecurityTypeEnum.OPT)
                     {
-                        CompatibleOptionCodeConverter.IsCompatibleOption(info.code, ref newCode);
+                        newCode= CompatibleOptionCodeConverter.ConvertToNewTTContract(info.code);
                     }
-
-
-
-
-
-
-
-
-
 
                     TTMarketAdapter.Model.OrderModel orderModel = TTMarketAdapterCommon.GetOrderModel(newCode);
                     var validate = orderModel.Validate();

@@ -452,16 +452,11 @@ namespace TTMarketAdapter
                     codeBean.zdProduct = zdProduct;
                     codeBean.contractType = secuDefList[i].SecurityType.getValue();
 
-                    try
-                    {
-                        //codeBean.zdContractDate = zdContractDate;
-                        //codeBean.zdCode = zdCode;
-                        transferOptionToZDCode(codeBean, one);
-                    }
-                    catch (Exception ex)
-                    {
-                        TT.Common.NLogUtility.Error(ex.ToString());
-                    }
+
+                    //codeBean.zdContractDate = zdContractDate;
+                    //codeBean.zdCode = zdCode;
+                    transferOptionToZDCode(codeBean, one);
+
 
                     // Mapping from CME to ZD 通过产品关联公司的交易所的名称
                     if (prdExchgDict.ContainsKey(codeBean.zdProduct))
@@ -852,6 +847,7 @@ namespace TTMarketAdapter
             //DX_C1812 78
             codeBean.zdCode += " " + strikePrice.ToString();
 
+            codeBean.zdCode = CompatibleOptionCodeConverter.CompatibleOpenInterestContract(codeBean.zdCode);
             //if (secuDef.IsSetContractYearMonth())
             //{
             //    CheckContractYearMonth(secuDef, 2);

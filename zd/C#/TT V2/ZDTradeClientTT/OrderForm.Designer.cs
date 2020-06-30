@@ -167,7 +167,7 @@
             this.txtContract.Name = "txtContract";
             this.txtContract.Size = new System.Drawing.Size(121, 21);
             this.txtContract.TabIndex = 11;
-            this.txtContract.Text = "BRN2010";
+            this.txtContract.Text = "CT_C2009 65.00";
             // 
             // tbQty
             // 
@@ -263,7 +263,7 @@
             this.tbPrice.Name = "tbPrice";
             this.tbPrice.Size = new System.Drawing.Size(121, 21);
             this.tbPrice.TabIndex = 22;
-            this.tbPrice.Text = "43";
+            this.tbPrice.Text = "6.86";
             // 
             // label11
             // 
