@@ -847,7 +847,7 @@ namespace TTMarketAdapter
             //DX_C1812 78
             codeBean.zdCode += " " + strikePrice.ToString();
 
-            codeBean.zdCode = CompatibleOptionCodeConverter.CompatibleOpenInterestContract(codeBean.zdCode);
+            //codeBean.zdCode = CompatibleOpenInterestContract.CompatibleOpenInterestContracts(codeBean.zdCode);
             //if (secuDef.IsSetContractYearMonth())
             //{
             //    CheckContractYearMonth(secuDef, 2);

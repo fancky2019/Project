@@ -160,7 +160,14 @@ namespace TTMarketAdapter
         ///配置实例:DX:3[1,2,3]+6[4,5,6]
         /// </summary>
         public static readonly string OptionFutureMonth;
- 
+
+        /// <summary>
+        /// 兼容的老格式期权 配置格式：TT交易所,TT期权。多个以分号隔开
+        /// </summary>
+        public static readonly string CompatibleOption;
+
+
+
         /// <summary>
         /// 兼容老TT有持仓的期权：老TT合约的StrikePrice有多余零。配置格式：ZD合约代码,小数点位数
         /// </summary>
@@ -249,7 +256,7 @@ namespace TTMarketAdapter
                 CurrencyName = configuration.AppSettings.Settings["CurrencyName"]?.Value;
                 ContractChineseName = configuration.AppSettings.Settings["ContractChineseName"]?.Value;
                 OptionFutureMonth = configuration.AppSettings.Settings["OptionFutureMonth"]?.Value;
-            
+                CompatibleOption = configuration.AppSettings.Settings["CompatibleOption"]?.Value;
                 OpenInterestContract = configuration.AppSettings.Settings["OpenInterestContract"]?.Value;
                 OptionFutureMonthDic = new Dictionary<string, Dictionary<string, List<string>>>();
 

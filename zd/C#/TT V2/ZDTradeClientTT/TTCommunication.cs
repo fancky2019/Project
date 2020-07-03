@@ -1380,7 +1380,8 @@ namespace ZDTradeClientTT
                     var securityType = TTMarketAdapterCommon.GetSecurityType(info.code);
                     if (securityType == SecurityTypeEnum.OPT)
                     {
-                        newCode= CompatibleOptionCodeConverter.ConvertToNewTTContract(info.code);
+                        //newCode = CompatibleOpenInterestContract.ConvertToNewTTContract(info.code);
+                        CompatibleOptionCodeConverter.IsCompatibleOption(info.code, ref newCode);
                     }
 
                     TTMarketAdapter.Model.OrderModel orderModel = TTMarketAdapterCommon.GetOrderModel(newCode);
