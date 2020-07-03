@@ -228,44 +228,7 @@ namespace ZDTradeClientTT
             //var da = contractDate.Date;
             //return;
 
-            var contractTest = "CT_C2009 65";
-            var contractTestResult = "";
-            contractTestResult = CompatibleOptionCodeConverter.CompatibleOpenInterestContract(contractTest);
-            contractTest = "CT_C2009 65.1";
-            contractTestResult = CompatibleOptionCodeConverter.CompatibleOpenInterestContract(contractTest);
-            contractTest = "DX_C2009 65.1";
-            contractTestResult = CompatibleOptionCodeConverter.CompatibleOpenInterestContract(contractTest);
-            var re = "";
-            decimal d = 14.100m;
-
-            re = d.ToString("F2");
-  
-            //CT_C2009 65.00  6.86
-            ////CT_P2009 65.00  1.32
-            string contract = "CT_C2009 65.00";
-            string newOptionConstract = "";
-            newOptionConstract = CompatibleOptionCodeConverter.ConvertToNewTTContract(contract);
-            contract = "SB_C2010 12.00";
-            newOptionConstract = CompatibleOptionCodeConverter.ConvertToNewTTContract(contract);
-
-
-            var decimalString = "65.123";
-            var decimalCount = 2;
-            var newdecimalString = "";
-            newdecimalString = CompatibleOptionCodeConverter.RemoveRedundantZero(decimalString, decimalCount);
-
-            decimalString = "65.126";
-            newdecimalString = CompatibleOptionCodeConverter.RemoveRedundantZero(decimalString, decimalCount);
-
-            decimalString = "65.120";
-            newdecimalString = CompatibleOptionCodeConverter.RemoveRedundantZero(decimalString, decimalCount);
-
-            decimalString = "65.10";
-            newdecimalString = CompatibleOptionCodeConverter.RemoveRedundantZero(decimalString, decimalCount);
-
-            decimalString = "65.107";
-            newdecimalString = CompatibleOptionCodeConverter.RemoveRedundantZero(decimalString, decimalCount);
-
+      
             return;
             NLogUtility.Debug("Debug1");
             NLogUtility.Info("NLogDemo info ");

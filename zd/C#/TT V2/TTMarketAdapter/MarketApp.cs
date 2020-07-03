@@ -88,6 +88,7 @@ namespace TTMarketAdapter
                         Thread.Sleep(100);
                         continue;
                     }
+
                     //MarketDataIncrementalRefresh incRefresh;
                     //if (inceRefreshBC.TryTake(out incRefresh, 500))
                     //{
