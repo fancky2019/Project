@@ -63,7 +63,7 @@
     <Compile Include="BufferLog.cs" />
     <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="FileUsing.cs" />
-    <Compile Include="JsonDemo.cs" />
+    <Compile Include="NewtonsoftHelper.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="Log4NetUtility.cs" />
     <Compile Include="LogAsync.cs" />

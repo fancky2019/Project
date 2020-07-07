@@ -90,26 +90,26 @@ namespace ZDTradeClientTT
         {
 
 
-            CommonClassLib.NetInfo obj = new CommonClassLib.NetInfo();
-            CommonClassLib.OrderInfo info = new CommonClassLib.OrderInfo();
+            CommonClassLib.NetInfo netInfo = new CommonClassLib.NetInfo();
+            CommonClassLib.OrderInfo orderInfo = new CommonClassLib.OrderInfo();
 
-            obj.code = CommandCode.ORDER;
+            netInfo.code = CommandCode.ORDER;
             //上手号
             //obj.accountNo = "ZD_001";
-            obj.accountNo = ZDTradeClientTTConfiurations.Account;
-            obj.systemCode = "system1";
+            netInfo.accountNo = ZDTradeClientTTConfiurations.Account;
+            netInfo.systemCode = "system1";
             //tag 50  < add key = "SenderSubID" value = "ZD_123456" />
-            obj.todayCanUse = tbTag50ID.Text;
+            netInfo.todayCanUse = tbTag50ID.Text;
 
-            info.exchangeCode = tbSymbol.Text;
-            info.code = txtContract.Text;
-            info.orderPrice = tbPrice.Text;
-            info.orderNumber = tbQty.Text;
-            info.buySale = orderSideDict[combSide.Text];
-            info.priceType = orderTypeDict[combOrderType.Text];
-            info.validDate = tifDict[combTIF.Text];
-            info.MinQty = txtMinQty.Text.Trim();
-            info.triggerPrice = txtTriggerPrice.Text.Trim();
+            orderInfo.exchangeCode = tbSymbol.Text;
+            orderInfo.code = txtContract.Text;
+            orderInfo.orderPrice = tbPrice.Text;
+            orderInfo.orderNumber = tbQty.Text;
+            orderInfo.buySale = orderSideDict[combSide.Text];
+            orderInfo.priceType = orderTypeDict[combOrderType.Text];
+            orderInfo.validDate = tifDict[combTIF.Text];
+            orderInfo.MinQty = txtMinQty.Text.Trim();
+            orderInfo.triggerPrice = txtTriggerPrice.Text.Trim();
 
 
 
@@ -162,13 +162,13 @@ namespace ZDTradeClientTT
 
 
 
-            info.priceType = globexCommu.ConvertToZDOrdType(info.priceType);
-            info.validDate = globexCommu.ConvertToZDTimeInForce(info.validDate);
-            obj.infoT = info.MyToString();
+            orderInfo.priceType = globexCommu.ConvertToZDOrdType(orderInfo.priceType);
+            orderInfo.validDate = globexCommu.ConvertToZDTimeInForce(orderInfo.validDate);
+            netInfo.infoT = orderInfo.MyToString();
 
 
 
-            globexCommu.PlaceOrder(obj);
+            globexCommu.PlaceOrder(netInfo);
             return;
 
 
