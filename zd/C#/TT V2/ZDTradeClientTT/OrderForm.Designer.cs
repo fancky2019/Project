@@ -167,7 +167,7 @@
             this.txtContract.Name = "txtContract";
             this.txtContract.Size = new System.Drawing.Size(121, 21);
             this.txtContract.TabIndex = 11;
-            this.txtContract.Text = "CT_C2009 65.00";
+            this.txtContract.Text = "BRN2009";
             // 
             // tbQty
             // 
@@ -215,7 +215,7 @@
             this.tbClOrderID.Name = "tbClOrderID";
             this.tbClOrderID.Size = new System.Drawing.Size(121, 21);
             this.tbClOrderID.TabIndex = 17;
-            this.tbClOrderID.Text = "8000106";
+            this.tbClOrderID.Text = "1000053";
             // 
             // btnAddOrder
             // 
@@ -263,7 +263,7 @@
             this.tbPrice.Name = "tbPrice";
             this.tbPrice.Size = new System.Drawing.Size(121, 21);
             this.tbPrice.TabIndex = 22;
-            this.tbPrice.Text = "6.86";
+            this.tbPrice.Text = "42.59";
             // 
             // label11
             // 

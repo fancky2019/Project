@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Demos.OpenResource.Json
 {
 
-    public class JsonDemo
+    public class NewtonsoftHelper
     {
         void Test()
         {

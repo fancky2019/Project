@@ -39,6 +39,8 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnCreateOrderModelFile = new System.Windows.Forms.Button();
+            this.btnNetInfo = new System.Windows.Forms.Button();
+            this.txtNetInfo = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -138,6 +140,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.txtNetInfo);
+            this.tabPage2.Controls.Add(this.btnNetInfo);
             this.tabPage2.Controls.Add(this.btnCreateOrderModelFile);
             this.tabPage2.Controls.Add(this.btnTest);
             this.tabPage2.Controls.Add(this.btnOpenDic);
@@ -159,6 +163,25 @@
             this.btnCreateOrderModelFile.UseVisualStyleBackColor = true;
             this.btnCreateOrderModelFile.Click += new System.EventHandler(this.BtnCreateOrderModelFile_Click);
             // 
+            // btnNetInfo
+            // 
+            this.btnNetInfo.Location = new System.Drawing.Point(308, 124);
+            this.btnNetInfo.Name = "btnNetInfo";
+            this.btnNetInfo.Size = new System.Drawing.Size(75, 23);
+            this.btnNetInfo.TabIndex = 20;
+            this.btnNetInfo.Text = "NetInfo";
+            this.btnNetInfo.UseVisualStyleBackColor = true;
+            this.btnNetInfo.Click += new System.EventHandler(this.btnNetInfo_Click);
+            // 
+            // txtNetInfo
+            // 
+            this.txtNetInfo.Location = new System.Drawing.Point(8, 125);
+            this.txtNetInfo.Name = "txtNetInfo";
+            this.txtNetInfo.Size = new System.Drawing.Size(294, 21);
+            this.txtNetInfo.TabIndex = 21;
+            this.txtNetInfo.Text = "ORDER001@20200630000002@000726281T000002@100091@@ZD_001@ICE@@100091@&ZD_001@@ZD_0" +
+    "01@888888@C@ICE@BRN2009@1@1@42@@1@@@0.0@1@1@@0@0@BRN@2009@@@@@@@@@@@@0@";
+            // 
             // FrmTradeClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -176,6 +199,7 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -194,6 +218,8 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button btnCreateOrderModelFile;
+        private System.Windows.Forms.Button btnNetInfo;
+        private System.Windows.Forms.TextBox txtNetInfo;
     }
 }
 

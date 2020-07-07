@@ -1,4 +1,5 @@
 ﻿using CommonClassLib;
+using Demos.OpenResource.Json;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using TT.Common;
@@ -228,7 +230,7 @@ namespace ZDTradeClientTT
             //var da = contractDate.Date;
             //return;
 
-      
+
             return;
             NLogUtility.Debug("Debug1");
             NLogUtility.Info("NLogDemo info ");
@@ -537,6 +539,70 @@ namespace ZDTradeClientTT
             System.Diagnostics.Process.Start(path);
         }
 
+        private void btnNetInfo_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+
+                /*       
+                 *                                                           ORDER001@20200630000002@000726281T000002@100091@@ZD_001@ICE@@100091@&ZD_001@@ZD_001@888888@C@ICE@BRN2009@1@1@42@@1@@@0.0@1@1@@0@0@BRN@2009@@@@@@@@@@@@0@
+                 * 20200630 10:05:22:949 [3] - 192.168.1.114:61333 {(len=152)ORDER001@20200630000002@000726281T000002@100091@@ZD_001@ICE@@100091@&ZD_001@@ZD_001@888888@C@ICE@BRN2009@1@1@42@@1@@@0.0@1@1@@0@0@BRN@2009@@@@@@@@@@@@0@}
+                 *20200630 10:05:53:567 [3] - 192.168.1.114:61333 {(len=153)CANCEL01@20200630000002@000726281T000002@100091@@ZD_001@ICE@@@&ZD_001@192.168.1.105@ZD_001@888888@@000726281T000002@1000007@ICE@BRN2009@1@1@@0@@@@C@@@@@@}
+                 *20200630 10:05:57:748 [3] - 192.168.1.114:61333 {(len=152)ORDER001@20200630000003@000726281T000003@100091@@ZD_001@ICE@@100091@&ZD_001@@ZD_001@888888@C@ICE@BRN2009@1@1@42@@1@@@0.0@1@1@@0@0@BRN@2009@@@@@@@@@@@@0@}
+                 *20200630 10:06:04:784 [3] - 192.168.1.114:61333 {(len=160)MODIFY01@20200629000002@000726281Q000002@100091@@ZD_001@CME@@100091@&ZD_001@@ZD_001@888888@1000009@CME@6A2007@1@1@42.00@0@2@42.00@1@1@C@0.00@0.0@2@@@@@@@@@@@@0@}
+                 *20200630 10:06:27:437 [3] - 192.168.1.114:61333 {(len=160)MODIFY01@20200629000002@000726281Q000002@100091@@ZD_001@CME@@100091@&ZD_001@@ZD_001@888888@1000009@CME@6A2007@1@1@42.00@0@2@42.00@1@1@C@0.00@0.0@2@@@@@@@@@@@@0@}
+                 */
+                //var netInfoStr = "ORDER001@00055257I9000002@00064055U9000952@006380@@LME30225@XEurex@@006380@&FCS_C_TT_B@003656@LME30225@888888@C@XEurex@FDXM2006@1@1@0.0@@4@@@12726@1@1@@0@0@FDXM@2006@@@@@@@@@@@@@";
+                //var netInfoStr = "ORDER001@20200630000002@000726281T000002@100091@@ZD_001@ICE@@100091@&ZD_001@@ZD_001@888888@C@ICE@BRN2009@1@1@42@@1@@@0.0@1@1@@0@0@BRN@2009@@@@@@@@@@@@0@";
+                //var netInfoStr = "CANCEL01@20200630000002@000726281T000002@100091@@ZD_001@ICE@@@&ZD_001@192.168.1.105@ZD_001@888888@@000726281T000002@1000007@ICE@BRN2009@1@1@@0@@@@C@@@@@@";
+                //var netInfoStr = "MODIFY01@20200629000002@000726281Q000002@100091@@ZD_001@CME@@100091@&ZD_001@@ZD_001@888888@1000009@CME@6A2007@1@1@42.00@0@2@42.00@1@1@C@0.00@0.0@2@@@@@@@@@@@@0@";
+
+                var netInfoStr = this.txtNetInfo.Text.Trim();
+
+                NetInfo netInfo = new NetInfo();
+                netInfo.MyReadString(netInfoStr);
+                //if(netInfo.MyToString()== netInfoStr)
+                //{
+
+                //}
+                StringBuilder sb = new StringBuilder();
+                sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netInfo));
+                sb.Append("\r\n");
+                var command = netInfoStr.Substring(0, 8);
+                switch (command)
+                {
+                    case "ORDER001":
+                        OrderInfo orderInfo = new OrderInfo();
+                        orderInfo.MyReadString(netInfo.infoT);
+                        sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
+                        break;
+                    case "CANCEL01":
+                        CancelInfo cancelInfo = new CancelInfo();
+                        cancelInfo.MyReadString(netInfo.infoT);
+                        sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(cancelInfo));
+                        break;
+                    case "MODIFY01":
+                        ModifyInfo modifyInfo = new ModifyInfo();
+                        modifyInfo.MyReadString(netInfo.infoT);
+                        sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(modifyInfo));
+                        break;
+                    default:
+                        MessageBox.Show("订单指令有误！");
+                        return;
+                }
+
+                string fileName = @"NetInfo.data";
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+                TxtFile.SaveTxtFile(path, new List<string>() { sb.ToString() });
+                System.Diagnostics.Process.Start(path);
+            }
+            catch (Exception ex)
+            {
+                TT.Common.NLogUtility.Error(ex.ToString());
+            }
+
+        }
     }
 
 

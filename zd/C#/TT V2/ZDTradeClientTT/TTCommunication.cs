@@ -1178,18 +1178,6 @@ namespace ZDTradeClientTT
         {
             OrderResponseInfo info = new OrderResponseInfo();
 
-            //info.orderNo = execReport.ClOrdID.getValue();
-
-            //string OrderID = execReport.OrderID.getValue();
-            //info.origOrderNo = info.orderNo;
-            //OrderID 是GUID,长度过长，改赋值ClOrdID
-            info.origOrderNo = execReport.ClOrdID.getValue();
-            //盘房和TT对单用，关联字段。
-            if (execReport.IsSetField(Tags.SecondaryClOrdID))
-            {
-                info.origOrderNo = execReport.GetString(Tags.SecondaryClOrdID);
-            }
-
             string strSymbol = execReport.Symbol.getValue();
             //CodeBean codeBean = CodeTransfer_TT.getZDCodeInfoByUpperCode(execReport.SecurityID.getValue());
             //info.exchangeCode = codeBean.zdExchg;
@@ -1238,7 +1226,12 @@ namespace ZDTradeClientTT
             //info.validDate = ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
             info.validDate = ConvertToZDTimeInForce(refObj, execReport.TimeInForce.ToString());
             info.orderNo = refObj.clOrderID;
-            info.origOrderNo = info.orderNo;
+            info.origOrderNo = execReport.ClOrdID.getValue();
+            //盘房和TT对单用，关联字段。
+            if (execReport.IsSetField(Tags.SecondaryClOrdID))
+            {
+                info.origOrderNo = execReport.GetString(Tags.SecondaryClOrdID);
+            }
 
             refObj.addGlobexRes(execReport);
 
@@ -1335,15 +1328,15 @@ namespace ZDTradeClientTT
         /// 
         /// rainer 壳调用下单入口
         /// </summary>
-        /// <param name="obj"></param>
-        public void PlaceOrder(NetInfo obj)
+        /// <param name="netInfo"></param>
+        public void PlaceOrder(NetInfo netInfo)
         {
             try
             {
-                TT.Common.NLogUtility.Info($"Receive from Client - {obj.MyToString()}");
+                TT.Common.NLogUtility.Info($"Receive from Client - {netInfo.MyToString()}");
 
-                OrderInfo info = new OrderInfo();
-                info.MyReadString(obj.infoT);
+                OrderInfo orderInfo = new OrderInfo();
+                orderInfo.MyReadString(netInfo.infoT);
 
                 long clOrdID = ClOrderIDGen.GetNextClOrderID(_xReference);
                 QuickFix.FIX42.NewOrderSingle newOrderSingle = new QuickFix.FIX42.NewOrderSingle();
@@ -1351,14 +1344,14 @@ namespace ZDTradeClientTT
                 newOrderSingle.ClOrdID = new ClOrdID(clOrdID.ToString());
                 //// Tag60
                 //newOrderSingle.TransactTime = new TransactTime(DateTime.UtcNow);
-                var securityExchange = info.exchangeCode;
+                var securityExchange = orderInfo.exchangeCode;
                 if (_securityDefinitionFileExist)
                 {
                     #region When specifying by security ID
-                    SecurityDefinition sd = CodeTransfer_TT.getUpperCodeInfoByZDCode(info.code, info.exchangeCode);
+                    SecurityDefinition sd = CodeTransfer_TT.getUpperCodeInfoByZDCode(orderInfo.code, orderInfo.exchangeCode);
                     if (sd == null)
                     {
-                        string msg = $"contract({ info.exchangeCode},{info.code}) not found!";
+                        string msg = $"contract({ orderInfo.exchangeCode},{orderInfo.code}) not found!";
                         TT.Common.NLogUtility.Info(msg);
                         throw new Exception(msg);
                     }
@@ -1376,19 +1369,19 @@ namespace ZDTradeClientTT
                 {
                     #region When specifying by alternate security ID
                     //
-                    var newCode = info.code;
-                    var securityType = TTMarketAdapterCommon.GetSecurityType(info.code);
+                    var newCode = orderInfo.code;
+                    var securityType = TTMarketAdapterCommon.GetSecurityType(orderInfo.code);
                     if (securityType == SecurityTypeEnum.OPT)
                     {
                         //newCode = CompatibleOpenInterestContract.ConvertToNewTTContract(info.code);
-                        CompatibleOptionCodeConverter.IsCompatibleOption(info.code, ref newCode);
+                        CompatibleOptionCodeConverter.IsCompatibleOption(orderInfo.code, ref newCode);
                     }
 
                     TTMarketAdapter.Model.OrderModel orderModel = TTMarketAdapterCommon.GetOrderModel(newCode);
                     var validate = orderModel.Validate();
                     if (!validate.Success)
                     {
-                        OrderException(obj, validate.ErrorMessage);
+                        OrderException(netInfo, validate.ErrorMessage);
                         return;
                     }
                     // Tag55
@@ -1410,11 +1403,11 @@ namespace ZDTradeClientTT
                 }
 
                 //委托量
-                var orderQty = decimal.Parse(info.orderNumber);
+                var orderQty = decimal.Parse(orderInfo.orderNumber);
                 // Tag38
                 newOrderSingle.OrderQty = new OrderQty(orderQty);
                 // Tag54
-                newOrderSingle.Side = QuerySide(info.buySale);
+                newOrderSingle.Side = QuerySide(orderInfo.buySale);
                 ////Tag167
                 //newOrderSingle.SecurityType = sd.SecurityType;
                 ////Tag207
@@ -1423,7 +1416,7 @@ namespace ZDTradeClientTT
 
                 //客户端用的是FIX 7X和 新TT的FIX版本 不一样
                 //两个版本的OrderType值1和2反了
-                string orderType = ConvertToTTOrdType(info.priceType);
+                string orderType = ConvertToTTOrdType(orderInfo.priceType);
 
                 char charOrdType = Char.Parse(orderType);
                 // Tag40
@@ -1432,14 +1425,14 @@ namespace ZDTradeClientTT
                 // Tag44
                 if (charOrdType == OrdType.LIMIT || charOrdType == OrdType.STOP_LIMIT)
                 {
-                    decimal prx = CodeTransfer_TT.toGlobexPrx(info.orderPrice, newOrderSingle.Symbol.getValue());
+                    decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.orderPrice, newOrderSingle.Symbol.getValue());
                     newOrderSingle.Price = new Price(prx);
                 }
 
                 // Tag99
                 if (charOrdType == OrdType.STOP || charOrdType == OrdType.STOP_LIMIT)
                 {
-                    decimal prx = CodeTransfer_TT.toGlobexPrx(info.triggerPrice, newOrderSingle.Symbol.getValue());
+                    decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.triggerPrice, newOrderSingle.Symbol.getValue());
                     newOrderSingle.StopPx = new StopPx(prx);
                 }
                 //tag 77
@@ -1447,9 +1440,9 @@ namespace ZDTradeClientTT
                 // Tag11028
                 newOrderSingle.ManualOrderIndicator = moi;
 
-                string timeInForce = info.validDate;
+                string timeInForce = orderInfo.validDate;
                 //港交所T+1时间段内下单59=W
-                if (info.exchangeCode == "HKEX")
+                if (orderInfo.exchangeCode == "HKEX")
                 {
                     if (TPlusOneHelper.IsTPlusOne(newOrderSingle.Symbol.getValue()))
                     {
@@ -1469,20 +1462,20 @@ namespace ZDTradeClientTT
                 {
                     //根据MinQty和订单数量大小判断是FOK还是IOC
                     //FOK
-                    if (info.MinQty == info.orderNumber)
+                    if (orderInfo.MinQty == orderInfo.orderNumber)
                     {
                         timeInForce = "4";//FOK
                     }
                     //IOC:info.MinQty < info.orderNumber
-                    if (!string.IsNullOrEmpty(info.MinQty) && info.MinQty != "0")
-                        newOrderSingle.SetField(new MinQty(decimal.Parse(info.MinQty)));
+                    if (!string.IsNullOrEmpty(orderInfo.MinQty) && orderInfo.MinQty != "0")
+                        newOrderSingle.SetField(new MinQty(decimal.Parse(orderInfo.MinQty)));
                 }
 
                 //tag 59
                 newOrderSingle.TimeInForce = new TimeInForce(char.Parse(timeInForce));
 
                 // Tag1  上手号
-                newOrderSingle.Account = new Account(obj.accountNo);
+                newOrderSingle.Account = new Account(netInfo.accountNo);
 
                 // SenderSubID(Tag50 ID)
                 //newOrderSingle.SetField(new SenderSubID(obj.todayCanUse));
@@ -1511,9 +1504,9 @@ namespace ZDTradeClientTT
                 }
 
                 //iceBerg单 显示数量<实际数量
-                if (!string.IsNullOrEmpty(info.MaxShow) && info.MaxShow != "0")
+                if (!string.IsNullOrEmpty(orderInfo.MaxShow) && orderInfo.MaxShow != "0")
                 {
-                    var displayQty = decimal.Parse(info.MaxShow);
+                    var displayQty = decimal.Parse(orderInfo.MaxShow);
                     if (orderQty > displayQty)
                     {
                         newOrderSingle.DisplayQty = new DisplayQty(displayQty);
@@ -1523,7 +1516,7 @@ namespace ZDTradeClientTT
                 #region GHF Tag
                 if (ZDTradeClientTTConfiurations.ClearFirm == "GHF")
                 {
-                    string p_Fxd_Clis_Ac_Ref = ZDTradeClientTTConfiurations.Prefix + obj.todayCanUse;
+                    string p_Fxd_Clis_Ac_Ref = ZDTradeClientTTConfiurations.Prefix + netInfo.todayCanUse;
                     //string p_Fxd_Clis_Ac_Ref = "ZD123456";
                     switch (securityExchange)
                     {
@@ -1601,9 +1594,9 @@ namespace ZDTradeClientTT
 
                             //ASX由于长度限制，不加前缀
                             //Tag 16556
-                            newOrderSingle.TextA = new TextA(obj.todayCanUse);
+                            newOrderSingle.TextA = new TextA(netInfo.todayCanUse);
                             //Tag 16558
-                            newOrderSingle.TextTT = new TextTT(obj.todayCanUse);
+                            newOrderSingle.TextTT = new TextTT(netInfo.todayCanUse);
 
                             break;
                         case "SGX":
@@ -1634,9 +1627,9 @@ namespace ZDTradeClientTT
 
                 // Maintain XReference
                 RefObj refObj = new RefObj();
-                refObj.NetInfo = obj;
+                refObj.NetInfo = netInfo;
                 refObj.clOrderID = clOrdID.ToString();
-                string[] temp = { obj.accountNo, obj.systemCode, obj.clientNo, obj.localSystemCode, info.code, info.userType, obj.todayCanUse };
+                string[] temp = { netInfo.accountNo, netInfo.systemCode, netInfo.clientNo, netInfo.localSystemCode, orderInfo.code, orderInfo.userType, netInfo.todayCanUse };
                 refObj.newOrderSingle = newOrderSingle;
                 refObj.strArray = temp;
                 _xReference.TryAdd(clOrdID, refObj);
@@ -1648,7 +1641,7 @@ namespace ZDTradeClientTT
                 if (!ret)
                 {
 
-                    OrderException(obj, "can not connect to TT server!");
+                    OrderException(netInfo, "can not connect to TT server!");
                 }
 
             }
@@ -1656,7 +1649,7 @@ namespace ZDTradeClientTT
             {
                 //去掉汉字
                 string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}";
-                OrderException(obj, msg);
+                OrderException(netInfo, msg);
                 TT.Common.NLogUtility.Error(ex.ToString());
             }
         }
@@ -1666,18 +1659,18 @@ namespace ZDTradeClientTT
         /// 
         /// rainer 壳调用撤单入口
         /// </summary>
-        /// <param name="obj"></param>
-        public void CancelOrder(NetInfo obj)
+        /// <param name="netInfo"></param>
+        public void CancelOrder(NetInfo netInfo)
         {
 
             try
             {
-                TT.Common.NLogUtility.Info($"Receive from Client - {obj.MyToString()}");
+                TT.Common.NLogUtility.Info($"Receive from Client - {netInfo.MyToString()}");
 
-                CancelInfo info = new CancelInfo();
-                info.MyReadString(obj.infoT);
+                CancelInfo cancelInfo = new CancelInfo();
+                cancelInfo.MyReadString(netInfo.infoT);
 
-                long clOrdID = Convert.ToInt64(info.orderNo);
+                long clOrdID = Convert.ToInt64(cancelInfo.orderNo);
                 RefObj refObj;
                 bool ret = _xReference.TryGetValue(clOrdID, out refObj);
                 if (ret && refObj.orderStatus != OrdStatus.PENDING_CANCEL && refObj.orderStatus != OrdStatus.PENDING_CANCELREPLACE)
@@ -1715,20 +1708,20 @@ namespace ZDTradeClientTT
 
                     if (!ret)
                     {
-                        CancelOrderException(obj, "can not connect to TT server!");
+                        CancelOrderException(netInfo, "can not connect to TT server!");
                     }
                 }
                 else
                 {
-                    CancelOrderException(obj, $@"Order:{info.orderNo}, Not Found!");
-                    TT.Common.NLogUtility.Info($"CancelOrder 订单没找到：{info.MyToString()}");
+                    CancelOrderException(netInfo, $@"Order:{cancelInfo.orderNo}, Not Found!");
+                    TT.Common.NLogUtility.Info($"CancelOrder 订单没找到：{cancelInfo.MyToString()}");
                 }
             }
             catch (Exception ex)
             {
                 //去掉汉字
                 string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}";
-                CancelOrderException(obj, msg);
+                CancelOrderException(netInfo, msg);
             }
 
         }
@@ -1739,18 +1732,18 @@ namespace ZDTradeClientTT
         /// 
         /// rainer 壳调用改单入口
         /// </summary>
-        /// <param name="obj"></param>
-        public void CancelReplaceOrder(NetInfo obj)
+        /// <param name="netInfo"></param>
+        public void CancelReplaceOrder(NetInfo netInfo)
         {
 
             try
             {
-                TT.Common.NLogUtility.Info($"Receive from Client - {obj.MyToString()}");
+                TT.Common.NLogUtility.Info($"Receive from Client - {netInfo.MyToString()}");
 
-                ModifyInfo info = new ModifyInfo();
-                info.MyReadString(obj.infoT);
+                ModifyInfo modifyInfo = new ModifyInfo();
+                modifyInfo.MyReadString(netInfo.infoT);
 
-                long clOrdID = Convert.ToInt64(info.orderNo);
+                long clOrdID = Convert.ToInt64(modifyInfo.orderNo);
                 RefObj refObj;
                 bool ret = _xReference.TryGetValue(clOrdID, out refObj);
                 if (ret && refObj.orderStatus != OrdStatus.PENDING_CANCEL && refObj.orderStatus != OrdStatus.PENDING_CANCELREPLACE)
@@ -1782,25 +1775,25 @@ namespace ZDTradeClientTT
                     long newClOrdID = ClOrderIDGen.GetNextClOrderID(_xReference);
                     ocrr.ClOrdID = new ClOrdID(newClOrdID.ToString());
                     // Tag1
-                    ocrr.Account = new Account(obj.accountNo);
+                    ocrr.Account = new Account(netInfo.accountNo);
                     // Tag38
-                    ocrr.OrderQty = new OrderQty(decimal.Parse(info.modifyNumber));
+                    ocrr.OrderQty = new OrderQty(decimal.Parse(modifyInfo.modifyNumber));
                     // Tag54
-                    ocrr.Side = QuerySide(info.buySale);
+                    ocrr.Side = QuerySide(modifyInfo.buySale);
 
 
 
 
                     // Tag40 ,不能用QueryOrdType(info.priceType);方法，有的客户端LME交易所不传值
                     ocrr.OrdType = newOrderSingle.OrdType;
-                    info.priceType = newOrderSingle.OrdType.ToString();
+                    modifyInfo.priceType = newOrderSingle.OrdType.ToString();
 
-                    char ordType = Char.Parse(info.priceType);
+                    char ordType = Char.Parse(modifyInfo.priceType);
                     string symbol = newOrderSingle.Symbol.getValue();
                     // Tag44
                     if (ordType == OrdType.LIMIT || ordType == OrdType.STOP_LIMIT)
                     {
-                        decimal prx = CodeTransfer_TT.toGlobexPrx(info.modifyPrice, symbol);
+                        decimal prx = CodeTransfer_TT.toGlobexPrx(modifyInfo.modifyPrice, symbol);
                         ocrr.Price = new Price(prx);
                     }
 
@@ -1808,7 +1801,7 @@ namespace ZDTradeClientTT
                     // StopPx
                     if (ordType == OrdType.STOP || ordType == OrdType.STOP_LIMIT)
                     {
-                        decimal prx = CodeTransfer_TT.toGlobexPrx(info.modifyTriggerPrice, symbol);
+                        decimal prx = CodeTransfer_TT.toGlobexPrx(modifyInfo.modifyTriggerPrice, symbol);
                         ocrr.StopPx = new StopPx(prx);
                     }
                     //tag 77
@@ -1827,13 +1820,13 @@ namespace ZDTradeClientTT
                     if (!ret)
                     {
 
-                        OrderCancelReplaceException(obj, "can not connect to TT server!");
+                        OrderCancelReplaceException(netInfo, "can not connect to TT server!");
                     }
 
                 }
                 else
                 {
-                    OrderCancelReplaceException(obj, $@"Order:{info.orderNo}, Not Found!");
+                    OrderCancelReplaceException(netInfo, $@"Order:{modifyInfo.orderNo}, Not Found!");
                 }
 
             }
@@ -1845,7 +1838,7 @@ namespace ZDTradeClientTT
                 //obj.errorCode = ErrorCode.ERR_ORDER_0004;
                 //obj.code = CommandCode.ORDER;
                 //TradeServerFacade.SendString(obj);
-                OrderCancelReplaceException(obj, msg);
+                OrderCancelReplaceException(netInfo, msg);
                 TT.Common.NLogUtility.Error(ex.ToString());
             }
         }
