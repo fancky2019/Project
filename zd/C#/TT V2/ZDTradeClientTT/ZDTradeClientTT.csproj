@@ -174,7 +174,8 @@
   <ItemGroup>
     <Content Include="de.ico" />
     <Content Include="版本.txt" />
-    <Content Include="调试SeqNum.txt" />
+    <Content Include="Document\QuickFixV15源码解读.txt" />
+    <Content Include="Document\调试SeqNum.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

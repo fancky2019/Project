@@ -1,5 +1,0 @@
-seqnums文件
-前一个序列号(Client):Broker会主动拒绝，Fixlog Message里有记录。
-后一个序列号（Broker）:Client主动退出，Fixlog Message里没有有记录，Fixlog Event里有记录。
-
-每次退出会加1，调试Broker SeqNum,下次重启时候设置提示的值加1。如：期望3收到4，seqnums文件保存的小了要设置大点，由于加1，设置成5。
