@@ -15,9 +15,10 @@ namespace Client.FixUtility
     {
         // Debug, Info, Warn, Error and Fatal
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+        private Session _session = null;
+        private static TradeClient _instance = null;
+        private static object _lockObj = new object();
 
-        static TradeClient _instance = null;
-        static object _lockObj = new object();
         public static TradeClient Instance
         {
             get
@@ -35,12 +36,11 @@ namespace Client.FixUtility
                 return _instance;
             }
         }
-
-        Session _session = null;
-
-        // This variable is a kludge for developer test purposes.  Don't do this on a production application.
-        //public IInitiator IInitiator = null;
         public QuickFix.Transport.SocketInitiator SocketInitiator { get; }
+
+        public event Action<string> Logon;
+        public event Action<string> LogOut;
+
         private TradeClient()
         {
             string tradeClientConfigPath = "Config/TradeClient.cfg";
@@ -59,23 +59,31 @@ namespace Client.FixUtility
 
         public void OnLogon(SessionID sessionID)
         {
-            Console.WriteLine("Logon - " + sessionID.ToString());
+            //FIX.4.4:ZDDEV->EXECUTOR|
+            var sendAndTargetIDs = sessionID.ToString().Split(':')[1];
+            _nLog.Info($"Logon - { sendAndTargetIDs}");
+            Logon?.Invoke(sendAndTargetIDs);
+
+
         }
         public void OnLogout(SessionID sessionID)
         {
-            Console.WriteLine("Logout - " + sessionID.ToString());
+            var sendAndTargetIDs = sessionID.ToString().Split(':')[1];
+            _nLog.Info($"Logout - { sendAndTargetIDs}");
+            LogOut?.Invoke(sendAndTargetIDs);
         }
+
         /// <summary>
         ///Admin Msg 35=0A12345n
         /// </summary>
         /// <param name="message"></param>
         /// <param name="sessionID"></param>
-        public void FromAdmin(Message message, SessionID sessionID) 
+        public void FromAdmin(Message message, SessionID sessionID)
         {
             _nLog.Info(message.ToString());
         }
         public void ToAdmin(Message message, SessionID sessionID)
-        {   
+        {
             message.Header.SetField(new SendingTime(DateTime.UtcNow));
             string msgType = message.Header.GetString(Tags.MsgType);
             if (QuickFix.Fields.MsgType.LOGON == msgType)
@@ -136,7 +144,7 @@ namespace Client.FixUtility
         #endregion
 
 
-   
+
 
         public bool SendMessage(Message m)
         {
