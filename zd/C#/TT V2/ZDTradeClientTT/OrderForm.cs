@@ -162,14 +162,17 @@ namespace ZDTradeClientTT
 
 
 
+
             orderInfo.priceType = globexCommu.ConvertToZDOrdType(orderInfo.priceType);
             orderInfo.validDate = globexCommu.ConvertToZDTimeInForce(orderInfo.validDate);
             netInfo.infoT = orderInfo.MyToString();
-
-
-
             globexCommu.PlaceOrder(netInfo);
             return;
+
+
+
+
+
 
 
 
@@ -184,7 +187,7 @@ namespace ZDTradeClientTT
             //ni.MyReadString(netInfoStr1);
             //globexCommu.PlaceOrder(ni);
 
-            //string netInfoStr1 = "ORDER001@00055257I9000002@00064055U9000952@006380@@LME30225@XEurex@@006380@&FCS_C_TT_B@003656@LME30225@888888@C@XEurex@FDXM2006@1@1@0.0@@4@@@12726@1@1@@0@0@FDXM@2006@@@@@@@@@@@@@";
+            //string netInfoStr1 = "ORDER001@25757@0007261496000011@100091@@ZD_001@XEurex@@100091@&ZD_001@@ZD_001@888888@P@XEurex@FDAX2009@1@5@12699@1@1@@@0.0@4@1@@0@5@FDAX@2009@@@@@@@@@@@@@";
             //NetInfo ni = new NetInfo();
             //ni.MyReadString(netInfoStr1);
             //globexCommu.PlaceOrder(ni);
