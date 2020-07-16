@@ -139,7 +139,7 @@ namespace QuickFix
                 string targetSubID = SessionID.NOT_SET;
                 string targetLocID = SessionID.NOT_SET;
                 string senderCompPsw = SessionID.NOT_SET;
-                string heartBtInt = SessionID.NOT_SET;
+                string heartBtInt ="30";
                 if (dict.Has(SESSION_QUALIFIER))
                     sessionQualifier = dict.GetString(SESSION_QUALIFIER);
                 if (dict.Has(SENDERSUBID))

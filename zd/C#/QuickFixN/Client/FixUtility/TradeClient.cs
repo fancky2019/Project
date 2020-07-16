@@ -13,6 +13,9 @@ namespace Client.FixUtility
     /// </summary>
     public class TradeClient : QuickFix.IApplication
     {
+        // Debug, Info, Warn, Error and Fatal
+        private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+
         static TradeClient _instance = null;
         static object _lockObj = new object();
         public static TradeClient Instance
@@ -62,8 +65,15 @@ namespace Client.FixUtility
         {
             Console.WriteLine("Logout - " + sessionID.ToString());
         }
-
-        public void FromAdmin(Message message, SessionID sessionID) { }
+        /// <summary>
+        ///Admin Msg 35=0A12345n
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="sessionID"></param>
+        public void FromAdmin(Message message, SessionID sessionID) 
+        {
+            _nLog.Info(message.ToString());
+        }
         public void ToAdmin(Message message, SessionID sessionID)
         {   
             message.Header.SetField(new SendingTime(DateTime.UtcNow));
@@ -89,15 +99,19 @@ namespace Client.FixUtility
                 {
                     case QuickFix.FIX44.ExecutionReport executionReport:
                         break;
+                    case QuickFix.FIX44.OrderCancelReject orderCancelReject:
+                        break;
+                    case QuickFix.FIX44.News news:
+                        break;
+                    case QuickFix.FIX44.BusinessMessageReject businessMessageReject:
+                        break;
                     default:
                         break;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("==Cracker exception==");
-                Console.WriteLine(ex.ToString());
-                Console.WriteLine(ex.StackTrace);
+                _nLog.Info(ex.ToString());
             }
         }
 
@@ -117,62 +131,27 @@ namespace Client.FixUtility
             catch (FieldNotFoundException)
             { }
 
-            Console.WriteLine();
-            Console.WriteLine("OUT: " + message.ToString());
+
         }
         #endregion
 
 
-        #region MessageCracker handlers
-        public void OnMessage(QuickFix.FIX44.ExecutionReport m, SessionID s)
-        {
-            //try
-            //{
-            //    execReportBC.Add(msg);
-            //}
-            //catch (Exception ex)
-            //{
-            //    TT.Common.NLogUtility.Error(ex.ToString());
-            //}
-            Console.WriteLine("Received execution report");
-        }
-
-        public void OnMessage(QuickFix.FIX44.OrderCancelReject m, SessionID s)
-        {
-            Console.WriteLine("Received order cancel reject");
-        }
-        #endregion
-
-
-
+   
 
         public bool SendMessage(Message m)
         {
-
-
-
-            //if (Initiator.IsLoggedOn() == false)
             if (!SocketInitiator.IsLoggedOn)
             {
-                //throw new Exception("Can't send a message.  We're not logged on.");
                 return false;
             }
             if (SocketInitiator == null)
             {
-                //throw new Exception("Can't send a message.  ActiveSessionID is null (not logged on?).");
                 return false;
             }
 
             return _session != null ? _session.Send(m) : false;
 
         }
-
-
-
-
-
-
-
 
 
         #region Message creation functions
