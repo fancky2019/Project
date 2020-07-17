@@ -11,7 +11,7 @@ namespace Client.FixUtility
     /// <summary>
     /// 一、取消继承 QuickFix.MessageCracker - 反射，可读性差。
     /// </summary>
-    public class TradeClient : QuickFix.IApplication
+    class TradeClient : QuickFix.IApplication
     {
         // Debug, Info, Warn, Error and Fatal
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
@@ -38,6 +38,7 @@ namespace Client.FixUtility
         }
         public QuickFix.Transport.SocketInitiator SocketInitiator { get; }
 
+        public event Action<Message, SessionID> ReceiveMsgFromApp;
         public event Action<string> Logon;
         public event Action<string> LogOut;
 
@@ -95,34 +96,21 @@ namespace Client.FixUtility
 
         }
 
-
+        /// <summary>
+        /// Client receive messages from brker
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="sessionID"></param>
         public void FromApp(Message message, SessionID sessionID)
         {
-            Console.WriteLine("IN:  " + message.ToString());
-            try
-            {
-
-                //Crack(message, sessionID);
-                switch (message)
-                {
-                    case QuickFix.FIX44.ExecutionReport executionReport:
-                        break;
-                    case QuickFix.FIX44.OrderCancelReject orderCancelReject:
-                        break;
-                    case QuickFix.FIX44.News news:
-                        break;
-                    case QuickFix.FIX44.BusinessMessageReject businessMessageReject:
-                        break;
-                    default:
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                _nLog.Info(ex.ToString());
-            }
+            this.ReceiveMsgFromApp?.Invoke(message, sessionID);
         }
 
+        /// <summary>
+        /// 发送到Broker
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="sessionID"></param>
         public void ToApp(Message message, SessionID sessionID)
         {
             try
