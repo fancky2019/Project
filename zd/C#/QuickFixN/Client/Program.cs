@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client.FixUtility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace Client
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FrmTradeClient());
+
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Client.FixUtility;
+using Client.Models;
 using Client.Service;
+using Client.Utility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -70,6 +72,14 @@ namespace Client
         private void btnStop_Click(object sender, EventArgs e)
         {
             TradeClient.Instance.SocketInitiator.Stop();
+        }
+
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            Order order = new Order();
+            order.ClientNumber = "dsdsfaadsdas";
+            order.ClientID = 100;
+            new RedisQueue().SaveToRedis<Order>(order);
         }
     }
 }
