@@ -31,6 +31,7 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.btnOpenDic = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
+            this.btnTest = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnStart
@@ -63,11 +64,22 @@
             this.btnStop.UseVisualStyleBackColor = true;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
+            // btnTest
+            // 
+            this.btnTest.Location = new System.Drawing.Point(181, 81);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(75, 23);
+            this.btnTest.TabIndex = 21;
+            this.btnTest.Text = "test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
             // FrmTradeClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(294, 195);
+            this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnOpenDic);
             this.Controls.Add(this.btnStart);
@@ -84,6 +96,7 @@
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnOpenDic;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.Button btnTest;
     }
 }
 

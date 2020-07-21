@@ -445,20 +445,22 @@ namespace ZDTradeClientTT
             try
             {
                 PersistOrders.PersistOrder(_xReference);
+                TT.Common.NLogUtility.Info(" PersistOrders PersistOrder Complete。");
             }
             catch (Exception ex)
             {
-                TT.Common.NLogUtility.Error("SaveToFile() 异常。");
+                TT.Common.NLogUtility.Error(" PersistOrders.PersistOrder() 异常。");
                 TT.Common.NLogUtility.Error(ex.ToString());
             }
 
             try
             {
                 OrderModel.SaveToFile(GlobalData.OrderModelList);
+                TT.Common.NLogUtility.Info(" PersistOrders OrderModelList Complete。");
             }
             catch (Exception ex)
             {
-                TT.Common.NLogUtility.Error("SaveToFile() 异常。");
+                TT.Common.NLogUtility.Error("OrderModel.SaveToFile() 异常。");
                 TT.Common.NLogUtility.Error(ex.ToString());
             }
 
@@ -466,10 +468,11 @@ namespace ZDTradeClientTT
             try
             {
                 ClOrderIDGen.SaveOrderId();
+                TT.Common.NLogUtility.Info(" PersistOrders OrderId Complete。");
             }
             catch (Exception ex)
             {
-                TT.Common.NLogUtility.Error("saveOrderId() 异常。");
+                TT.Common.NLogUtility.Error("ClOrderIDGen.SaveOrderId() 异常。");
                 TT.Common.NLogUtility.Error(ex.ToString());
             }
 
