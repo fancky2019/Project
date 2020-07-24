@@ -30,11 +30,15 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.lbMsgs = new System.Windows.Forms.ListBox();
+            this.rtbNetInfo = new System.Windows.Forms.RichTextBox();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.nudDisplayQty = new System.Windows.Forms.NumericUpDown();
+            this.nudMinQty = new System.Windows.Forms.NumericUpDown();
+            this.nudQrdQty = new System.Windows.Forms.NumericUpDown();
+            this.btnNewOrderSingle = new System.Windows.Forms.Button();
             this.txtStopPx = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.txtPrice = new System.Windows.Forms.TextBox();
@@ -52,13 +56,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.cmbOrderType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.lbMsgs = new System.Windows.Forms.ListBox();
-            this.btnNewOrderSingle = new System.Windows.Forms.Button();
-            this.nudQrdQty = new System.Windows.Forms.NumericUpDown();
-            this.nudMinQty = new System.Windows.Forms.NumericUpDown();
-            this.nudDisplayQty = new System.Windows.Forms.NumericUpDown();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
             this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
@@ -81,6 +79,7 @@
             this.label19 = new System.Windows.Forms.Label();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label20 = new System.Windows.Forms.Label();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown8 = new System.Windows.Forms.NumericUpDown();
@@ -103,26 +102,27 @@
             this.label29 = new System.Windows.Forms.Label();
             this.comboBox6 = new System.Windows.Forms.ComboBox();
             this.label30 = new System.Windows.Forms.Label();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnOpenDirectory = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.tabPage5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudQrdQty)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudMinQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDisplayQty)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMinQty)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudQrdQty)).BeginInit();
+            this.tabPage4.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
+            this.tabPage5.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -139,7 +139,7 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.lbMsgs);
-            this.tabPage1.Controls.Add(this.richTextBox1);
+            this.tabPage1.Controls.Add(this.rtbNetInfo);
             this.tabPage1.Controls.Add(this.tabControl2);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -149,16 +149,28 @@
             this.tabPage1.Text = "测试";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // lbMsgs
             // 
-            this.tabPage2.Controls.Add(this.btnOpenDirectory);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(835, 530);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "工具";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.lbMsgs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbMsgs.FormattingEnabled = true;
+            this.lbMsgs.HorizontalScrollbar = true;
+            this.lbMsgs.ItemHeight = 12;
+            this.lbMsgs.Location = new System.Drawing.Point(328, 3);
+            this.lbMsgs.Name = "lbMsgs";
+            this.lbMsgs.Size = new System.Drawing.Size(504, 314);
+            this.lbMsgs.TabIndex = 21;
+            this.lbMsgs.SelectedIndexChanged += new System.EventHandler(this.lbMsgs_SelectedIndexChanged);
+            this.lbMsgs.KeyUp += new System.Windows.Forms.KeyEventHandler(this.lbMsgs_KeyUp);
+            // 
+            // rtbNetInfo
+            // 
+            this.rtbNetInfo.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.rtbNetInfo.Location = new System.Drawing.Point(328, 317);
+            this.rtbNetInfo.Name = "rtbNetInfo";
+            this.rtbNetInfo.ReadOnly = true;
+            this.rtbNetInfo.Size = new System.Drawing.Size(504, 210);
+            this.rtbNetInfo.TabIndex = 14;
+            this.rtbNetInfo.Text = "";
             // 
             // tabControl2
             // 
@@ -182,17 +194,6 @@
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "下单";
             this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.panel2);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(317, 498);
-            this.tabPage4.TabIndex = 1;
-            this.tabPage4.Text = "改单";
-            this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
@@ -222,6 +223,42 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(311, 492);
             this.panel1.TabIndex = 12;
+            // 
+            // nudDisplayQty
+            // 
+            this.nudDisplayQty.Location = new System.Drawing.Point(156, 198);
+            this.nudDisplayQty.Name = "nudDisplayQty";
+            this.nudDisplayQty.Size = new System.Drawing.Size(120, 21);
+            this.nudDisplayQty.TabIndex = 40;
+            // 
+            // nudMinQty
+            // 
+            this.nudMinQty.Location = new System.Drawing.Point(156, 171);
+            this.nudMinQty.Name = "nudMinQty";
+            this.nudMinQty.Size = new System.Drawing.Size(120, 21);
+            this.nudMinQty.TabIndex = 39;
+            // 
+            // nudQrdQty
+            // 
+            this.nudQrdQty.Location = new System.Drawing.Point(156, 144);
+            this.nudQrdQty.Name = "nudQrdQty";
+            this.nudQrdQty.Size = new System.Drawing.Size(120, 21);
+            this.nudQrdQty.TabIndex = 38;
+            this.nudQrdQty.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // btnNewOrderSingle
+            // 
+            this.btnNewOrderSingle.Location = new System.Drawing.Point(199, 289);
+            this.btnNewOrderSingle.Name = "btnNewOrderSingle";
+            this.btnNewOrderSingle.Size = new System.Drawing.Size(78, 23);
+            this.btnNewOrderSingle.TabIndex = 37;
+            this.btnNewOrderSingle.Text = "下单";
+            this.btnNewOrderSingle.UseVisualStyleBackColor = true;
+            this.btnNewOrderSingle.Click += new System.EventHandler(this.btnNewOrderSingle_Click);
             // 
             // txtStopPx
             // 
@@ -369,72 +406,16 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "OrdType(40):";
             // 
-            // tabPage5
+            // tabPage4
             // 
-            this.tabPage5.Controls.Add(this.panel3);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(317, 498);
-            this.tabPage5.TabIndex = 2;
-            this.tabPage5.Text = "撤单";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.richTextBox1.Location = new System.Drawing.Point(328, 317);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(504, 210);
-            this.richTextBox1.TabIndex = 14;
-            this.richTextBox1.Text = "";
-            // 
-            // lbMsgs
-            // 
-            this.lbMsgs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbMsgs.FormattingEnabled = true;
-            this.lbMsgs.HorizontalScrollbar = true;
-            this.lbMsgs.ItemHeight = 12;
-            this.lbMsgs.Location = new System.Drawing.Point(328, 3);
-            this.lbMsgs.Name = "lbMsgs";
-            this.lbMsgs.Size = new System.Drawing.Size(504, 314);
-            this.lbMsgs.TabIndex = 21;
-            // 
-            // btnNewOrderSingle
-            // 
-            this.btnNewOrderSingle.Location = new System.Drawing.Point(199, 289);
-            this.btnNewOrderSingle.Name = "btnNewOrderSingle";
-            this.btnNewOrderSingle.Size = new System.Drawing.Size(78, 23);
-            this.btnNewOrderSingle.TabIndex = 37;
-            this.btnNewOrderSingle.Text = "下单";
-            this.btnNewOrderSingle.UseVisualStyleBackColor = true;
-            this.btnNewOrderSingle.Click += new System.EventHandler(this.btnNewOrderSingle_Click);
-            // 
-            // nudQrdQty
-            // 
-            this.nudQrdQty.Location = new System.Drawing.Point(156, 144);
-            this.nudQrdQty.Name = "nudQrdQty";
-            this.nudQrdQty.Size = new System.Drawing.Size(120, 21);
-            this.nudQrdQty.TabIndex = 38;
-            this.nudQrdQty.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // nudMinQty
-            // 
-            this.nudMinQty.Location = new System.Drawing.Point(156, 171);
-            this.nudMinQty.Name = "nudMinQty";
-            this.nudMinQty.Size = new System.Drawing.Size(120, 21);
-            this.nudMinQty.TabIndex = 39;
-            // 
-            // nudDisplayQty
-            // 
-            this.nudDisplayQty.Location = new System.Drawing.Point(156, 198);
-            this.nudDisplayQty.Name = "nudDisplayQty";
-            this.nudDisplayQty.Size = new System.Drawing.Size(120, 21);
-            this.nudDisplayQty.TabIndex = 40;
+            this.tabPage4.Controls.Add(this.panel2);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(317, 498);
+            this.tabPage4.TabIndex = 1;
+            this.tabPage4.Text = "改单";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // panel2
             // 
@@ -641,6 +622,17 @@
             this.label20.TabIndex = 1;
             this.label20.Text = "Order type:";
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.panel3);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(317, 498);
+            this.tabPage5.TabIndex = 2;
+            this.tabPage5.Text = "撤单";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
             // panel3
             // 
             this.panel3.Controls.Add(this.numericUpDown7);
@@ -846,6 +838,17 @@
             this.label30.TabIndex = 1;
             this.label30.Text = "Order type:";
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.btnOpenDirectory);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(835, 530);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "工具";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
             // btnOpenDirectory
             // 
             this.btnOpenDirectory.Location = new System.Drawing.Point(759, 20);
@@ -869,26 +872,26 @@
             this.Load += new System.EventHandler(this.OrderForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
-            this.tabPage4.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.tabPage5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.nudQrdQty)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudMinQty)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDisplayQty)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMinQty)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudQrdQty)).EndInit();
+            this.tabPage4.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
+            this.tabPage5.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
+            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -899,7 +902,7 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ListBox lbMsgs;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox rtbNetInfo;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Panel panel1;

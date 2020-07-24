@@ -1,4 +1,5 @@
 ﻿using Client.Service;
+using Client.Utility;
 using CommonClassLib;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Client
         {
             InitializeComponent();
         }
-    
+
         private void OrderForm_Load(object sender, EventArgs e)
         {
             _orderTypeDict.Add("MARKET", "1");
@@ -42,7 +43,7 @@ namespace Client
             _orderTypeDict.Add("MARKET_WITH_LEFT_OVER_AS_LIMIT", "K");
             _orderTypeDict.Add("MARKET_LIMIT_MARKET_LEFT_OVER_AS_LIMIT", "Q");
             _orderTypeDict.Add("STOP_MARKET_TO_LIMIT", "S");
-        
+
             this.cmbOrderType.Items.AddRange(_orderTypeDict.Keys.ToArray());
             cmbOrderType.SelectedIndex = 1;
 
@@ -71,9 +72,69 @@ namespace Client
             _sideDict.Add("SELL", "2");
             this.cmbSide.Items.AddRange(_sideDict.Keys.ToArray());
             cmbSide.SelectedIndex = 0;
+
+
+
+
+
+
+            TradeClientAppService.Instance.ExecutionReport += (p) =>
+              {
+                  this.BeginInvoke((MethodInvoker)(() =>
+                  {
+                      if (!string.IsNullOrEmpty(p))
+                      {
+                          this.lbMsgs.Items.Add(p);
+                      }
+
+                  }));
+              };
         }
 
+        private void lbMsgs_KeyUp(object sender, KeyEventArgs e)
+        {
+            if ((e.Control) && e.KeyCode == Keys.C)
+            {
+                Clipboard.SetDataObject(this.lbMsgs.SelectedItem.ToString());
+            }
+        }
 
+        private void lbMsgs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            NetInfo netinfo = new NetInfo();
+            var netInfoStr = this.lbMsgs.SelectedItem.ToString();
+            netinfo.MyReadString(netInfoStr);
+            //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(netinfo);
+            //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
+
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
+            sb.Append("\r\n");
+            var command = netInfoStr.Substring(0, 8);
+            switch (command)
+            {
+                case "ORDER001":
+                    OrderInfo orderInfo = new OrderInfo();
+                    orderInfo.MyReadString(netinfo.infoT);
+                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
+                    break;
+                case "CANCEL01":
+                    CancelInfo cancelInfo = new CancelInfo();
+                    cancelInfo.MyReadString(netinfo.infoT);
+                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(cancelInfo));
+                    break;
+                case "MODIFY01":
+                    ModifyInfo modifyInfo = new ModifyInfo();
+                    modifyInfo.MyReadString(netinfo.infoT);
+                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(modifyInfo));
+                    break;
+                default:
+                    MessageBox.Show("订单指令有误！");
+                    return;
+            }
+            this.rtbNetInfo.Text = sb.ToString();
+        }
 
         private void btnOpenDirectory_Click(object sender, EventArgs e)
         {
@@ -104,12 +165,14 @@ namespace Client
 
 
 
-          
+
 
             orderInfo.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(orderInfo.priceType);
             orderInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(orderInfo.validDate);
             netInfo.infoT = orderInfo.MyToString();
             TradeClientAppService.Instance.Order(netInfo);
         }
+
+
     }
 }

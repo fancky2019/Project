@@ -1,5 +1,5 @@
 ﻿using CommonClassLib;
-using QuickFix.FIX44;
+using QuickFix.FIX42;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,11 +35,11 @@ namespace Client.Models
         /// <summary>
         /// 下单FIX
         /// </summary>
-        public NewOrderSingle NewOrderSingle { get; set; }
+        public string NewOrderSingle { get; set; }
         /// <summary>
         /// 改单FIX
         /// </summary>
-        public OrderCancelReplaceRequest OrderCancelReplaceRequest { get; set; }
+        public string OrderCancelReplaceRequest { get; set; }
         
     }
 }

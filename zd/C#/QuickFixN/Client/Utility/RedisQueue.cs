@@ -57,16 +57,26 @@ namespace Client.Utility
             {
                 var consumerClient = RedisHelper.GetQueueClient() as RedisClient;
                 consumerClient.Db = 13;
+                //try
+                //{
+
+
+
                 while (true)
                 {
-               
-                        //没有数据就阻塞
-                        var re = consumerClient.BRPop(QUEUE_KEY, 0);
-                        //var key = Encoding.UTF8.GetString(re[0]);
-                        var order = MessagePackUtility.Deserialize<T>(re[1]);
-                        DequeueRedis?.Invoke(order);
-                 
+
+                    //没有数据就阻塞
+                    var re = consumerClient.BRPop(QUEUE_KEY, 0);
+                    //var key = Encoding.UTF8.GetString(re[0]);
+                    var order = MessagePackUtility.Deserialize<T>(re[1]);
+                    DequeueRedis?.Invoke(order);
+
                 }
+                //}
+                //catch(Exception ex)
+                //{
+                //    consumerClient = null;
+                //}
 
             });
         }
