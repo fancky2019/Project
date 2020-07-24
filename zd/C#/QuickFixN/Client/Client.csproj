@@ -46,6 +46,9 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.7.2\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -119,6 +122,7 @@
     <Compile Include="Service\ZDUperTagValueConvert.cs" />
     <Compile Include="Utility\Log.cs" />
     <Compile Include="Utility\MessagePackUtility.cs" />
+    <Compile Include="Utility\NewtonsoftHelper.cs" />
     <Compile Include="Utility\RedisHelper.cs" />
     <Compile Include="Utility\RedisQueue.cs" />
     <EmbeddedResource Include="FrmTradeClient.resx">
@@ -157,17 +161,23 @@
   <ItemGroup>
     <Content Include="Config\FixVersion\FIX40.xml" />
     <Content Include="Config\FixVersion\FIX41.xml" />
+    <Content Include="Config\FixVersion\FIX42 - 复制.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Config\FixVersion\FIX42.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Config\FixVersion\FIX43.xml" />
-    <Content Include="Config\FixVersion\FIX44.xml">
+    <Content Include="Config\FixVersion\FIX44 - 复制.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Config\FixVersion\FIX50.xml" />
     <Content Include="Config\FixVersion\FIX50SP1.xml" />
     <Content Include="Config\FixVersion\FIX50SP2.xml" />
     <Content Include="Config\FixVersion\FIXT11.xml" />
+    <Content Include="Config\FixVersion\FIX44.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Dll\AuthCommon.dll" />
     <Content Include="Dll\CommonClassLib.dll" />
     <Content Include="Dll\Redis\ServiceStack.Common.dll" />
@@ -177,9 +187,9 @@
     <Content Include="Dll\Redis\ServiceStack.Text.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Messages\FIX44\QuickFix.FIX44.csproj">
-      <Project>{98bb2476-9f60-4162-b1bc-847fdabd5bc2}</Project>
-      <Name>QuickFix.FIX44</Name>
+    <ProjectReference Include="..\Messages\FIX42\QuickFix.FIX42.csproj">
+      <Project>{aa93e26d-653e-496b-a39d-3e726b165d0d}</Project>
+      <Name>QuickFix.FIX42</Name>
     </ProjectReference>
     <ProjectReference Include="..\QuickFIXn\QuickFix.csproj">
       <Project>{44271a81-4ae0-4d43-bc41-d6179cdc7ce6}</Project>

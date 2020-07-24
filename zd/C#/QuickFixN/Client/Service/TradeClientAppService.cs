@@ -4,14 +4,15 @@ using Client.Utility;
 using CommonClassLib;
 using QuickFix;
 using QuickFix.Fields;
-using QuickFix.FIX44;
+using QuickFix.FIX42;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static QuickFix.FIX44.Advertisement;
+using static QuickFix.FIX42.Advertisement;
+using static QuickFix.FIX42.NewOrderSingle;
 
 namespace Client.Service
 {
@@ -169,11 +170,11 @@ namespace Client.Service
                 newOrderSingle.SecurityExchange = new SecurityExchange("ICE");
 
                 //167
-                newOrderSingle.SecurityType = new SecurityType("fut");
+                newOrderSingle.SecurityType = new SecurityType("FUT");
                 //454
                 NoSecurityAltIDGroup noSecurityAltIDGroup = new NoSecurityAltIDGroup();
                 //455
-                noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("BRN2009");
+                noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("BRN Dec20");
                 //456
                 noSecurityAltIDGroup.SecurityAltIDSource = new SecurityAltIDSource("97");
                 newOrderSingle.AddGroup(noSecurityAltIDGroup);
@@ -186,10 +187,7 @@ namespace Client.Service
                 newOrderSingle.OrderQty = new OrderQty(orderQty);
                 // Tag54
                 newOrderSingle.Side = ZDUperTagValueConvert.QuerySide(orderInfo.buySale);
-                ////Tag167
-                //newOrderSingle.SecurityType = sd.SecurityType;
-                ////Tag207
-                //newOrderSingle.SecurityExchange = sd.SecurityExchange;
+       
 
 
                 //客户端用的是FIX 7X和 新TT的FIX版本 不一样
@@ -257,16 +255,16 @@ namespace Client.Service
 
 
 
+     
 
-            
                 bool ret = TradeClient.Instance.SendMessage(newOrderSingle);
-
-                if (!ret)
+              
+                if (ret)
                 {
                     order.SystemCode = netInfo.systemCode;
                     order.ClientID = newOrderSingle.ClOrdID.getValue();
-
-                    order.NewOrderSingle = newOrderSingle;
+                   // newOrderSingle.FromString()
+                    order.NewOrderSingle = newOrderSingle.ToString();
 
 
 
@@ -310,153 +308,194 @@ namespace Client.Service
         private void ConsumerFromAppMsg(QuickFix.Message message)
         {
             NetInfo netInfo = null;
-            switch (message)
+            try
             {
-                case QuickFix.FIX44.ExecutionReport executionReport:
-                    //ExecutionReport?.Invoke(executionReport.ToString());
-                    char execType = executionReport.ExecType.getValue();
+                switch (message)
+                {
+                    case ExecutionReport executionReport:
+                        //ExecutionReport?.Invoke(executionReport.ToString());
+                        char execType = executionReport.ExecType.getValue();
 
 
-                    switch (execType)
-                    {
-                        case ExecType.NEW:
-                            netInfo = ExecType_New(executionReport);
-                            break;
+                        switch (execType)
+                        {
+                            case ExecType.NEW:
+                                netInfo = ExecType_New(executionReport);
+                                break;
 
-                        case ExecType.FILL:
-                        case ExecType.PARTIAL_FILL:
-                            //netInfo = replyFill(execReport);
-                            break;
+                            case ExecType.FILL:
+                            case ExecType.PARTIAL_FILL:
+                                //netInfo = replyFill(execReport);
+                                break;
 
-                        case ExecType.CANCELED:
-                            //netInfo = replyCancelled(execReport);
-                            break;
+                            case ExecType.CANCELED:
+                                //netInfo = replyCancelled(execReport);
+                                break;
 
-                        case ExecType.REJECTED:
-                            //netInfo = replyRejected(execReport);
-                            break;
+                            case ExecType.REJECTED:
+                                netInfo = ExecType_Rejected(executionReport);
+                                break;
 
-                        case ExecType.PENDING_CANCEL:
-                            //doPendingCancel(execReport);
-                            break;
+                            case ExecType.PENDING_CANCEL:
+                                //doPendingCancel(execReport);
+                                break;
 
-                        case ExecType.REPLACED:
-                            //netInfo = replyReplaced(execReport);
-                            break;
+                            case ExecType.REPLACED:
+                                //netInfo = replyReplaced(execReport);
+                                break;
 
-                        case ExecType.EXPIRED:
-                            //netInfo = doExpired(execReport);
-                            //netInfo = replyCancelled(execReport);
-                            break;
-                        default:
-                            break;
-                            //case GlobexExt.ORD_STATUS_TRADE_CANCELLATION:
-                            //    break;
-                    }
-                    break;
-                case QuickFix.FIX44.OrderCancelReject orderCancelReject:
-                    break;
-                case QuickFix.FIX44.News news:
-                    break;
-                case QuickFix.FIX44.BusinessMessageReject businessMessageReject:
-                    break;
-                default:
-                    break;
+                            case ExecType.EXPIRED:
+                                //netInfo = doExpired(execReport);
+                                //netInfo = replyCancelled(execReport);
+                                break;
+                            default:
+                                break;
+                                //case GlobexExt.ORD_STATUS_TRADE_CANCELLATION:
+                                //    break;
+                        }
+                        break;
+                    case OrderCancelReject orderCancelReject:
+                        break;
+                    case News news:
+                        break;
+                    case BusinessMessageReject businessMessageReject:
+                        break;
+                    default:
+                        break;
+                }
             }
-            var responseMsg = netInfo.MyToString();
+            catch(Exception ex)
+            {
+
+            }
+            var responseMsg = netInfo!=null? netInfo?.MyToString():"";
             ExecutionReport?.Invoke(responseMsg);
         }
 
         #region ExecutionReport
         NetInfo ExecType_New(ExecutionReport execReport)
         {
-            //系统号
-            var order = RedisHelper.GetOrdder(execReport.ClOrdID.getValue());
-            OrderResponseInfo info = new OrderResponseInfo();
-
-            info.orderNo = execReport.ClOrdID.getValue();
-
-            string OrderID = execReport.OrderID.getValue();
-            //info.origOrderNo = info.orderNo;
-            //OrderID 是GUID,长度过长，改赋值ClOrdID
-            info.origOrderNo = info.orderNo;
-            //盘房和TT对单用，关联字段。
-            if (execReport.IsSetField(Tags.SecondaryClOrdID))
-            {
-                info.origOrderNo = execReport.GetString(Tags.SecondaryClOrdID);
-            }
-            info.orderMethod = "1";
-            info.htsType = "";
-
-            string strSymbol = execReport.Symbol.getValue();
-            //CodeBean codeBean = CodeTransfer_TT.getZDCodeInfoByUpperCode(execReport.SecurityID.getValue());
-
-            //info.exchangeCode = codeBean.zdExchg;
-
-            info.exchangeCode = execReport.GetString(Tags.SecurityExchange);
-
-            //if (execReport.Side.getValue() == Side.BUY)
-            //    info.buySale = "1";
-            //else
-            //    info.buySale = "2";
-            info.buySale = ZDUperTagValueConvert.QuerySide(execReport.Side);
-            info.tradeType = "1";
-
-            char ordType = execReport.OrdType.getValue();
-            info.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(ordType.ToString());
-
-
-            //if (ordType == OrdType.LIMIT || ordType == OrdType.STOP_LIMIT)
-            //{
-            //    info.orderPrice = CodeTransfer_TT.toClientPrx(execReport.Price.getValue(), strSymbol);
-            //}
-
-            //if (ordType == OrdType.STOP || ordType == OrdType.STOP_LIMIT)
-            //{
-            //    info.triggerPrice = CodeTransfer_TT.toClientPrx(execReport.StopPx.getValue(), strSymbol);
-            //}
-
-
-            info.orderNumber = execReport.OrderQty.getValue().ToString();
-            info.filledNumber = "0";
-
-            DateTime transTime = execReport.TransactTime.getValue();
-            info.orderTime = transTime.ToString("HH:mm:ss");
-            info.orderDate = transTime.ToString("yyyy-MM-dd");
-
-
-
-            //info.validDate = ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
-
-            info.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
-
-            //refObj.orderID = OrderID;
-            //refObj.addGlobexRes(execReport);
-
-
-
-            info.code = order.OrderNetInfo.code;
-            info.accountNo = order.OrderNetInfo.accountNo;
-            info.systemNo = order.OrderNetInfo.systemCode;
-
-            OrderInfo orderInfo = new OrderInfo();
-            orderInfo.MyReadString(order.OrderNetInfo.infoT);
-            info.acceptType = orderInfo.userType;
-
             NetInfo netInfo = new NetInfo();
+            try
+            {
+                //系统号
+                var order = RedisHelper.GetOrdder(execReport.ClOrdID.getValue());
+                OrderResponseInfo info = new OrderResponseInfo();
 
-            netInfo.infoT = info.MyToString();
-            netInfo.exchangeCode = info.exchangeCode;
-            netInfo.errorCode = ErrorCode.SUCCESS;
-            netInfo.code = CommandCode.ORDER;
+                info.orderNo = execReport.ClOrdID.getValue();
 
-            netInfo.accountNo = info.accountNo;
-            netInfo.systemCode = info.systemNo;
-            //obj.todayCanUse = execReport.Header.GetField(Tags.TargetSubID);
-            netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
-            netInfo.clientNo = order.OrderNetInfo.clientNo;
-            netInfo.localSystemCode = order.OrderNetInfo.localSystemCode;
+                string OrderID = execReport.OrderID.getValue();
+                //info.origOrderNo = info.orderNo;
+                //OrderID 是GUID,长度过长，改赋值ClOrdID
+                info.origOrderNo = info.orderNo;
+                //盘房和TT对单用，关联字段。
+                if (execReport.IsSetField(Tags.SecondaryClOrdID))
+                {
+                    info.origOrderNo = execReport.GetString(Tags.SecondaryClOrdID);
+                }
+                info.orderMethod = "1";
+                info.htsType = "";
 
+                string strSymbol = execReport.Symbol.getValue();
+                //CodeBean codeBean = CodeTransfer_TT.getZDCodeInfoByUpperCode(execReport.SecurityID.getValue());
+
+                //info.exchangeCode = codeBean.zdExchg;
+
+                info.exchangeCode = execReport.GetString(Tags.SecurityExchange);
+
+                //if (execReport.Side.getValue() == Side.BUY)
+                //    info.buySale = "1";
+                //else
+                //    info.buySale = "2";
+                info.buySale = ZDUperTagValueConvert.QuerySide(execReport.Side);
+                info.tradeType = "1";
+
+                char ordType = execReport.OrdType.getValue();
+                info.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(ordType.ToString());
+
+
+                //if (ordType == OrdType.LIMIT || ordType == OrdType.STOP_LIMIT)
+                //{
+                //    info.orderPrice = CodeTransfer_TT.toClientPrx(execReport.Price.getValue(), strSymbol);
+                //}
+
+                //if (ordType == OrdType.STOP || ordType == OrdType.STOP_LIMIT)
+                //{
+                //    info.triggerPrice = CodeTransfer_TT.toClientPrx(execReport.StopPx.getValue(), strSymbol);
+                //}
+
+
+                info.orderNumber = execReport.OrderQty.getValue().ToString();
+                info.filledNumber = "0";
+
+                DateTime transTime = execReport.TransactTime.getValue();
+                info.orderTime = transTime.ToString("HH:mm:ss");
+                info.orderDate = transTime.ToString("yyyy-MM-dd");
+
+
+
+                //info.validDate = ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
+
+                info.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
+
+                //refObj.orderID = OrderID;
+                //refObj.addGlobexRes(execReport);
+
+
+
+                info.code = order.OrderNetInfo.code;
+                info.accountNo = order.OrderNetInfo.accountNo;
+                info.systemNo = order.OrderNetInfo.systemCode;
+
+                OrderInfo orderInfo = new OrderInfo();
+                orderInfo.MyReadString(order.OrderNetInfo.infoT);
+                info.acceptType = orderInfo.userType;
+
+
+
+                netInfo.infoT = info.MyToString();
+                netInfo.exchangeCode = info.exchangeCode;
+                netInfo.errorCode = ErrorCode.SUCCESS;
+                netInfo.code = CommandCode.ORDER;
+
+                netInfo.accountNo = info.accountNo;
+                netInfo.systemCode = info.systemNo;
+                //obj.todayCanUse = execReport.Header.GetField(Tags.TargetSubID);
+                netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
+                netInfo.clientNo = order.OrderNetInfo.clientNo;
+                netInfo.localSystemCode = order.OrderNetInfo.localSystemCode;
+
+
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return netInfo;
+        }
+
+        NetInfo ExecType_Rejected(ExecutionReport executionReport)
+        {
+            NetInfo netInfo = new NetInfo();
+            var msgType = executionReport.GetString(Tags.MsgType);
+            var order = RedisHelper.GetOrdder(executionReport.ClOrdID.getValue());
+            if (msgType == "D")
+            {
+                netInfo = order.OrderNetInfo;
+                netInfo.errorCode = ErrorCode.ERR_ORDER_0000;
+            }
+            else if(msgType == "G")
+            {
+                netInfo = order.AmendNetInfo;
+                netInfo.errorCode = ErrorCode.ERR_ORDER_0016;
+            }
+            else if (msgType == "F")
+            {
+                netInfo = order.CancelNetInfo;
+                netInfo.errorCode = ErrorCode.ERR_ORDER_0014; 
+            }
+
+            netInfo.errorMsg = executionReport.GetString(Tags.Text); ;
 
 
             return netInfo;

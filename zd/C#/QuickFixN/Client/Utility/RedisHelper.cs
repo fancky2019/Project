@@ -15,7 +15,7 @@ namespace Client.Utility
         const string NEXT_CLIENT_ORDER_ID = "NextClOrderID";
         static RedisHelper()
         {
-            var redisConStr = ConfigurationManager.AppSettings["ServiceStackMasterRedis"].ToString();
+            var redisConStr = "fancky123456@127.0.0.1:6379?db=0&amp;connectTimeout=2&amp;sendtimeout=3&amp;receiveTimeout=4&amp;idletimeoutsecs=5&amp;NamespacePrefix=prefix.";
             var slaveRedis = "";
             _pooledRedisClientManager = new PooledRedisClientManager(new string[] { redisConStr },
                                                         new string[] { slaveRedis },

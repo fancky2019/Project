@@ -62,6 +62,9 @@ namespace Client
                 }
 
             });
+
+
+           
         }
 
         private void btnOpenDic_Click(object sender, EventArgs e)

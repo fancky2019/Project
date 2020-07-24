@@ -2361,6 +2361,88 @@ namespace QuickFix
                 }
             
             }
+
+
+            public class NoSecurityAltIDGroup : Group
+            {
+                public static int[] fieldOrder = { Tags.SecurityAltID, Tags.SecurityAltIDSource, 0 };
+
+                public NoSecurityAltIDGroup()
+                  : base(Tags.NoSecurityAltID, Tags.SecurityAltID, fieldOrder)
+                {
+                }
+
+                public override Group Clone()
+                {
+                    var clone = new NoSecurityAltIDGroup();
+                    clone.CopyStateFrom(this);
+                    return clone;
+                }
+
+                public QuickFix.Fields.SecurityAltID SecurityAltID
+                {
+                    get
+                    {
+                        QuickFix.Fields.SecurityAltID val = new QuickFix.Fields.SecurityAltID();
+                        GetField(val);
+                        return val;
+                    }
+                    set { SetField(value); }
+                }
+
+                public void Set(QuickFix.Fields.SecurityAltID val)
+                {
+                    this.SecurityAltID = val;
+                }
+
+                public QuickFix.Fields.SecurityAltID Get(QuickFix.Fields.SecurityAltID val)
+                {
+                    GetField(val);
+                    return val;
+                }
+
+                public bool IsSet(QuickFix.Fields.SecurityAltID val)
+                {
+                    return IsSetSecurityAltID();
+                }
+
+                public bool IsSetSecurityAltID()
+                {
+                    return IsSetField(Tags.SecurityAltID);
+                }
+                public QuickFix.Fields.SecurityAltIDSource SecurityAltIDSource
+                {
+                    get
+                    {
+                        QuickFix.Fields.SecurityAltIDSource val = new QuickFix.Fields.SecurityAltIDSource();
+                        GetField(val);
+                        return val;
+                    }
+                    set { SetField(value); }
+                }
+
+                public void Set(QuickFix.Fields.SecurityAltIDSource val)
+                {
+                    this.SecurityAltIDSource = val;
+                }
+
+                public QuickFix.Fields.SecurityAltIDSource Get(QuickFix.Fields.SecurityAltIDSource val)
+                {
+                    GetField(val);
+                    return val;
+                }
+
+                public bool IsSet(QuickFix.Fields.SecurityAltIDSource val)
+                {
+                    return IsSetSecurityAltIDSource();
+                }
+
+                public bool IsSetSecurityAltIDSource()
+                {
+                    return IsSetField(Tags.SecurityAltIDSource);
+                }
+
+            }
         }
     }
 }
