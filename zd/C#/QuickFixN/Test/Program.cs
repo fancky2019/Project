@@ -1,27 +1,34 @@
-﻿using ServiceStack.Redis;
+﻿using Client.Utility;
+using FixNClient.Models;
+using ServiceStack.Redis;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace Server
+namespace Test
 {
-    public partial class FrmTradeServer : Form
+    class Program
     {
-        public FrmTradeServer()
+        static void Main(string[] args)
         {
-            InitializeComponent();
+            //RedisQueue();
+            Test();
+            Console.ReadLine();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private static void  Test()
         {
-            RedisQueue();
- 
+            Personcs personcs = new Personcs();
+            personcs.Name = "ddddd";
+
+            RedisQueue<Personcs>.Instance.DequeueRedis += (order) =>
+            {
+
+            };
+            RedisQueue<Personcs>.Instance.EnqueueRedis(personcs);
         }
 
         #region 生产者消费者队列
@@ -51,7 +58,7 @@ namespace Server
                     producerClient.FlushDb();
                     var message = "message";
                     //Stopwatch stopwatch = Stopwatch.StartNew();
-                    for (int i = 0; i < 1; i++)
+                    for (int i = 0; i < 100000; i++)
                     {
                         message = $"message - {i}";
                         producerClient.LPush(listKey, Encoding.UTF8.GetBytes(message));

@@ -32,6 +32,7 @@
             this.btnOpenDic = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnTest = new System.Windows.Forms.Button();
+            this.btnShowOrderForm = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnStart
@@ -66,7 +67,7 @@
             // 
             // btnTest
             // 
-            this.btnTest.Location = new System.Drawing.Point(181, 81);
+            this.btnTest.Location = new System.Drawing.Point(207, 58);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(75, 23);
             this.btnTest.TabIndex = 21;
@@ -74,11 +75,22 @@
             this.btnTest.UseVisualStyleBackColor = true;
             this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
+            // btnShowOrderForm
+            // 
+            this.btnShowOrderForm.Location = new System.Drawing.Point(110, 86);
+            this.btnShowOrderForm.Name = "btnShowOrderForm";
+            this.btnShowOrderForm.Size = new System.Drawing.Size(75, 23);
+            this.btnShowOrderForm.TabIndex = 22;
+            this.btnShowOrderForm.Text = "OrderForm";
+            this.btnShowOrderForm.UseVisualStyleBackColor = true;
+            this.btnShowOrderForm.Click += new System.EventHandler(this.btnShowOrderForm_Click);
+            // 
             // FrmTradeClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(294, 195);
+            this.Controls.Add(this.btnShowOrderForm);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnOpenDic);
@@ -97,6 +109,7 @@
         private System.Windows.Forms.Button btnOpenDic;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.Button btnShowOrderForm;
     }
 }
 

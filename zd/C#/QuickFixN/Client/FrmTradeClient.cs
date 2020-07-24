@@ -76,10 +76,20 @@ namespace Client
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            Order order = new Order();
-            order.ClientNumber = "dsdsfaadsdas";
-            order.ClientID = 100;
-            new RedisQueue().SaveToRedis<Order>(order);
+            //Order order = new Order();
+            //order.ClientNumber = "dsdsfaadsdas";
+            //order.ClientID = 100;
+            //new RedisQueue().SaveToRedis<Order>(order);
+        }
+
+        private OrderForm _orderForm;
+        private void btnShowOrderForm_Click(object sender, EventArgs e)
+        {
+            if(_orderForm==null|| _orderForm.IsDisposed)
+            {
+                _orderForm = new OrderForm();
+            }
+            _orderForm.Show();
         }
     }
 }

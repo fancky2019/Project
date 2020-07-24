@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CommonClassLib;
+using QuickFix.FIX44;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +10,36 @@ namespace Client.Models
 {
    public class Order
     {
-        public string ClientNumber { get; set; }
-        public int ClientID { get; set; }
+        /// <summary>
+        /// 客户号  --redis hash key
+        /// </summary>
+        public string SystemCode { get; set; }
+        /// <summary>
+        /// 最新单的TAG 11--- redis key
+        /// </summary>
+        public string ClientID { get; set; }
+    
+        /// <summary>
+        /// 下单
+        /// </summary>
+        public NetInfo OrderNetInfo { get; set; }
+        /// <summary>
+        /// 改单
+        /// </summary>
+        public NetInfo AmendNetInfo { get; set; }
+
+        /// <summary>
+        /// 撤单
+        /// </summary>
+        public NetInfo CancelNetInfo { get; set; }
+        /// <summary>
+        /// 下单FIX
+        /// </summary>
+        public NewOrderSingle NewOrderSingle { get; set; }
+        /// <summary>
+        /// 改单FIX
+        /// </summary>
+        public OrderCancelReplaceRequest OrderCancelReplaceRequest { get; set; }
+        
     }
 }

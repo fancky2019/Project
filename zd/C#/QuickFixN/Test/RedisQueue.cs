@@ -13,7 +13,7 @@ namespace Client.Utility
     class RedisQueue<T>
     {
         // Debug, Info, Warn, Error and Fatal
-        private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+        //private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
         //PooledRedisClientManager _pooledRedisClientManager = null;
         private const string QUEUE_KEY = "RedisQueueKey";
         internal static readonly RedisQueue<T> Instance;
