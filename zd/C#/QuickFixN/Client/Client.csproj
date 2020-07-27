@@ -120,6 +120,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\TradeClientAppService.cs" />
     <Compile Include="Service\ZDUperTagValueConvert.cs" />
+    <Compile Include="Utility\Extensions.cs" />
     <Compile Include="Utility\Log.cs" />
     <Compile Include="Utility\MessagePackUtility.cs" />
     <Compile Include="Utility\NewtonsoftHelper.cs" />
@@ -140,7 +141,13 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="Config\TradeClient - Phillip.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Config\TradeClient.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\TradeClient - TT.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="NLog.config" />

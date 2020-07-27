@@ -9,15 +9,28 @@ using System.Threading.Tasks;
 using ServiceStack;
 namespace Client.Utility
 {
+    /*
+     * https://github.com/ServiceStack/ServiceStack.Redis
+     */
     class RedisHelper
     {
         static PooledRedisClientManager _pooledRedisClientManager = null;
         const string NEXT_CLIENT_ORDER_ID = "NextClOrderID";
         static RedisHelper()
         {
-            //var redisConStr = "fancky123456@127.0.0.1:6379?db=0&amp;connectTimeout=2&amp;sendtimeout=3&amp;receiveTimeout=4&amp;idletimeoutsecs=5&amp;NamespacePrefix=prefix.";
-            var redisConStr = "fancky123456@127.0.0.1:6379?db=0;connectTimeout=2;sendtimeout=3;receiveTimeout=4;idletimeoutsecs=5;NamespacePrefix=prefix.";
-
+            /*
+             *  localhost
+                127.0.0.1:6379
+                redis://localhost:6379
+                password@localhost:6379
+                clientid:password@localhost:6379
+                redis://clientid:password@localhost:6380?ssl=true&db=1
+             */
+             //不能将下面语句放入配置文件，读取的配置无法连接redis
+            var redisConStr = "fancky123456@127.0.0.1:6379?db=0&amp;connectTimeout=2&amp;sendtimeout=3&amp;receiveTimeout=4&amp;idletimeoutsecs=5&amp;NamespacePrefix=prefix.";
+            // fancky123456@127.0.0.1:6379?db=0
+         
+            var redisConStr1 = ConfigurationManager.AppSettings["ServiceStackMasterRedis"].ToString();
             var slaveRedis = "";
             _pooledRedisClientManager = new PooledRedisClientManager(new string[] { redisConStr },
                                                         new string[] { slaveRedis },
@@ -52,6 +65,21 @@ namespace Client.Utility
 
             return NextClOrderID;
 
+        }
+
+        static internal long SetCurrentClientOrderIDAndSysytemCode(string systemCode, string newOrderSingleCliOrderID,string currentClientOrderID)
+        {
+            var redisClient = GetQueueClient();
+            var result = redisClient.HSet(systemCode, newOrderSingleCliOrderID.ToUtf8Bytes(), currentClientOrderID.ToUtf8Bytes());
+            return result;
+        }
+
+        static internal string  GetCurrentClientOrderID(string systemCode,string newOrderSingleCliOrderID)
+        {
+            var redisClient = GetQueueClient();
+            var currentCliOrderIDBytes = redisClient.HGet(systemCode.ToUtf8Bytes(), newOrderSingleCliOrderID.ToUtf8Bytes());
+            var currentCliOrderID = Encoding.UTF8.GetString(currentCliOrderIDBytes);
+            return currentCliOrderID;
         }
 
         /// <summary>

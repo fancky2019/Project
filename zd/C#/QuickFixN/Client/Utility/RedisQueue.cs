@@ -56,7 +56,7 @@ namespace Client.Utility
             Task.Run(() =>
             {
                 var consumerClient = RedisHelper.GetQueueClient() as RedisClient;
-                consumerClient.Db = 13;
+
                 //try
                 //{
 
