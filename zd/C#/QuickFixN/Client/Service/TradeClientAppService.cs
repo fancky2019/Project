@@ -269,8 +269,7 @@ namespace Client.Service
 
 
 
-
-
+                    RedisHelper.SetCurrentClientOrderIDAndSysytemCode(order.SystemCode, order.ClientID, order.ClientID);
                     RedisHelper.SaveOrder(order);
                     //OrderException(netInfo, "can not connect to TT server!");
                 }

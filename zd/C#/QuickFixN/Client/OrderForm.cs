@@ -149,7 +149,7 @@ namespace Client
             netInfo.code = CommandCode.ORDER;
             //tag1:zd上手号
             netInfo.accountNo = "ZD_001";
-            netInfo.systemCode = "system1";
+            netInfo.systemCode = $"SystemCode{DateTime.Now.GetTimeStamp()}";
             //tag 50  
             netInfo.todayCanUse = "0047";
 

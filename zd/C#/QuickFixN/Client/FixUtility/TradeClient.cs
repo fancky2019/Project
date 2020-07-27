@@ -89,8 +89,12 @@ namespace Client.FixUtility
             string msgType = message.Header.GetString(Tags.MsgType);
             if (QuickFix.Fields.MsgType.LOGON == msgType)
             {
-                message.SetField(new RawDataLength(sessionID.SenderCompPsw.Length));
-                message.SetField(new RawData(sessionID.SenderCompPsw));
+                if(!string.IsNullOrEmpty(sessionID.SenderCompPsw))
+                {
+                    message.SetField(new RawDataLength(sessionID.SenderCompPsw.Length));
+                    message.SetField(new RawData(sessionID.SenderCompPsw));
+                }
+             
                 message.SetField(new HeartBtInt(int.Parse(sessionID.HeartBtInt)));
             }
 
