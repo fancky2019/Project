@@ -126,6 +126,7 @@
     <Compile Include="Utility\NewtonsoftHelper.cs" />
     <Compile Include="Utility\RedisHelper.cs" />
     <Compile Include="Utility\RedisQueue.cs" />
+    <Compile Include="Utility\StopwatchHelper.cs" />
     <EmbeddedResource Include="FrmTradeClient.resx">
       <DependentUpon>FrmTradeClient.cs</DependentUpon>
     </EmbeddedResource>
@@ -150,7 +151,9 @@
     <None Include="Config\TradeClient - TT.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="NLog.config" />
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

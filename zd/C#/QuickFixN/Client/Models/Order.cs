@@ -18,7 +18,13 @@ namespace Client.Models
         /// 最新单的TAG 11--- redis key
         /// </summary>
         public string ClientID { get; set; }
-    
+
+        public string NewOrderSingleClientID { get; set; }
+        /// <summary>
+        /// Total number of contracts that have filled over the life of this order
+        /// </summary>
+        public decimal CumQty { get; set; }
+        
         /// <summary>
         /// 下单
         /// </summary>

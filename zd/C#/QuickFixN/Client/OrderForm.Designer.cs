@@ -81,29 +81,13 @@
             this.label20 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown8 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown9 = new System.Windows.Forms.NumericUpDown();
-            this.button2 = new System.Windows.Forms.Button();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.comboBox6 = new System.Windows.Forms.ComboBox();
+            this.btnOrderCancelRequest = new System.Windows.Forms.Button();
             this.label30 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnOpenDirectory = new System.Windows.Forms.Button();
+            this.label21 = new System.Windows.Forms.Label();
+            this.txtOrderCancelSystemCode = new System.Windows.Forms.TextBox();
+            this.txtCancelOrderClOrderID = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl2.SuspendLayout();
@@ -119,9 +103,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             this.tabPage5.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -635,26 +616,10 @@
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.numericUpDown7);
-            this.panel3.Controls.Add(this.numericUpDown8);
-            this.panel3.Controls.Add(this.numericUpDown9);
-            this.panel3.Controls.Add(this.button2);
-            this.panel3.Controls.Add(this.textBox5);
+            this.panel3.Controls.Add(this.txtCancelOrderClOrderID);
+            this.panel3.Controls.Add(this.txtOrderCancelSystemCode);
             this.panel3.Controls.Add(this.label21);
-            this.panel3.Controls.Add(this.textBox6);
-            this.panel3.Controls.Add(this.label22);
-            this.panel3.Controls.Add(this.label23);
-            this.panel3.Controls.Add(this.label24);
-            this.panel3.Controls.Add(this.label25);
-            this.panel3.Controls.Add(this.textBox7);
-            this.panel3.Controls.Add(this.label26);
-            this.panel3.Controls.Add(this.label27);
-            this.panel3.Controls.Add(this.textBox8);
-            this.panel3.Controls.Add(this.label28);
-            this.panel3.Controls.Add(this.comboBox4);
-            this.panel3.Controls.Add(this.comboBox5);
-            this.panel3.Controls.Add(this.label29);
-            this.panel3.Controls.Add(this.comboBox6);
+            this.panel3.Controls.Add(this.btnOrderCancelRequest);
             this.panel3.Controls.Add(this.label30);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
@@ -662,172 +627,15 @@
             this.panel3.Size = new System.Drawing.Size(311, 492);
             this.panel3.TabIndex = 13;
             // 
-            // numericUpDown7
+            // btnOrderCancelRequest
             // 
-            this.numericUpDown7.Location = new System.Drawing.Point(120, 205);
-            this.numericUpDown7.Name = "numericUpDown7";
-            this.numericUpDown7.Size = new System.Drawing.Size(120, 21);
-            this.numericUpDown7.TabIndex = 40;
-            // 
-            // numericUpDown8
-            // 
-            this.numericUpDown8.Location = new System.Drawing.Point(120, 177);
-            this.numericUpDown8.Name = "numericUpDown8";
-            this.numericUpDown8.Size = new System.Drawing.Size(120, 21);
-            this.numericUpDown8.TabIndex = 39;
-            // 
-            // numericUpDown9
-            // 
-            this.numericUpDown9.Location = new System.Drawing.Point(120, 147);
-            this.numericUpDown9.Name = "numericUpDown9";
-            this.numericUpDown9.Size = new System.Drawing.Size(120, 21);
-            this.numericUpDown9.TabIndex = 38;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(162, 311);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(78, 23);
-            this.button2.TabIndex = 37;
-            this.button2.Text = "下单";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(119, 268);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(121, 21);
-            this.textBox5.TabIndex = 36;
-            this.textBox5.Text = "42.59";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(30, 271);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(83, 12);
-            this.label21.TabIndex = 35;
-            this.label21.Text = "TriggerPrice:";
-            // 
-            // textBox6
-            // 
-            this.textBox6.Location = new System.Drawing.Point(119, 235);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(121, 21);
-            this.textBox6.TabIndex = 24;
-            this.textBox6.Text = "42.59";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(66, 238);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(41, 12);
-            this.label22.TabIndex = 23;
-            this.label22.Text = "Price:";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(54, 207);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(59, 12);
-            this.label23.TabIndex = 22;
-            this.label23.Text = "Max show:";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(54, 180);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(53, 12);
-            this.label24.TabIndex = 20;
-            this.label24.Text = "Min qty:";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(48, 151);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(65, 12);
-            this.label25.TabIndex = 17;
-            this.label25.Text = "Order qty:";
-            // 
-            // textBox7
-            // 
-            this.textBox7.Location = new System.Drawing.Point(119, 117);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(121, 21);
-            this.textBox7.TabIndex = 16;
-            this.textBox7.Text = "BRN2009";
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(54, 120);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(59, 12);
-            this.label26.TabIndex = 15;
-            this.label26.Text = "Security:";
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(54, 91);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(59, 12);
-            this.label27.TabIndex = 14;
-            this.label27.Text = "Exchange:";
-            // 
-            // textBox8
-            // 
-            this.textBox8.Location = new System.Drawing.Point(119, 88);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(121, 21);
-            this.textBox8.TabIndex = 13;
-            this.textBox8.Text = "ICE";
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(78, 62);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(35, 12);
-            this.label28.TabIndex = 12;
-            this.label28.Text = "Side:";
-            // 
-            // comboBox4
-            // 
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Location = new System.Drawing.Point(119, 62);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(121, 20);
-            this.comboBox4.TabIndex = 11;
-            // 
-            // comboBox5
-            // 
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(119, 31);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(121, 20);
-            this.comboBox5.TabIndex = 10;
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(24, 34);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(89, 12);
-            this.label29.TabIndex = 9;
-            this.label29.Text = "Time in force:";
-            // 
-            // comboBox6
-            // 
-            this.comboBox6.FormattingEnabled = true;
-            this.comboBox6.Location = new System.Drawing.Point(119, 4);
-            this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(121, 20);
-            this.comboBox6.TabIndex = 8;
+            this.btnOrderCancelRequest.Location = new System.Drawing.Point(162, 93);
+            this.btnOrderCancelRequest.Name = "btnOrderCancelRequest";
+            this.btnOrderCancelRequest.Size = new System.Drawing.Size(78, 23);
+            this.btnOrderCancelRequest.TabIndex = 37;
+            this.btnOrderCancelRequest.Text = "撤单";
+            this.btnOrderCancelRequest.UseVisualStyleBackColor = true;
+            this.btnOrderCancelRequest.Click += new System.EventHandler(this.btnOrderCancelRequest_Click);
             // 
             // label30
             // 
@@ -836,7 +644,7 @@
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(71, 12);
             this.label30.TabIndex = 1;
-            this.label30.Text = "Order type:";
+            this.label30.Text = "SystemCode:";
             // 
             // tabPage2
             // 
@@ -858,6 +666,31 @@
             this.btnOpenDirectory.Text = "目录";
             this.btnOpenDirectory.UseVisualStyleBackColor = true;
             this.btnOpenDirectory.Click += new System.EventHandler(this.btnOpenDirectory_Click);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(18, 37);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(89, 12);
+            this.label21.TabIndex = 38;
+            this.label21.Text = "ClOrderID(11):";
+            // 
+            // txtOrderCancelSystemCode
+            // 
+            this.txtOrderCancelSystemCode.Location = new System.Drawing.Point(119, 3);
+            this.txtOrderCancelSystemCode.Name = "txtOrderCancelSystemCode";
+            this.txtOrderCancelSystemCode.Size = new System.Drawing.Size(121, 21);
+            this.txtOrderCancelSystemCode.TabIndex = 39;
+            this.txtOrderCancelSystemCode.Text = "42.59";
+            // 
+            // txtCancelOrderClOrderID
+            // 
+            this.txtCancelOrderClOrderID.Location = new System.Drawing.Point(119, 34);
+            this.txtCancelOrderClOrderID.Name = "txtCancelOrderClOrderID";
+            this.txtCancelOrderClOrderID.Size = new System.Drawing.Size(121, 21);
+            this.txtCancelOrderClOrderID.TabIndex = 40;
+            this.txtCancelOrderClOrderID.Text = "42.59";
             // 
             // OrderForm
             // 
@@ -888,9 +721,6 @@
             this.tabPage5.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -952,27 +782,11 @@
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.NumericUpDown numericUpDown7;
-        private System.Windows.Forms.NumericUpDown numericUpDown8;
-        private System.Windows.Forms.NumericUpDown numericUpDown9;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.ComboBox comboBox5;
-        private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.ComboBox comboBox6;
+        private System.Windows.Forms.Button btnOrderCancelRequest;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Button btnOpenDirectory;
+        private System.Windows.Forms.TextBox txtCancelOrderClOrderID;
+        private System.Windows.Forms.TextBox txtOrderCancelSystemCode;
+        private System.Windows.Forms.Label label21;
     }
 }
