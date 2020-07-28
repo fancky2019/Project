@@ -17,9 +17,20 @@ namespace Client.Models
         /// <summary>
         /// 最新单的TAG 11--- redis key
         /// </summary>
-        public string ClientID { get; set; }
+        public string CurrentCliOrderID { get; set; }
+
+        /// <summary>
+        /// 此CliOrderID可能不成功，暂存客户端生产的单号
+        /// </summary>
+        public string TempCliOrderID { get; set; }
 
         public string NewOrderSingleClientID { get; set; }
+
+        /// <summary>
+        /// 上手的ID
+        /// </summary>
+        public string OrderID { get; set; }
+        
         /// <summary>
         /// Total number of contracts that have filled over the life of this order
         /// </summary>
@@ -38,6 +49,12 @@ namespace Client.Models
         /// 撤单
         /// </summary>
         public NetInfo CancelNetInfo { get; set; }
+
+        /// <summary>
+        /// 下改撤
+        /// </summary>
+        public string CommandCode { get; set; }
+        
         /// <summary>
         /// 下单FIX
         /// </summary>

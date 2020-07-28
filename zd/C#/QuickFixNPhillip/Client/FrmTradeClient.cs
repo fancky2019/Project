@@ -6,6 +6,7 @@ using CommonClassLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -77,6 +78,8 @@ namespace Client
         private void btnStop_Click(object sender, EventArgs e)
         {
             TradeClient.Instance.SocketInitiator.Stop();
+
+            TxtFile.SaveTxtFile(ConfigurationManager.AppSettings["OrderIDFilePath"].ToString(), new List<string> { MemoryDataManager.LastOrderID.ToString() });
         }
 
         private void btnTest_Click(object sender, EventArgs e)

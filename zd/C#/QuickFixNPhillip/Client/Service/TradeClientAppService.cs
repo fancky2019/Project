@@ -22,7 +22,7 @@ namespace Client.Service
         #region 私有成员
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
         private BlockingCollection<QuickFix.Message> _receiveFromAppMsgs = new BlockingCollection<QuickFix.Message>();
-        private BlockingCollection<object> _orders = new BlockingCollection<object>();
+        private BlockingCollection<NetInfo> _orderQueue = new BlockingCollection<NetInfo>();
         #endregion
 
         #region 公有成员
@@ -59,11 +59,11 @@ namespace Client.Service
 
             };
 
-            RedisQueue<Order>.Instance.DequeueRedis += (order) =>
-              {
-                  ConsumerOrders(order);
-              };
 
+            Task.Run(() =>
+            {
+                ConsumerOrders();
+            });
 
 
             Task.Run(() =>
@@ -88,7 +88,7 @@ namespace Client.Service
         private void WaitForAdding()
         {
             //为了避免异常--未扔到交易所的单在内存就丢失
-            while (!_orders.IsAddingCompleted && !_receiveFromAppMsgs.IsAddingCompleted)
+            while (!_orderQueue.IsAddingCompleted && !_receiveFromAppMsgs.IsAddingCompleted)
             {
                 //所有的单据不送交易所处理。
             }
@@ -96,38 +96,41 @@ namespace Client.Service
 
         public void Order(NetInfo netInfo)
         {
-            Order order = new Order();
-            if (netInfo.code == CommandCode.ORDER)
-            {
-                order.OrderNetInfo = netInfo;
-            }
-            else if (netInfo.code == CommandCode.MODIFY)
-            {
-                order.AmendNetInfo = netInfo;
-            }
-            else if (netInfo.code == CommandCode.CANCEL)
-            {
-                order.CancelNetInfo = netInfo;
-            }
-
-            RedisQueue<Order>.Instance.EnqueueRedis(order);
+            _orderQueue.TryAdd(netInfo, 100);
         }
 
-        private void ConsumerOrders(Order order)
+        private void ConsumerOrders()
         {
 
-            if (order.OrderNetInfo.code == CommandCode.ORDER)
+            try
             {
-                NewOrderSingle(order);
-            }
-            else if (order.OrderNetInfo.code == CommandCode.MODIFY)
-            {
+                foreach (NetInfo netInfo in _orderQueue.GetConsumingEnumerable())
+                {
 
-            }
-            else if (order.OrderNetInfo.code == CommandCode.CANCEL)
-            {
+                    if (netInfo.code == CommandCode.ORDER)
+                    {
+                        Order order = new Order();
+                        order.OrderNetInfo = netInfo;
+                        order.CommandCode = netInfo.code;
+                        NewOrderSingle(order);
+                    }
+                    else if (netInfo.code == CommandCode.MODIFY)
+                    {
+                        //  order.AmendNetInfo = netInfo;
+                    }
+                    else if (netInfo.code == CommandCode.CANCEL)
+                    {
 
+                        OrderCancelRequest(netInfo);
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                _nLog.Info(ex.ToString());
+            }
+
+
         }
 
         private void NewOrderSingle(Order order)
@@ -139,11 +142,11 @@ namespace Client.Service
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(netInfo.infoT);
 
-         
 
-                long clOrdID = RedisHelper.GetNextClOrderID();
 
-        
+                long clOrdID = MemoryDataManager.GetNextClOrderID();
+
+
 
 
                 NewOrderSingle newOrderSingle = new NewOrderSingle();
@@ -270,15 +273,10 @@ namespace Client.Service
                 if (ret)
                 {
                     order.SystemCode = netInfo.systemCode;
-                    order.ClientID = newOrderSingle.ClOrdID.getValue();
+                    order.TempCliOrderID = newOrderSingle.ClOrdID.getValue();
                     // newOrderSingle.FromString()
                     order.NewOrderSingle = newOrderSingle.ToString();
-
-
-
-                    order.NewOrderSingleClientID = order.ClientID;
-                    RedisHelper.SetCurrentClientOrderIDAndSysytemCode(order.SystemCode, order.ClientID, order.ClientID);
-                    RedisHelper.SaveOrder(order);
+                    MemoryDataManager.Orders.Add(order.SystemCode, order);
                     //OrderException(netInfo, "can not connect to TT server!");
                 }
 
@@ -306,33 +304,31 @@ namespace Client.Service
                 CancelInfo cancelInfo = new CancelInfo();
                 cancelInfo.MyReadString(netInfo.infoT);
 
-
-
-                string currentCliOrderID = RedisHelper.GetCurrentClientOrderID(netInfo.systemCode, cancelInfo.orderNo);
-
-                var order = RedisHelper.GetOrdder(currentCliOrderID);
-
-
+                var order = MemoryDataManager.Orders[netInfo.systemCode];
+                order.CommandCode = netInfo.code;
+                order.CancelNetInfo = netInfo;
                 QuickFix.FIX42.OrderCancelRequest orderCancelRequest = new QuickFix.FIX42.OrderCancelRequest();
 
-                NewOrderSingle newOrderSingle = new NewOrderSingle();
-                newOrderSingle.FromString(order.NewOrderSingle, false, null, null);
+                //NewOrderSingle newOrderSingle = new NewOrderSingle();
+                //newOrderSingle.FromString(order.NewOrderSingle, false, null, null);
+
+
+
                 //Tag 37
-                orderCancelRequest.OrderID = new OrderID(newOrderSingle.GetString(Tags.OrderID));
+                orderCancelRequest.OrderID = new OrderID(order.OrderID);
 
                 //Tag 11
-                //long clOrdID = ClOrderIDGen.getNextClOrderID();
-                orderCancelRequest.ClOrdID = new ClOrdID(RedisHelper.GetNextClOrderID().ToString());
-
-
+                var clOrdID = MemoryDataManager.GetNextClOrderID().ToString();
+                orderCancelRequest.ClOrdID = new ClOrdID(clOrdID);
                 //Tag 41
-                orderCancelRequest.OrigClOrdID = new OrigClOrdID(currentCliOrderID);
+                orderCancelRequest.OrigClOrdID = new OrigClOrdID(order.CurrentCliOrderID.ToString());
+
 
                 var ret = TradeClient.Instance.SendMessage(orderCancelRequest);
 
-                if (!ret)
+                if (ret)
                 {
-
+                    order.TempCliOrderID = clOrdID;
                 }
 
 
@@ -348,9 +344,7 @@ namespace Client.Service
 
 
         /// <summary>
-        /// 改单
         /// 
-        /// rainer 壳调用改单入口
         /// </summary>
         /// <param name="netInfo"></param>
         public void OrderCancelReplaceRequest(NetInfo netInfo)
@@ -362,24 +356,23 @@ namespace Client.Service
                 ModifyInfo modifyInfo = new ModifyInfo();
                 modifyInfo.MyReadString(netInfo.infoT);
 
-                string currentCliOrderID = RedisHelper.GetCurrentClientOrderID(netInfo.systemCode, modifyInfo.orderNo);
 
-                var order = RedisHelper.GetOrdder(currentCliOrderID);
-
+                var order = MemoryDataManager.Orders[netInfo.systemCode];
+                order.CommandCode = netInfo.code;
                 QuickFix.FIX42.OrderCancelReplaceRequest ocrr = new QuickFix.FIX42.OrderCancelReplaceRequest();
 
                 NewOrderSingle newOrderSingle = new NewOrderSingle();
                 newOrderSingle.FromString(order.NewOrderSingle, false, null, null);
                 //Tag 37
-                ocrr.OrderID = new OrderID(newOrderSingle.GetString(Tags.OrderID));
+                ocrr.OrderID = new OrderID(order.OrderID);
 
 
 
                 //Tag 41
-                ocrr.OrigClOrdID = new OrigClOrdID(currentCliOrderID);
+                ocrr.OrigClOrdID = new OrigClOrdID(order.CurrentCliOrderID);
                 //Tag 11
 
-                ocrr.ClOrdID = new ClOrdID(RedisHelper.GetNextClOrderID().ToString());
+                ocrr.ClOrdID = new ClOrdID(MemoryDataManager.GetNextClOrderID().ToString());
                 // Tag1
                 ocrr.Account = new Account(netInfo.accountNo);
                 // Tag38
@@ -429,15 +422,8 @@ namespace Client.Service
                 {
 
                     order.SystemCode = netInfo.systemCode;
-                    order.ClientID = ocrr.ClOrdID.getValue();
+                    order.CurrentCliOrderID = ocrr.ClOrdID.getValue();
                     order.OrderCancelReplaceRequest = ocrr.ToString();
-
-
-                    RedisHelper.DeleteCurrentClientOrderIDAndSysytemCode(netInfo.systemCode, modifyInfo.orderNo);
-                    RedisHelper.DeleteOrder(currentCliOrderID);
-
-                    RedisHelper.SetCurrentClientOrderIDAndSysytemCode(order.SystemCode, order.ClientID, order.ClientID);
-                    RedisHelper.SaveOrder(order);
                 }
 
 
@@ -535,7 +521,7 @@ namespace Client.Service
 
             }
             var responseMsg = netInfo != null ? netInfo?.MyToString() : "";
- 
+
             ExecutionReport?.Invoke(responseMsg);
         }
 
@@ -545,8 +531,9 @@ namespace Client.Service
             NetInfo netInfo = new NetInfo();
             try
             {
-                //系统号
-                var order = RedisHelper.GetOrdder(execReport.ClOrdID.getValue());
+                var currentCliOrderID = execReport.ClOrdID.getValue();
+                var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
+                order.OrderID = execReport.OrderID.getValue();
                 OrderResponseInfo info = new OrderResponseInfo();
 
                 info.orderNo = execReport.ClOrdID.getValue();
@@ -632,7 +619,8 @@ namespace Client.Service
                 netInfo.clientNo = order.OrderNetInfo.clientNo;
                 netInfo.localSystemCode = order.OrderNetInfo.localSystemCode;
 
-
+                order.CurrentCliOrderID = order.TempCliOrderID;
+                order.TempCliOrderID = "";
             }
             catch (Exception ex)
             {
@@ -645,9 +633,11 @@ namespace Client.Service
         {
             OrderResponseInfo info = new OrderResponseInfo();
 
-            var order = RedisHelper.GetOrdder(execReport.ClOrdID.getValue());
 
+            var currentCliOrderID = execReport.ClOrdID.getValue();
+            var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
 
+            order.OrderID = execReport.OrderID.getValue();
 
             ModifyInfo modifyInfo = new ModifyInfo();
             modifyInfo.MyReadString(order.AmendNetInfo.infoT);
@@ -721,7 +711,8 @@ namespace Client.Service
         {
             CancelResponseInfo info = new CancelResponseInfo();
 
-            var order = RedisHelper.GetOrdder(execReport.OrigClOrdID.getValue());
+            var currentCliOrderID = execReport.ClOrdID.getValue();
+            var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
 
             CancelInfo cancelInfo = new CancelInfo();
             cancelInfo.MyReadString(order.CancelNetInfo.infoT);
@@ -761,7 +752,7 @@ namespace Client.Service
             obj.infoT = info.MyToString();
             obj.exchangeCode = info.exchangeCode;
             obj.errorCode = ErrorCode.SUCCESS;
-            obj.code = CommandCode.CANCELCAST;
+            obj.code = CommandCode.CANCEL;
             obj.accountNo = info.accountNo;
             obj.systemCode = info.systemNo;
             //obj.todayCanUse = execReport.Header.GetField(Tags.TargetSubID);
@@ -769,8 +760,7 @@ namespace Client.Service
             obj.clientNo = order.CancelNetInfo.clientNo;
 
 
-            RedisHelper.DeleteCurrentClientOrderIDAndSysytemCode(order.OrderNetInfo.systemCode, execReport.OrigClOrdID.getValue());
-            RedisHelper.DeleteOrder(execReport.OrigClOrdID.getValue());
+            MemoryDataManager.Orders.Remove(order.SystemCode);
             return obj;
         }
 
@@ -788,7 +778,9 @@ namespace Client.Service
                     return null;
                 }
             }
-            var order = RedisHelper.GetOrdder(execReport.ClOrdID.getValue());
+            var currentCliOrderID = execReport.ClOrdID.getValue();
+            var order = MemoryDataManager.Orders.Values.Where(p => p.CurrentCliOrderID == currentCliOrderID).FirstOrDefault();
+
             info.exchangeCode = order.OrderNetInfo.exchangeCode;
 
             //if (execReport.Side.getValue() == Side.BUY)
@@ -837,7 +829,7 @@ namespace Client.Service
                 order.CumQty = cumQty;
             }
             OrderInfo orderInfo = new OrderInfo();
-          
+
             orderInfo.MyReadString(order.OrderNetInfo.infoT);
             info.orderNo = order.NewOrderSingleClientID;
             info.accountNo = order.OrderNetInfo.accountNo;
@@ -856,11 +848,10 @@ namespace Client.Service
 
             if (mReportType == 1)//FUT
             {
-               
+
                 if (execReport.LeavesQty.getValue() == 0)
                 {
-                    RedisHelper.DeleteCurrentClientOrderIDAndSysytemCode(order.OrderNetInfo.systemCode, execReport.OrigClOrdID.getValue());
-                    RedisHelper.DeleteOrder(execReport.OrigClOrdID.getValue());
+                    MemoryDataManager.Orders.Remove(order.SystemCode);
                 }
             }
             else if (mReportType == 2)// multi-leg 
@@ -869,9 +860,9 @@ namespace Client.Service
                 //BRN Jul19
                 var securityAltID = g2.GetString(Tags.SecurityAltID);
                 var securityExchange = execReport.SecurityExchange.getValue();
-   
+
                 obj.infoT = info.MyToString();
-          
+
             }
             else if (mReportType == 3)
             {
@@ -886,27 +877,38 @@ namespace Client.Service
         NetInfo ExecType_Rejected(ExecutionReport executionReport)
         {
             NetInfo netInfo = new NetInfo();
-            var msgType = executionReport.GetString(Tags.MsgType);
-            var order = RedisHelper.GetOrdder(executionReport.ClOrdID.getValue());
-            if (msgType == "D")
+            try
             {
-                netInfo = order.OrderNetInfo;
-                netInfo.errorCode = ErrorCode.ERR_ORDER_0000;
+                var currentCliOrderID = executionReport.ClOrdID.getValue();
+                var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
+
+           
+                if (order.CommandCode == CommandCode.ORDER)
+                {
+                    netInfo = order.OrderNetInfo;
+                    //
+                    netInfo.errorCode = ErrorCode.ERR_ORDER_0000;
+                    MemoryDataManager.Orders.Remove(order.SystemCode);
+                }
+                else if (order.CommandCode == CommandCode.MODIFY)
+                {
+                    netInfo = order.AmendNetInfo;
+                    netInfo.errorCode = ErrorCode.ERR_ORDER_0016;
+                }
+                else if (order.CommandCode == CommandCode.CANCEL)
+                {
+
+                    netInfo = order.CancelNetInfo;
+                    netInfo.errorCode = ErrorCode.ERR_ORDER_0014;
+                }
+
+                netInfo.errorMsg = executionReport.GetString(Tags.Text); ;
+
             }
-            else if (msgType == "G")
+            catch(Exception ex)
             {
-                netInfo = order.AmendNetInfo;
-                netInfo.errorCode = ErrorCode.ERR_ORDER_0016;
+
             }
-            else if (msgType == "F")
-            {
-                netInfo = order.CancelNetInfo;
-                netInfo.errorCode = ErrorCode.ERR_ORDER_0014;
-            }
-
-            netInfo.errorMsg = executionReport.GetString(Tags.Text); ;
-
-
             return netInfo;
         }
         #endregion
