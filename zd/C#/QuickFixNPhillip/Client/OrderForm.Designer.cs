@@ -81,13 +81,13 @@
             this.label20 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.txtCancelOrderClOrderID = new System.Windows.Forms.TextBox();
+            this.txtOrderCancelSystemCode = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
             this.btnOrderCancelRequest = new System.Windows.Forms.Button();
             this.label30 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnOpenDirectory = new System.Windows.Forms.Button();
-            this.label21 = new System.Windows.Forms.Label();
-            this.txtOrderCancelSystemCode = new System.Windows.Forms.TextBox();
-            this.txtCancelOrderClOrderID = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl2.SuspendLayout();
@@ -627,6 +627,30 @@
             this.panel3.Size = new System.Drawing.Size(311, 492);
             this.panel3.TabIndex = 13;
             // 
+            // txtCancelOrderClOrderID
+            // 
+            this.txtCancelOrderClOrderID.Location = new System.Drawing.Point(119, 34);
+            this.txtCancelOrderClOrderID.Name = "txtCancelOrderClOrderID";
+            this.txtCancelOrderClOrderID.Size = new System.Drawing.Size(121, 21);
+            this.txtCancelOrderClOrderID.TabIndex = 40;
+            this.txtCancelOrderClOrderID.Text = "1000001";
+            // 
+            // txtOrderCancelSystemCode
+            // 
+            this.txtOrderCancelSystemCode.Location = new System.Drawing.Point(119, 3);
+            this.txtOrderCancelSystemCode.Name = "txtOrderCancelSystemCode";
+            this.txtOrderCancelSystemCode.Size = new System.Drawing.Size(121, 21);
+            this.txtOrderCancelSystemCode.TabIndex = 39;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(18, 37);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(89, 12);
+            this.label21.TabIndex = 38;
+            this.label21.Text = "ClOrderID(11):";
+            // 
             // btnOrderCancelRequest
             // 
             this.btnOrderCancelRequest.Location = new System.Drawing.Point(162, 93);
@@ -666,31 +690,6 @@
             this.btnOpenDirectory.Text = "目录";
             this.btnOpenDirectory.UseVisualStyleBackColor = true;
             this.btnOpenDirectory.Click += new System.EventHandler(this.btnOpenDirectory_Click);
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(18, 37);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(89, 12);
-            this.label21.TabIndex = 38;
-            this.label21.Text = "ClOrderID(11):";
-            // 
-            // txtOrderCancelSystemCode
-            // 
-            this.txtOrderCancelSystemCode.Location = new System.Drawing.Point(119, 3);
-            this.txtOrderCancelSystemCode.Name = "txtOrderCancelSystemCode";
-            this.txtOrderCancelSystemCode.Size = new System.Drawing.Size(121, 21);
-            this.txtOrderCancelSystemCode.TabIndex = 39;
-            this.txtOrderCancelSystemCode.Text = "42.59";
-            // 
-            // txtCancelOrderClOrderID
-            // 
-            this.txtCancelOrderClOrderID.Location = new System.Drawing.Point(119, 34);
-            this.txtCancelOrderClOrderID.Name = "txtCancelOrderClOrderID";
-            this.txtCancelOrderClOrderID.Size = new System.Drawing.Size(121, 21);
-            this.txtCancelOrderClOrderID.TabIndex = 40;
-            this.txtCancelOrderClOrderID.Text = "42.59";
             // 
             // OrderForm
             // 

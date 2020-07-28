@@ -122,11 +122,12 @@
     <Compile Include="Service\ZDUperTagValueConvert.cs" />
     <Compile Include="Utility\Extensions.cs" />
     <Compile Include="Utility\Log.cs" />
+    <Compile Include="Utility\MemoryDataManager.cs" />
     <Compile Include="Utility\MessagePackUtility.cs" />
     <Compile Include="Utility\NewtonsoftHelper.cs" />
-    <Compile Include="Utility\RedisHelper.cs" />
-    <Compile Include="Utility\RedisQueue.cs" />
+    <Compile Include="Utility\Persist.cs" />
     <Compile Include="Utility\StopwatchHelper.cs" />
+    <Compile Include="Utility\TxtFile.cs" />
     <EmbeddedResource Include="FrmTradeClient.resx">
       <DependentUpon>FrmTradeClient.cs</DependentUpon>
     </EmbeddedResource>

@@ -88,7 +88,7 @@ namespace Client
                       {
                           this.lbMsgs.Items.Add(p);
                       }
-                  
+
                   }));
               };
         }
@@ -117,17 +117,17 @@ namespace Client
             switch (command)
             {
                 case "ORDER001":
-                    OrderInfo orderInfo = new OrderInfo();
+                    OrderResponseInfo orderInfo = new OrderResponseInfo();
                     orderInfo.MyReadString(netinfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
                     break;
                 case "CANCEL01":
-                    CancelInfo cancelInfo = new CancelInfo();
+                    CancelResponseInfo cancelInfo = new CancelResponseInfo();
                     cancelInfo.MyReadString(netinfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(cancelInfo));
                     break;
                 case "MODIFY01":
-                    ModifyInfo modifyInfo = new ModifyInfo();
+                    OrderResponseInfo modifyInfo = new OrderResponseInfo();
                     modifyInfo.MyReadString(netinfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(modifyInfo));
                     break;
@@ -181,7 +181,23 @@ namespace Client
 
         private void btnOrderCancelRequest_Click(object sender, EventArgs e)
         {
+            CommonClassLib.NetInfo netInfo = new CommonClassLib.NetInfo();
+            CommonClassLib.CancelInfo cancelInfo = new CommonClassLib.CancelInfo();
 
+            netInfo.code = CommandCode.CANCEL;
+            //tag1:zd上手号
+            netInfo.accountNo = "ZD_001";
+            netInfo.systemCode = this.txtOrderCancelSystemCode.Text.Trim();
+
+            //tag 50  
+            netInfo.todayCanUse = "0047";
+
+
+            cancelInfo.orderNo = this.txtCancelOrderClOrderID.Text.Trim();
+
+            netInfo.infoT = cancelInfo.MyToString();
+            //globexCommu.CancelOrder(obj,  info, tifDict[combTIF.Text]);
+            TradeClientAppService.Instance.Order(netInfo);
         }
     }
 }
