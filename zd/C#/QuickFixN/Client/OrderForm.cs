@@ -15,6 +15,7 @@ namespace Client
 {
     public partial class OrderForm : Form
     {
+        private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
         /// <summary>
         /// tag 40
         /// </summary>
@@ -80,13 +81,14 @@ namespace Client
 
             TradeClientAppService.Instance.ExecutionReport += (p) =>
               {
+
                   this.BeginInvoke((MethodInvoker)(() =>
                   {
                       if (!string.IsNullOrEmpty(p))
                       {
                           this.lbMsgs.Items.Add(p);
                       }
-
+                  
                   }));
               };
         }
@@ -170,9 +172,16 @@ namespace Client
             orderInfo.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(orderInfo.priceType);
             orderInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(orderInfo.validDate);
             netInfo.infoT = orderInfo.MyToString();
+
+            StopwatchHelper.Instance.Stopwatch.Restart();
             TradeClientAppService.Instance.Order(netInfo);
+            //"ORDER001@@SystemCode1595929502113@0047@@ZD_001@@@@&@@@@@ICE@BRN2012@1@1@42.59@@1@@@42.59@1@@@@0"
+
         }
 
+        private void btnOrderCancelRequest_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }

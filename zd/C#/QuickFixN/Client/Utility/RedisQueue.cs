@@ -18,7 +18,7 @@ namespace Client.Utility
         private const string QUEUE_KEY = "RedisQueueKey";
         internal static readonly RedisQueue<T> Instance;
 
-        RedisClient _producerClient => RedisHelper.GetQueueClient();
+        RedisClient _producerClient => RedisHelper.GetRedisClient();
 
         internal event Action<T> DequeueRedis;
         static RedisQueue()
@@ -55,7 +55,7 @@ namespace Client.Utility
         {
             Task.Run(() =>
             {
-                var consumerClient = RedisHelper.GetQueueClient() as RedisClient;
+                var consumerClient = RedisHelper.GetRedisClient() as RedisClient;
 
                 //try
                 //{
