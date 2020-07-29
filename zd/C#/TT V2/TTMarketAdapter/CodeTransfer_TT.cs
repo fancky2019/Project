@@ -68,10 +68,7 @@ namespace TTMarketAdapter
         /// TT价格：除以倍率
         /// </summary>
         internal static Dictionary<string, decimal> PrdPrxFactorDict { get; private set; }
-        /// <summary>
-        /// Key: TT product code; Val: price factor
-        /// </summary>
-        private static Dictionary<string, FractionalPrxBean> fractionalPrxFactorDict = null;
+
         /// <summary>
         /// F- 01
         /// G- 02
@@ -998,37 +995,6 @@ namespace TTMarketAdapter
                     }
                 }
             }
-
-            if (fractionalPrxFactorDict == null)
-            {
-                fractionalPrxFactorDict = new Dictionary<string, FractionalPrxBean>();
-
-                //  CfgManager cfgManager = CfgManager.getInstance(CONFIG_FILE);
-                //   string fractionalCfg =Configurations.FractionalPrxFactor: 
-
-                //FractionalPrxFactor:ZC:ZS:ZW:ZR:ZO:XC:XW:XK,100,8
-                if (string.IsNullOrEmpty(Configurations.FractionalPrxFactor))
-                    return;
-
-                string[] groupArr = Configurations.FractionalPrxFactor.Split(';');
-                foreach (string oneGroup in groupArr)
-                {
-                    string[] itemArr = oneGroup.Split(',');
-
-                    FractionalPrxBean fpb = new FractionalPrxBean();
-                    fpb.factor = decimal.Parse(itemArr[1]);//100
-                    fpb.denominator = decimal.Parse(itemArr[2]);//8
-
-                    string[] products = itemArr[0].Split(':');
-                    foreach (string product in products)
-                    {
-                        if (!fractionalPrxFactorDict.ContainsKey(product))
-                        {
-                            fractionalPrxFactorDict.Add(product, fpb);
-                        }
-                    }
-                }
-            }
         }
         #endregion
 
@@ -1060,30 +1026,6 @@ namespace TTMarketAdapter
                 }
 
             }
-            else if (fractionalPrxFactorDict.ContainsKey(ttPrdCd))
-            {
-                FractionalPrxBean fpb = fractionalPrxFactorDict[ttPrdCd];
-
-                // To client
-                //9722 -> 9.7225
-                string strPrx = inputPrx.ToString();
-                int dotIdx = strPrx.IndexOf('.');
-                if (dotIdx > -1)
-                {
-                    strPrx = strPrx.Substring(0, dotIdx);
-                }
-
-
-                char fractionPrx = strPrx[strPrx.Length - 1];
-
-                decimal dDecimal = decimal.Parse(fractionPrx.ToString());
-                decimal tail = dDecimal / fpb.denominator;
-                decimal data = decimal.Parse(strPrx.Substring(0, strPrx.Length - 1)) + tail;
-
-                decimal result = data / fpb.factor;
-                return result.ToString();
-
-            }
 
             return inputPrx.ToString();
         }
@@ -1113,21 +1055,6 @@ namespace TTMarketAdapter
                     return decInputPrx;
                 }
             }
-            else if (fractionalPrxFactorDict.ContainsKey(ttPrdCd))
-            {
-                FractionalPrxBean fpb = fractionalPrxFactorDict[ttPrdCd];
-
-                // To tt
-                //9.7225 -> 9722 
-                decimal data = decimal.Parse(inputPrx) * fpb.factor;
-                int head = Decimal.ToInt32(data);
-                decimal tail = (data - head) * fpb.denominator;
-
-                string result = head.ToString() + tail.ToString();
-                return decimal.Parse(result);
-
-            }
-
             return decInputPrx;
         }
         #endregion

@@ -83,10 +83,7 @@ namespace TTMarketAdapter
         /// 是新版行情
         /// </summary>
         public static readonly bool NewMDBool;
-        /// <summary>
-        /// 
-        /// </summary>
-        public static readonly string FractionalPrxFactor;
+
         /// <summary>
         /// 程序启动时自动启动服务
         /// </summary>
@@ -234,7 +231,7 @@ namespace TTMarketAdapter
                 {
                     bool.TryParse(NewMD, out NewMDBool);
                 }
-                FractionalPrxFactor = configuration.AppSettings.Settings["FractionalPrxFactor"]?.Value;
+
                 AutoStart = configuration.AppSettings.Settings["AutoStart"]?.Value;
                 FutureConnectStr = configuration.AppSettings.Settings["FutureConnectStr"]?.Value;
                 ForeignShareStr = configuration.AppSettings.Settings["ForeignShareStr"]?.Value;

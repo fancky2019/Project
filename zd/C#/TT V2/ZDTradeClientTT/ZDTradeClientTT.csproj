@@ -83,6 +83,12 @@
     <Compile Include="ClOrderIDGen.cs" />
     <Compile Include="CMEFixStrategy.cs" />
     <Compile Include="CfgManager.cs" />
+    <Compile Include="FrmOrderStatusRequest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmOrderStatusRequest.Designer.cs">
+      <DependentUpon>FrmOrderStatusRequest.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmTradeClient.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +112,9 @@
     <Compile Include="TradeApp.cs" />
     <Compile Include="TradeServerFacade.cs" />
     <Compile Include="ZDTradeClientTTConfiurations.cs" />
+    <EmbeddedResource Include="FrmOrderStatusRequest.resx">
+      <DependentUpon>FrmOrderStatusRequest.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmTradeClient.resx">
       <DependentUpon>FrmTradeClient.cs</DependentUpon>
     </EmbeddedResource>
