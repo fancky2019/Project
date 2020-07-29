@@ -624,7 +624,7 @@ namespace Client.Service
             }
             catch (Exception ex)
             {
-
+                _nLog.Error(ex.ToString());
             }
             return netInfo;
         }
@@ -884,7 +884,7 @@ namespace Client.Service
                 var errorMessage = "";
                 if (executionReport.IsSetText())
                 {
-                    var text = executionReport.Text.getValue();
+                    errorMessage = executionReport.Text.getValue();
 
                 }
                 if (order.CommandCode == CommandCode.ORDER)

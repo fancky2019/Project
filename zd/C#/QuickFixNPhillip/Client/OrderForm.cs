@@ -119,6 +119,7 @@ namespace Client
                 case "ORDER001":
                     OrderResponseInfo orderInfo = new OrderResponseInfo();
                     orderInfo.MyReadString(netinfo.infoT);
+                    //@@@@@ICE@BRN2012@1@1@42.59@@1@@@42.59@1@@@@0
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
                     break;
                 case "CANCEL01":
