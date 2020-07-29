@@ -276,7 +276,7 @@ namespace Client.Service
                     order.TempCliOrderID = newOrderSingle.ClOrdID.getValue();
                     // newOrderSingle.FromString()
                     order.NewOrderSingle = newOrderSingle.ToString();
-                    MemoryDataManager.Orders.Add(order.SystemCode, order);
+                    MemoryDataManager.Orders.TryAdd(order.SystemCode, order);
                     //OrderException(netInfo, "can not connect to TT server!");
                 }
 
@@ -760,7 +760,7 @@ namespace Client.Service
             obj.clientNo = order.CancelNetInfo.clientNo;
 
 
-            MemoryDataManager.Orders.Remove(order.SystemCode);
+            MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
             return obj;
         }
 
@@ -851,7 +851,7 @@ namespace Client.Service
 
                 if (execReport.LeavesQty.getValue() == 0)
                 {
-                    MemoryDataManager.Orders.Remove(order.SystemCode);
+                    MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
                 }
             }
             else if (mReportType == 2)// multi-leg 
@@ -881,33 +881,33 @@ namespace Client.Service
             {
                 var currentCliOrderID = executionReport.ClOrdID.getValue();
                 var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
+                var errorMessage = "";
+                if (executionReport.IsSetText())
+                {
+                    var text = executionReport.Text.getValue();
 
-           
+                }
                 if (order.CommandCode == CommandCode.ORDER)
                 {
                     netInfo = order.OrderNetInfo;
-                    //
-                    netInfo.errorCode = ErrorCode.ERR_ORDER_0000;
-                    MemoryDataManager.Orders.Remove(order.SystemCode);
+                    netInfo.NewOrderSingleException(errorMessage);
+                    MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
                 }
                 else if (order.CommandCode == CommandCode.MODIFY)
                 {
                     netInfo = order.AmendNetInfo;
-                    netInfo.errorCode = ErrorCode.ERR_ORDER_0016;
+                    netInfo.OrderCancelReplaceRequestException(errorMessage);
                 }
                 else if (order.CommandCode == CommandCode.CANCEL)
                 {
 
                     netInfo = order.CancelNetInfo;
-                    netInfo.errorCode = ErrorCode.ERR_ORDER_0014;
+                    netInfo.OrderCancelRequestException(errorMessage);
                 }
-
-                netInfo.errorMsg = executionReport.GetString(Tags.Text); ;
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
+                _nLog.Error(ex.ToString());
             }
             return netInfo;
         }

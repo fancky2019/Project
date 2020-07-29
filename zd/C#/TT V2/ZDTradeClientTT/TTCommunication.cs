@@ -2048,5 +2048,18 @@ namespace ZDTradeClientTT
             }
             return ttTimeInForce;
         }
+
+
+        private OrderForm orderForm = null;
+        public void ShowOrderForm()
+        {
+            if (orderForm == null || orderForm.IsDisposed)
+            {
+                orderForm = new OrderForm(this);
+                //壳会设置
+                //TradeServerFacade.setCommuServer(this);
+            }
+            orderForm.Show();
+        }
     }
 }
