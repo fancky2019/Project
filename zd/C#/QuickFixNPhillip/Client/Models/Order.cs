@@ -10,6 +10,7 @@ namespace Client.Models
 {
    public class Order
     {
+        public bool Pending { get; set; }
         /// <summary>
         /// 客户号  --redis hash key
         /// </summary>

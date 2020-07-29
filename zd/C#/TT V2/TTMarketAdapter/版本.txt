@@ -109,3 +109,4 @@
  二、优化BufferLog代码。
  三、期权老格式兼容
  2.0.4.7(未上线)
+ 一、删除FractionalPrxFactor配置。

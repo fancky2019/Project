@@ -125,6 +125,7 @@
     <Compile Include="Utility\MemoryDataManager.cs" />
     <Compile Include="Utility\MessagePackUtility.cs" />
     <Compile Include="Utility\NewtonsoftHelper.cs" />
+    <Compile Include="Utility\OrderExceptions.cs" />
     <Compile Include="Utility\Persist.cs" />
     <Compile Include="Utility\StopwatchHelper.cs" />
     <Compile Include="Utility\TxtFile.cs" />

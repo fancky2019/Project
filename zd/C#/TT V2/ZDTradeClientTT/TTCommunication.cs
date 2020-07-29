@@ -19,7 +19,7 @@ namespace ZDTradeClientTT
     public class TTCommunication
     {
 
-        public TradeApp tradeApp = null;
+        public TradeApp TradeApp { get; set; }
         private ManualOrderIndicator moi = new ManualOrderIndicator(true);
 
         private bool IsTestMode;
@@ -130,22 +130,22 @@ namespace ZDTradeClientTT
                 // FIX application setup
                 QuickFix.IMessageStoreFactory storeFactory = new QuickFix.FileStoreFactory(settings);
                 QuickFix.ILogFactory logFactory = new QuickFix.FileLogFactory(settings);
-                tradeApp = new TradeApp(settings, _execReportBC);
+                TradeApp = new TradeApp(settings, _execReportBC);
 
 
-                QuickFix.IInitiator initiator = new QuickFix.Transport.SocketInitiator(tradeApp, storeFactory, settings, logFactory);
-                tradeApp.Initiator = initiator;
+                QuickFix.IInitiator initiator = new QuickFix.Transport.SocketInitiator(TradeApp, storeFactory, settings, logFactory);
+                TradeApp.Initiator = initiator;
 
                 /*
                 EventHandler<ExectutionEventArgs> execReportHandler = new EventHandler<ExectutionEventArgs>(onExecReportEvent);
                 tradeApp.ExecutionEvent += execReportHandler;
                 */
 
-                tradeApp.OrderCacnelRejectEvent += OrderCacnelRejectHandler;
+                TradeApp.OrderCacnelRejectEvent += OrderCacnelRejectHandler;
 
                 EventHandler<EventArgs> logonEventHandler = new EventHandler<EventArgs>(onLogonEvent);
-                tradeApp.LogonEvent += logonEventHandler;
-                tradeApp.LogoutEvent += TradeApp_LogoutEvent;
+                TradeApp.LogonEvent += logonEventHandler;
+                TradeApp.LogoutEvent += TradeApp_LogoutEvent;
 
                 PersistOrders.LoadOrder(_xReference, _downReference);
 
@@ -393,7 +393,7 @@ namespace ZDTradeClientTT
 
 
             if (!IsTestMode)
-                tradeApp.Start();
+                TradeApp.Start();
 
         }
         public void connectGlobex(Action logon)
@@ -404,7 +404,7 @@ namespace ZDTradeClientTT
             //try
             //{
             if (!IsTestMode)
-                tradeApp.Start();
+                TradeApp.Start();
             //}
             //catch (Exception ex)
             //{
@@ -425,7 +425,7 @@ namespace ZDTradeClientTT
                 //string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ZDTradeClientTT.exe.config");
                 //ZDTradeClientTTConfiurations.UpdateConfig(path, "CL_ORDER_ID", ZDTradeClientTTConfiurations.ClOrderID);
                 if (!IsTestMode)
-                    tradeApp.Stop();
+                    TradeApp.Stop();
                 if (!_execReportBC.IsCompleted)
                 {
                     _execReportBC.CompleteAdding();
@@ -1639,7 +1639,7 @@ namespace ZDTradeClientTT
                 refObj.addClientReq(newOrderSingle);
 
 
-                bool ret = tradeApp.Send(newOrderSingle);
+                bool ret = TradeApp.Send(newOrderSingle);
 
                 if (!ret)
                 {
@@ -1707,7 +1707,7 @@ namespace ZDTradeClientTT
                     //Tag 41
                     orderCancelRequest.OrigClOrdID = new OrigClOrdID(lastClOrdID);
                     refObj.addClientReq(orderCancelRequest);
-                    ret = tradeApp.Send(orderCancelRequest);
+                    ret = TradeApp.Send(orderCancelRequest);
 
                     if (!ret)
                     {
@@ -1818,7 +1818,7 @@ namespace ZDTradeClientTT
                     refObj.addClientReq(ocrr);
 
 
-                    ret = tradeApp.Send(ocrr);
+                    ret = TradeApp.Send(ocrr);
 
                     if (!ret)
                     {

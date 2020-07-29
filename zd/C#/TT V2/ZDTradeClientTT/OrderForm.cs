@@ -14,7 +14,7 @@ namespace ZDTradeClientTT
     public partial class OrderForm : Form
     {
 
-        private TTCommunication globexCommu = null;
+        private TTCommunication _tTCommunication = null;
         private Dictionary<string, string> orderTypeDict = new Dictionary<string, string>();
         private Dictionary<string, string> orderSideDict = new Dictionary<string, string>();
         private Dictionary<string, string> tifDict = new Dictionary<string, string>();
@@ -22,7 +22,7 @@ namespace ZDTradeClientTT
         public OrderForm(TTCommunication globexCommu)
         {
             InitializeComponent();
-            this.globexCommu = globexCommu;
+            this._tTCommunication = globexCommu;
         }
 
         private void OrderForm_Load(object sender, EventArgs e)
@@ -163,10 +163,10 @@ namespace ZDTradeClientTT
 
 
 
-            orderInfo.priceType = globexCommu.ConvertToZDOrdType(orderInfo.priceType);
-            orderInfo.validDate = globexCommu.ConvertToZDTimeInForce(orderInfo.validDate);
+            orderInfo.priceType = _tTCommunication.ConvertToZDOrdType(orderInfo.priceType);
+            orderInfo.validDate = _tTCommunication.ConvertToZDTimeInForce(orderInfo.validDate);
             netInfo.infoT = orderInfo.MyToString();
-            globexCommu.PlaceOrder(netInfo);
+            _tTCommunication.PlaceOrder(netInfo);
             return;
 
 
@@ -229,7 +229,7 @@ namespace ZDTradeClientTT
 
             obj.infoT = info.MyToString();
             //globexCommu.CancelOrder(obj,  info, tifDict[combTIF.Text]);
-            globexCommu.CancelOrder(obj);
+            _tTCommunication.CancelOrder(obj);
         }
 
         private void btnOrderCreation_Click(object sender, EventArgs e)
@@ -254,7 +254,7 @@ namespace ZDTradeClientTT
             execReport.Header.SetField(new SenderCompID("CME"));
             execReport.Header.SetField(new SenderSubID("0047"));
 
-            globexCommu.onExecReportEvent(null, eea);
+            _tTCommunication.onExecReportEvent(null, eea);
         }
 
         private int allQty = 11;
@@ -289,7 +289,7 @@ namespace ZDTradeClientTT
             execReport.SetField(new LeavesQty(new decimal(allQty - partialFillQty)));
             // Partial fill
             execReport.SetField(new OrdStatus(OrdStatus.PARTIALLY_FILLED));
-            globexCommu.onExecReportEvent(null, eea);
+            _tTCommunication.onExecReportEvent(null, eea);
 
         }
 
@@ -321,7 +321,7 @@ namespace ZDTradeClientTT
             execReport2.SetField(new LeavesQty(new decimal(0)));
             // Complete fill
             execReport2.SetField(new OrdStatus(OrdStatus.FILLED));
-            globexCommu.onExecReportEvent(null, eea2);
+            _tTCommunication.onExecReportEvent(null, eea2);
         }
 
         private void btnReplyReject_Click(object sender, EventArgs e)
@@ -351,7 +351,7 @@ namespace ZDTradeClientTT
 
             // Partial fill
             execReport.SetField(new OrdStatus(OrdStatus.REJECTED));
-            globexCommu.onExecReportEvent(null, eea);
+            _tTCommunication.onExecReportEvent(null, eea);
         }
 
         private void btnReplyCancelled_Click(object sender, EventArgs e)
@@ -377,7 +377,7 @@ namespace ZDTradeClientTT
             execReport.Header.SetField(new SenderSubID("0047"));
 
             execReport.SetField(new OrdStatus(OrdStatus.CANCELED));
-            globexCommu.onExecReportEvent(null, eea);
+            _tTCommunication.onExecReportEvent(null, eea);
         }
 
         private void btnModify_Click(object sender, EventArgs e)
@@ -400,7 +400,7 @@ namespace ZDTradeClientTT
 
             obj.infoT = info.MyToString();
             //globexCommu.CancelReplaceOrder(obj,info, tifDict[combTIF.Text]);
-            globexCommu.CancelReplaceOrder(obj);
+            _tTCommunication.CancelReplaceOrder(obj);
         }
 
         private void btnQueryInstrument_Click(object sender, EventArgs e)
@@ -411,7 +411,7 @@ namespace ZDTradeClientTT
         private void button1_Click(object sender, EventArgs e)
         {
             QuickFix.Message msg = new QuickFix.Message("8=FIX.4.29=34335=D34=15749=DBECKMIFID52=20171115-06:57:5956=TTMIFIDOR1=dbeckmifid11=598731712440=LMA01316102=01338=540=244=54848=544473847=W54=255=IPE e-Gas Oil60=20051205-09:11:59167=FUT204=0207=ICE_IPE2593=22594=22595=Y2594=32595=Y453=3448=1452=1222376=24447=P448=1452=122376=24447=P448=987654452=32376=24447=P1724=510=083");
-            globexCommu.tradeApp.Send(msg);
+            _tTCommunication.TradeApp.Send(msg);
         }
 
 
@@ -427,6 +427,16 @@ namespace ZDTradeClientTT
         private void btnOpenDirectory_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory);
+        }
+
+        FrmOrderStatusRequest _frmOrderStatusRequest = null;
+        private void btnOrderStatusRequest_Click(object sender, EventArgs e)
+        {
+            if (_frmOrderStatusRequest == null||_frmOrderStatusRequest.IsDisposed)
+            {
+                _frmOrderStatusRequest = new FrmOrderStatusRequest(this._tTCommunication);
+            }
+            _frmOrderStatusRequest.Show();
         }
     }
 }

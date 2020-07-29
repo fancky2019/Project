@@ -64,6 +64,7 @@
             this.txtTriggerPrice = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.btnOpenDirectory = new System.Windows.Forms.Button();
+            this.btnOrderStatusRequest = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -389,11 +390,22 @@
             this.btnOpenDirectory.UseVisualStyleBackColor = true;
             this.btnOpenDirectory.Click += new System.EventHandler(this.btnOpenDirectory_Click);
             // 
+            // btnOrderStatusRequest
+            // 
+            this.btnOrderStatusRequest.Location = new System.Drawing.Point(281, 317);
+            this.btnOrderStatusRequest.Name = "btnOrderStatusRequest";
+            this.btnOrderStatusRequest.Size = new System.Drawing.Size(143, 23);
+            this.btnOrderStatusRequest.TabIndex = 36;
+            this.btnOrderStatusRequest.Text = "OrderStatusRequest";
+            this.btnOrderStatusRequest.UseVisualStyleBackColor = true;
+            this.btnOrderStatusRequest.Click += new System.EventHandler(this.btnOrderStatusRequest_Click);
+            // 
             // OrderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(628, 352);
+            this.ClientSize = new System.Drawing.Size(628, 349);
+            this.Controls.Add(this.btnOrderStatusRequest);
             this.Controls.Add(this.btnOpenDirectory);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.txtTriggerPrice);
@@ -478,5 +490,6 @@
         private System.Windows.Forms.TextBox txtTriggerPrice;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button btnOpenDirectory;
+        private System.Windows.Forms.Button btnOrderStatusRequest;
     }
 }
