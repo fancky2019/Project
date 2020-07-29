@@ -12,16 +12,21 @@ namespace Client.Utility
      * 150=5:ErrorCode.ERR_ORDER_0016;CommandCode.MODIFY
      * 150=4:ErrorCode.ERR_ORDER_0014;CommandCode.CANCELCAST
      * 150=2:ErrorCode.SUCCESS;CommandCode.FILLEDCAST;
+     * 
+     * 
+     * 下单、撤单可以没有消息体，改单必须有消息体
      */
     internal static class OrderExceptions
     {
         internal static NetInfo NewOrderSingleException(this NetInfo netInfo, string errorMsg)
         {
-            OrderInfo info = new OrderInfo();
-            info.MyReadString(netInfo.infoT);
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.MyReadString(netInfo.infoT);
+            OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
+            netInfo.infoT = orderResponseInfo.MyToString();
             netInfo.errorMsg = errorMsg;
-            netInfo.exchangeCode = info.exchangeCode;
-            netInfo.accountNo = info.accountNo;
+            netInfo.exchangeCode = orderInfo.exchangeCode;
+            netInfo.accountNo = orderInfo.accountNo;
             netInfo.errorCode = ErrorCode.ERR_ORDER_0000;
             netInfo.code = CommandCode.ORDER;
             return netInfo;
@@ -29,15 +34,15 @@ namespace Client.Utility
 
         internal static NetInfo OrderCancelRequestException(this NetInfo netInfo, string errorMsg)
         {
-            CancelInfo info = new CancelInfo();
-            info.MyReadString(netInfo.infoT);
-            CancelResponseInfo cinfo = new CancelResponseInfo();
-            cinfo.orderNo = info.orderNo;
+            CancelInfo cancelInfo = new CancelInfo();
+            cancelInfo.MyReadString(netInfo.infoT);
+            CancelResponseInfo cancelResponseInfo = new CancelResponseInfo();
+            cancelResponseInfo.orderNo = cancelInfo.orderNo;
             netInfo.errorMsg = errorMsg;
-            netInfo.infoT = cinfo.MyToString();
-            netInfo.exchangeCode = info.exchangeCode;
-            netInfo.accountNo = info.accountNo;
-            netInfo.systemCode = info.systemNo;
+            netInfo.infoT = cancelResponseInfo.MyToString();
+            netInfo.exchangeCode = cancelInfo.exchangeCode;
+            netInfo.accountNo = cancelInfo.accountNo;
+            netInfo.systemCode = cancelInfo.systemNo;
             netInfo.errorCode = ErrorCode.ERR_ORDER_0014;
             netInfo.code = CommandCode.CANCELCAST;
 
@@ -46,14 +51,14 @@ namespace Client.Utility
 
         internal static NetInfo OrderCancelReplaceRequestException(this NetInfo netInfo, string errorMsg)
         {
-            ModifyInfo info = new ModifyInfo();
-            info.MyReadString(netInfo.infoT);
-            OrderResponseInfo minfo = new OrderResponseInfo();
+            ModifyInfo modifyInfo = new ModifyInfo();
+            modifyInfo.MyReadString(netInfo.infoT);
+            OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
             netInfo.errorMsg = errorMsg;
-            minfo.orderNo = info.orderNo;
-            netInfo.infoT = minfo.MyToString();
-            netInfo.exchangeCode = info.exchangeCode;
-            netInfo.accountNo = info.accountNo;
+            orderResponseInfo.orderNo = modifyInfo.orderNo;
+            netInfo.infoT = orderResponseInfo.MyToString();
+            netInfo.exchangeCode = modifyInfo.exchangeCode;
+            netInfo.accountNo = modifyInfo.accountNo;
             netInfo.errorCode = ErrorCode.ERR_ORDER_0016;
             netInfo.code = CommandCode.MODIFY;
             return netInfo;
