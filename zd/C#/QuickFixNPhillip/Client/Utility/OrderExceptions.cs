@@ -15,7 +15,7 @@ namespace Client.Utility
      */
     internal static class OrderExceptions
     {
-        private static NetInfo OrderException(this NetInfo netInfo, string errorMsg)
+        internal static NetInfo NewOrderSingleException(this NetInfo netInfo, string errorMsg)
         {
             OrderInfo info = new OrderInfo();
             info.MyReadString(netInfo.infoT);
@@ -27,7 +27,7 @@ namespace Client.Utility
             return netInfo;
         }
 
-        private static NetInfo CancelOrderException(this NetInfo netInfo, string errorMsg)
+        internal static NetInfo OrderCancelRequestException(this NetInfo netInfo, string errorMsg)
         {
             CancelInfo info = new CancelInfo();
             info.MyReadString(netInfo.infoT);
@@ -44,7 +44,7 @@ namespace Client.Utility
             return netInfo;
         }
 
-        private static NetInfo OrderCancelReplaceException(this NetInfo netInfo, string errorMsg)
+        internal static NetInfo OrderCancelReplaceRequestException(this NetInfo netInfo, string errorMsg)
         {
             ModifyInfo info = new ModifyInfo();
             info.MyReadString(netInfo.infoT);

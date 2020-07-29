@@ -1,5 +1,6 @@
 ﻿using Client.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace Client.Utility
     class MemoryDataManager
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
-
-        internal static Dictionary<string, Order> Orders { get; set; }
+        
+        internal static ConcurrentDictionary<string, Order> Orders { get; set; }
         //static Dictionary<string, long> _systemCodeCliOrderID = null;
 
         static long _beginOrderId = 0;
@@ -23,7 +24,7 @@ namespace Client.Utility
 
         static MemoryDataManager()
         {
-            Orders = new Dictionary<string, Order>();
+            Orders = new ConcurrentDictionary<string, Order>();
             //_systemCodeCliOrderID = new Dictionary<string, long>();
 
 

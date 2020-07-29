@@ -139,12 +139,12 @@ namespace Client.Utility
         static internal void SaveOrder(Order order)
         {
        
-            using (var redisClient = GetRedisClient())
-            {
-                //redisClient.Del(order.ClientID.ToUtf8Bytes());
-                //redisClient.SetEntryInHash("RedisHashKey1", "HashKey1", "HashValue1");
-                redisClient.HSet(order.ClientID.ToString().ToUtf8Bytes(), order.SystemCode.ToUtf8Bytes(), MessagePackUtility.Serialize<Order>(order));
-            }
+            //using (var redisClient = GetRedisClient())
+            //{
+            //    //redisClient.Del(order.ClientID.ToUtf8Bytes());
+            //    //redisClient.SetEntryInHash("RedisHashKey1", "HashKey1", "HashValue1");
+            //    redisClient.HSet(order.ClientID.ToString().ToUtf8Bytes(), order.SystemCode.ToUtf8Bytes(), MessagePackUtility.Serialize<Order>(order));
+            //}
         }
 
         static internal long DeleteOrder(string clOrdId)

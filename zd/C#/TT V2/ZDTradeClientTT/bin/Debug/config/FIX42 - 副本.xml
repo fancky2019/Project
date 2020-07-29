@@ -2283,13 +2283,6 @@
             <value enum='113' description='EXEC_RESTATEMENT_REASON_CANCEL_SESSION_TRANSITION' />
             <value enum='114' description='EXEC_RESTATEMENT_REASON_CANCEL_AUCTION_DELETE' />
             <value enum='115' description='EXEC_RESTATEMENT_REASON_CANCEL_OTHER' />
-			<value enum="116" description="ORDER_PASSING_REQUEST_ACCEPTED"/>
-			<value enum="117" description="ORDER_PASSING_REQUEST_REJECTED"/>
-			<value enum="118" description="INCOMING_ORDER_SELF_MATCH_PREVENTION"/>
-			<value enum="119" description="RESTING_ORDER_SELF_MATCH_PREVENTION"/>
-			<value enum="120" description="CANCEL_DUE_TO_SELF_MATCH_PREVENTION"/>
-			<value enum="9000" description="EXEC_RESTATEMENT_REASON_UNSOLICITED_ORDER_RECOVERY"/>
-			<value enum="9001" description="EXEC_RESTATEMENT_REASON_TIMEOUT"/>
         </field>
         <field number='379' name='BusinessRejectRefID' type='STRING' />
         <field number='380' name='BusinessRejectReason' type='INT'>
