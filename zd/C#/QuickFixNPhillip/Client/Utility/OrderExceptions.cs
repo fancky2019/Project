@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Client.Utility
 {
+    /*
+     * 150=0:ErrorCode.ERR_ORDER_0000;CommandCode.ORDER
+     * 150=5:ErrorCode.ERR_ORDER_0016;CommandCode.MODIFY
+     * 150=4:ErrorCode.ERR_ORDER_0014;CommandCode.CANCELCAST
+     * 150=2:ErrorCode.SUCCESS;CommandCode.FILLEDCAST;
+     */
     internal static class OrderExceptions
     {
         private static NetInfo OrderException(this NetInfo netInfo, string errorMsg)

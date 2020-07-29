@@ -127,6 +127,7 @@
     <Compile Include="Utility\NewtonsoftHelper.cs" />
     <Compile Include="Utility\OrderExceptions.cs" />
     <Compile Include="Utility\Persist.cs" />
+    <Compile Include="Utility\RedisHelper.cs" />
     <Compile Include="Utility\StopwatchHelper.cs" />
     <Compile Include="Utility\TxtFile.cs" />
     <EmbeddedResource Include="FrmTradeClient.resx">
