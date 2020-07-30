@@ -58,7 +58,7 @@ namespace ZDTradeClientTT
                     ZDTradeClientTTConfiurations.Instance.Refresh();
                 }
 
-            }, null, 10 * 1000, 10 * 1000);
+            }, null, 60 * 1000, 60 * 1000);
         }
 
     }
