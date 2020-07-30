@@ -112,6 +112,7 @@
     <Compile Include="RefObj.cs" />
     <Compile Include="TradeApp.cs" />
     <Compile Include="TradeServerFacade.cs" />
+    <Compile Include="UnexpectedExceptionHandler.cs" />
     <Compile Include="ZDTradeClientTTConfiurations.cs" />
     <EmbeddedResource Include="FrmOrderStatusRequest.resx">
       <DependentUpon>FrmOrderStatusRequest.cs</DependentUpon>

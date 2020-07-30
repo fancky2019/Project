@@ -24,7 +24,6 @@ namespace Client
         {
             InitializeComponent();
             this.btnStop.Enabled = false;
-            ConfigFileRefresh.Refresh();
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -76,7 +75,7 @@ namespace Client
             System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory);
         }
 
-        private void btnStop_Click(object sender, EventArgs e)
+        internal void btnStop_Click(object sender, EventArgs e)
         {
             TradeClient.Instance.SocketInitiator.Stop();
 
@@ -86,7 +85,7 @@ namespace Client
         private void btnTest_Click(object sender, EventArgs e)
         {
             this.btnTest.Text = ConfigurationManager.AppSettings["RefreshTest"]?.ToString();
-         
+
             return;
             //Order order = new Order();
             //order.ClientNumber = "dsdsfaadsdas";
