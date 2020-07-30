@@ -1089,7 +1089,7 @@ namespace TTMarketAdapter
         {
             if (orderBookALL.codeBean.contractType == "FUT")
             {
-                var supportedTradeVolumeProduct = Configurations.SupportedTradeVolumeProductsList.Find(p => p.ZDExchange == orderBookALL.codeBean.zdExchg &&
+                var supportedTradeVolumeProduct = Configurations.Instance.SupportedTradeVolumeProductsList.Find(p => p.ZDExchange == orderBookALL.codeBean.zdExchg &&
                                                    p.ZDProduct == orderBookALL.codeBean.zdProduct);
                 if (!string.IsNullOrEmpty(supportedTradeVolumeProduct.ZDProduct))
                 {

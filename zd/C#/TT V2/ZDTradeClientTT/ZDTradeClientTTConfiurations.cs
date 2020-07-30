@@ -10,61 +10,74 @@ namespace ZDTradeClientTT
 {
     public class ZDTradeClientTTConfiurations
     {
-        public static readonly string QuickFixConfig;
-        public static readonly string FIX42;
-        public static readonly string SecurityDefinitionFuture;
-        public static readonly string SecurityDefinitionOption;
-        public static string SecurityDefFile;
+        public static ZDTradeClientTTConfiurations Instance { get; }
+        public string QuickFixConfig { get; private set; }
+        public string FIX42 { get; private set; }
+        public string SecurityDefinitionFuture { get; private set; }
+        public string SecurityDefinitionOption { get; private set; }
+        public string SecurityDefFile { get; private set; }
 
 
         /// <summary>
         /// tag 1
         /// </summary>
-        public static string Account;
+        public string Account { get; private set; }
 
 
-        public static string SessionAndPsw;
+        public string SessionAndPsw { get; private set; }
 
 
-        public static string Order_ID_Scope;
+        public string Order_ID_Scope { get; private set; }
 
-        public static long MinClOrderID;
-        public static long MaxClOrderID;
-        public static string OrderID;
-        public static string PersistOrders;
+        public long MinClOrderID { get; private set; }
+        public long MaxClOrderID { get; private set; }
+        public string OrderID { get; private set; }
+        public string PersistOrders { get; private set; }
 
 
 
         /// <summary>
         /// tag 116
         /// </summary>
-        public static string OnBehalfOfSubID;
+        public string OnBehalfOfSubID { get; private set; }
 
 
-        public static string Gate_FUT_IP;
+        public string Gate_FUT_IP { get; private set; }
 
-        public static string Gate_FUT_Port;
+        public string Gate_FUT_Port { get; private set; }
 
 
         #region  THG Tags
         /// <summary>
         /// 公司简称前缀（THF用）
         /// </summary>
-        public static readonly string Prefix;// => ConfigFile.AppSettings.Settings["Prefix"]?.Value;
-        public static readonly string Pre_Agreed_Ref;//=> ConfigFile.AppSettings.Settings["Pre_Agreed_Ref"]?.Value;
-        public static readonly string KenangaRef;//=> ConfigFile.AppSettings.Settings["KenangaRef"]?.Value;
-        public static readonly string Prefix_Newwedge_Ref;//=> ConfigFile.AppSettings.Settings["Prefix_Newwedge_Ref"]?.Value;
-        public static readonly string CME_SMPID;// => ConfigFile.AppSettings.Settings["CME_SMPID"]?.Value;
-        public static readonly string CME_Instruction;//=> ConfigFile.AppSettings.Settings["CME_Instruction"]?.Value;
-        public static readonly string SGX_ClearingAccountOverride;//=> ConfigFile.AppSettings.Settings["SGX_ClearingAccountOverride"]?.Value;
+        public string Prefix { get; private set; }// => ConfigFile.AppSettings.Settings["Prefix"]?.Value;
+        public string Pre_Agreed_Ref { get; private set; }//=> ConfigFile.AppSettings.Settings["Pre_Agreed_Ref"]?.Value;
+        public string KenangaRef { get; private set; }//=> ConfigFile.AppSettings.Settings["KenangaRef"]?.Value;
+        public string Prefix_Newwedge_Ref { get; private set; }//=> ConfigFile.AppSettings.Settings["Prefix_Newwedge_Ref"]?.Value;
+        public string CME_SMPID { get; private set; }// => ConfigFile.AppSettings.Settings["CME_SMPID"]?.Value;
+        public string CME_Instruction { get; private set; }//=> ConfigFile.AppSettings.Settings["CME_Instruction"]?.Value;
+        public string SGX_ClearingAccountOverride { get; private set; }//=> ConfigFile.AppSettings.Settings["SGX_ClearingAccountOverride"]?.Value;
         /// <summary>
         ///FCStone、GHF
         /// </summary>
-        public static readonly string ClearFirm;//=> ConfigFile.AppSettings.Settings["Company"]?.Value;
+        public string ClearFirm { get; private set; }//=> ConfigFile.AppSettings.Settings["Company"]?.Value;
+
+        public string RefreshTest { get; private set; }
 
         #endregion
 
         static ZDTradeClientTTConfiurations()
+        {
+            Instance = new ZDTradeClientTTConfiurations();
+        }
+
+        private  ZDTradeClientTTConfiurations()
+        {
+            Refresh();
+        }
+
+        public void Refresh()
         {
 
             try
@@ -73,6 +86,7 @@ namespace ZDTradeClientTT
                 ExeConfigurationFileMap filemap = new ExeConfigurationFileMap();
                 filemap.ExeConfigFilename = path;//配置文件路径  
                 Configuration configuration = ConfigurationManager.OpenMappedExeConfiguration(filemap, ConfigurationUserLevel.None);
+
                 //ProductCdMap = configuration.AppSettings.Settings["ProductCdMap"]?.Value;
                 //Products = configuration.AppSettings.Settings["Products"]?.Value;
 
@@ -119,6 +133,8 @@ namespace ZDTradeClientTT
                 CME_Instruction = configuration.AppSettings.Settings["CME_Instruction"]?.Value;
                 SGX_ClearingAccountOverride = configuration.AppSettings.Settings["SGX_ClearingAccountOverride"]?.Value;
                 ClearFirm = configuration.AppSettings.Settings["ClearFirm"]?.Value;
+
+                RefreshTest = configuration.AppSettings.Settings["RefreshTest"]?.Value;
             }
             catch (Exception ex)
             {

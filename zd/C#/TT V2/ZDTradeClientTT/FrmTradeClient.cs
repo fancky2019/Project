@@ -230,6 +230,7 @@ namespace ZDTradeClientTT
             //var da = contractDate.Date;
             //return;
 
+            this.btnTest.Text = $"{ZDTradeClientTTConfiurations.Instance.RefreshTest} {Configurations.Instance.RefreshTest}";
 
             return;
             NLogUtility.Debug("Debug1");

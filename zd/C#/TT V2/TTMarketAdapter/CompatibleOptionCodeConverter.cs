@@ -13,9 +13,9 @@ namespace TTMarketAdapter
         static CompatibleOptionCodeConverter()
         {
             _compatibleOption = new List<(string TTExchange, string TTProduct, int Decimal)>();
-            if (!string.IsNullOrEmpty(Configurations.CompatibleOption))
+            if (!string.IsNullOrEmpty(Configurations.Instance.CompatibleOption))
             {
-                var array = Configurations.CompatibleOption.Split(';').ToList();
+                var array = Configurations.Instance.CompatibleOption.Split(';').ToList();
                 array.ForEach(p =>
                 {
                     var exchangeProductDecimal = p.Split(':');
@@ -30,7 +30,7 @@ namespace TTMarketAdapter
         {
             var zdProduct = TTMarketAdapterCommon.GetZDProduct(optionContract, SecurityTypeEnum.OPT);
             //SB_P2010 14
-            var tt = Configurations.GetTTProductExchange(zdProduct, SecurityTypeEnum.OPT);
+            var tt = Configurations.Instance.GetTTProductExchange(zdProduct, SecurityTypeEnum.OPT);
 
             var compatibleOption = _compatibleOption.FirstOrDefault(p => p.TTExchange == tt.TTExchange && p.TTProduct == tt.TTProduct);
             if (!string.IsNullOrEmpty(compatibleOption.TTExchange) && !string.IsNullOrEmpty(compatibleOption.TTProduct))

@@ -124,9 +124,9 @@ namespace TTMarketAdapter
 
 
             mismatchPrdCd = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(Configurations.MappingZDProducts))
+            if (!string.IsNullOrEmpty(Configurations.Instance.MappingZDProducts))
             {
-                string[] codeGrp = Configurations.MappingZDProducts.Split(';');
+                string[] codeGrp = Configurations.Instance.MappingZDProducts.Split(';');
                 for (int i = 0; i < codeGrp.Length; i++)
                 {
 
@@ -142,10 +142,10 @@ namespace TTMarketAdapter
 
 
             prdExchgDict = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(Configurations.MappingZDExchanges))
+            if (!string.IsNullOrEmpty(Configurations.Instance.MappingZDExchanges))
             {
                 // ZD exchange:product map
-                string[] exchgPrdMap = Configurations.MappingZDExchanges.Split(';');
+                string[] exchgPrdMap = Configurations.Instance.MappingZDExchanges.Split(';');
                 for (int i = 0; i < exchgPrdMap.Length; i++)
                 {
                     string[] exchgPrdPair = exchgPrdMap[i].Split(',');
@@ -982,9 +982,9 @@ namespace TTMarketAdapter
 
                 // CfgManager cfgManager = CfgManager.getInstance(CONFIG_FILE);
                 // TT prd code:prx factor
-                if (!string.IsNullOrEmpty(Configurations.DisplayPrxFactor))
+                if (!string.IsNullOrEmpty(Configurations.Instance.DisplayPrxFactor))
                 {
-                    string[] arrPrxFactor = Configurations.DisplayPrxFactor.Split(';');
+                    string[] arrPrxFactor = Configurations.Instance.DisplayPrxFactor.Split(';');
                     for (int i = 0; i < arrPrxFactor.Length; i++)
                     {
                         string[] prxFactorPair = arrPrxFactor[i].Split(':');

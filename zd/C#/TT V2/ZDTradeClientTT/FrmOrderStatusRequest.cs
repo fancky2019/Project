@@ -24,7 +24,7 @@ namespace ZDTradeClientTT
         private void btnRequest_Click(object sender, EventArgs e)
         {
             OrderStatusRequest orderStatusRequest = new OrderStatusRequest();
-            orderStatusRequest.Account = new Account(ZDTradeClientTTConfiurations.Account);
+            orderStatusRequest.Account = new Account(ZDTradeClientTTConfiurations.Instance.Account);
             if (!string.IsNullOrEmpty(this.txtClOrdId.Text.Trim()))
             {
                 orderStatusRequest.ClOrdID = new ClOrdID(this.txtClOrdId.Text.Trim());
@@ -34,7 +34,7 @@ namespace ZDTradeClientTT
             {
                 orderStatusRequest.OrderID = new OrderID();
             }
-            _tTCommunication.TradeApp.Send(orderStatusRequest);
+            _tTCommunication.tradeApp.Send(orderStatusRequest);
 
         }
     }

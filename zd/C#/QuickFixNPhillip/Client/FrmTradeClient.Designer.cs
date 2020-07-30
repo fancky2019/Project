@@ -77,7 +77,7 @@
             // 
             // btnShowOrderForm
             // 
-            this.btnShowOrderForm.Location = new System.Drawing.Point(110, 86);
+            this.btnShowOrderForm.Location = new System.Drawing.Point(12, 109);
             this.btnShowOrderForm.Name = "btnShowOrderForm";
             this.btnShowOrderForm.Size = new System.Drawing.Size(75, 23);
             this.btnShowOrderForm.TabIndex = 22;

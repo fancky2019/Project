@@ -22,11 +22,11 @@ namespace ZDTradeClientTT
         static ClOrderIDGen()
         {
             _synLock = new object();
-            _beginOrderId = ZDTradeClientTTConfiurations.MinClOrderID;
-            _endOrderId = ZDTradeClientTTConfiurations.MaxClOrderID;
+            _beginOrderId = ZDTradeClientTTConfiurations.Instance.MinClOrderID;
+            _endOrderId = ZDTradeClientTTConfiurations.Instance.MaxClOrderID;
             _lastOrderID = _beginOrderId;
 
-            var datas = TxtFile.ReadTxtFile(ZDTradeClientTTConfiurations.OrderID);
+            var datas = TxtFile.ReadTxtFile(ZDTradeClientTTConfiurations.Instance.OrderID);
             if(datas.Count>0)
             {
                 _lastOrderID = long.Parse(datas[0]);
@@ -54,7 +54,7 @@ namespace ZDTradeClientTT
 
         public static void SaveOrderId()
         {
-            TxtFile.SaveTxtFile(ZDTradeClientTTConfiurations.OrderID, new List<string> { _lastOrderID.ToString() });
+            TxtFile.SaveTxtFile(ZDTradeClientTTConfiurations.Instance.OrderID, new List<string> { _lastOrderID.ToString() });
         }
     }
 

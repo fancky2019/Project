@@ -28,9 +28,9 @@ namespace ZDTradeClientTT
     public class TTCommunication
     {
 
-        public TradeApp TradeApp { get; set; }
+        public TradeApp tradeApp { get; set; }
         private ManualOrderIndicator moi = new ManualOrderIndicator(true);
-
+        
         private bool IsTestMode;
         //public ICustomFixStrategy strategy = null;
         // private ZDLogger globexIFLogger = null;
@@ -79,7 +79,7 @@ namespace ZDTradeClientTT
         {
             try
             {
-                if (!string.IsNullOrEmpty(ZDTradeClientTTConfiurations.Gate_FUT_IP) && !string.IsNullOrEmpty(ZDTradeClientTTConfiurations.Gate_FUT_Port))
+                if (!string.IsNullOrEmpty(ZDTradeClientTTConfiurations.Instance.Gate_FUT_IP) && !string.IsNullOrEmpty(ZDTradeClientTTConfiurations.Instance.Gate_FUT_Port))
                 {
                     //获取T+1时间
                     TPlusOneHelper.GetTPlusOneData();
@@ -121,7 +121,7 @@ namespace ZDTradeClientTT
 
 
                 // FIX app settings and related
-                QuickFix.SessionSettings settings = new QuickFix.SessionSettings(ZDTradeClientTTConfiurations.QuickFixConfig);
+                QuickFix.SessionSettings settings = new QuickFix.SessionSettings(ZDTradeClientTTConfiurations.Instance.QuickFixConfig);
                 //strategy.SessionSettings = settings;
 
                 _execReportBC = new BlockingCollection<QuickFix.FIX42.ExecutionReport>();
@@ -139,27 +139,27 @@ namespace ZDTradeClientTT
                 // FIX application setup
                 QuickFix.IMessageStoreFactory storeFactory = new QuickFix.FileStoreFactory(settings);
                 QuickFix.ILogFactory logFactory = new QuickFix.FileLogFactory(settings);
-                TradeApp = new TradeApp(settings, _execReportBC);
+                tradeApp = new TradeApp(settings, _execReportBC);
 
 
-                QuickFix.IInitiator initiator = new QuickFix.Transport.SocketInitiator(TradeApp, storeFactory, settings, logFactory);
-                TradeApp.Initiator = initiator;
+                QuickFix.IInitiator initiator = new QuickFix.Transport.SocketInitiator(tradeApp, storeFactory, settings, logFactory);
+                tradeApp.Initiator = initiator;
 
                 /*
                 EventHandler<ExectutionEventArgs> execReportHandler = new EventHandler<ExectutionEventArgs>(onExecReportEvent);
                 tradeApp.ExecutionEvent += execReportHandler;
                 */
 
-                TradeApp.OrderCacnelRejectEvent += OrderCacnelRejectHandler;
+                tradeApp.OrderCacnelRejectEvent += OrderCacnelRejectHandler;
 
                 EventHandler<EventArgs> logonEventHandler = new EventHandler<EventArgs>(onLogonEvent);
-                TradeApp.LogonEvent += logonEventHandler;
-                TradeApp.LogoutEvent += TradeApp_LogoutEvent;
+                tradeApp.LogonEvent += logonEventHandler;
+                tradeApp.LogoutEvent += TradeApp_LogoutEvent;
 
                 PersistOrders.LoadOrder(_xReference, _downReference);
 
                 //load期货数据
-                if (File.Exists(ZDTradeClientTTConfiurations.SecurityDefinitionFuture))
+                if (File.Exists(ZDTradeClientTTConfiurations.Instance.SecurityDefinitionFuture))
                 {
                     _securityDefinitionFileExist = true;
                     initInstrumentFromFile();
@@ -180,6 +180,10 @@ namespace ZDTradeClientTT
 
                 ////方法内要用到初始化合约数据，放在初始化合约之后执行
                 //CodeTransfer_TT.initPrxFactor();
+
+
+
+                ConfigFileRefresh.Instance.Refresh();
             }
             catch (Exception ex)
             {
@@ -217,7 +221,7 @@ namespace ZDTradeClientTT
             string realIntruementStr = instrumentStr.Replace('|', (char)1);
 
             QuickFix.DataDictionary.DataDictionary dd = new QuickFix.DataDictionary.DataDictionary();
-            dd.Load(ZDTradeClientTTConfiurations.FIX42);
+            dd.Load(ZDTradeClientTTConfiurations.Instance.FIX42);
 
             /*
             string exeReportStr = "8=FIX.4.2|9=00352|35=8|49=TTDS68O|56=DAIFLDTS|50=G|57=001016|34=6664|52=20140827-06:41:04.444|55=PB|48=PBFCEPSR3M|207=LME|1=00740|16102=00740|16103=00740|11=8000061|18203=LME|37=NONE|17=0G4TB2012|58=Insufficient permission to route order on this product.|32=0|103=99|151=0|14=0|54=1|40=2|59=0|11028=Y|150=8|20=0|39=8|44=2247|38=1|31=0|6=0|60=20140827-06:41:04.444|146=0|10=012|";
@@ -252,17 +256,17 @@ namespace ZDTradeClientTT
             List<QuickFix.FIX42.SecurityDefinition> optionSecuDefList = new List<QuickFix.FIX42.SecurityDefinition>();
 
             QuickFix.DataDictionary.DataDictionary dd = new QuickFix.DataDictionary.DataDictionary();
-            dd.Load(ZDTradeClientTTConfiurations.FIX42);
+            dd.Load(ZDTradeClientTTConfiurations.Instance.FIX42);
 
             //if (File.Exists(_secu_File))
             //{
-            ReadFile(ZDTradeClientTTConfiurations.SecurityDefinitionFuture);
+            ReadFile(ZDTradeClientTTConfiurations.Instance.SecurityDefinitionFuture);
             TT.Common.NLogUtility.Info("init instrument from SECU_FILE file data completed.");
             //}
 
-            if (File.Exists(ZDTradeClientTTConfiurations.SecurityDefinitionOption))
+            if (File.Exists(ZDTradeClientTTConfiurations.Instance.SecurityDefinitionOption))
             {
-                ReadFile(ZDTradeClientTTConfiurations.SecurityDefinitionOption);
+                ReadFile(ZDTradeClientTTConfiurations.Instance.SecurityDefinitionOption);
                 TT.Common.NLogUtility.Info("init instrument from SECU_OPT_FILE file data completed.");
             }
 
@@ -372,9 +376,9 @@ namespace ZDTradeClientTT
             List<QuickFix.FIX42.SecurityDefinition> optSecuDefList = new List<QuickFix.FIX42.SecurityDefinition>();
 
             QuickFix.DataDictionary.DataDictionary dd = new QuickFix.DataDictionary.DataDictionary();
-            dd.Load(ZDTradeClientTTConfiurations.FIX42);
+            dd.Load(ZDTradeClientTTConfiurations.Instance.FIX42);
 
-            using (StreamReader sReader = new StreamReader(File.Open(ZDTradeClientTTConfiurations.SecurityDefinitionOption, FileMode.Open), System.Text.Encoding.ASCII))
+            using (StreamReader sReader = new StreamReader(File.Open(ZDTradeClientTTConfiurations.Instance.SecurityDefinitionOption, FileMode.Open), System.Text.Encoding.ASCII))
             {
                 while (!sReader.EndOfStream)
                 {
@@ -402,7 +406,7 @@ namespace ZDTradeClientTT
 
 
             if (!IsTestMode)
-                TradeApp.Start();
+                tradeApp.Start();
 
         }
         public void connectGlobex(Action logon)
@@ -413,7 +417,7 @@ namespace ZDTradeClientTT
             //try
             //{
             if (!IsTestMode)
-                TradeApp.Start();
+                tradeApp.Start();
             //}
             //catch (Exception ex)
             //{
@@ -434,7 +438,7 @@ namespace ZDTradeClientTT
                 //string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ZDTradeClientTT.exe.config");
                 //ZDTradeClientTTConfiurations.UpdateConfig(path, "CL_ORDER_ID", ZDTradeClientTTConfiurations.ClOrderID);
                 if (!IsTestMode)
-                    TradeApp.Stop();
+                    tradeApp.Stop();
                 if (!_execReportBC.IsCompleted)
                 {
                     _execReportBC.CompleteAdding();
@@ -749,7 +753,7 @@ namespace ZDTradeClientTT
                 //CodeBean codeBean = CodeTransfer_TT.getZDCodeInfoByUpperCode(refObj.newOrderSingle.SecurityID.getValue());
                 //minfo.exchangeCode = codeBean.zdExchg;
                 var symbol = refObj.newOrderSingle.Symbol.getValue();
-                var zd = Configurations.GetZDExchangeProduct(symbol);
+                var zd = Configurations.Instance.GetZDExchangeProduct(symbol);
                 minfo.exchangeCode = zd.ZDExchange;
                 minfo.orderNo = refObj.clOrderID;
                 minfo.accountNo = refObj.strArray[0];
@@ -815,7 +819,7 @@ namespace ZDTradeClientTT
             //CodeBean codeBean = CodeTransfer_TT.getZDCodeInfoByUpperCode(execReport.SecurityID.getValue());
 
             //info.exchangeCode = codeBean.zdExchg;
-            var zd = Configurations.GetZDExchangeProduct(strSymbol);
+            var zd = Configurations.Instance.GetZDExchangeProduct(strSymbol);
             info.exchangeCode = zd.ZDExchange;
 
             //if (execReport.Side.getValue() == Side.BUY)
@@ -906,7 +910,7 @@ namespace ZDTradeClientTT
 
             //    codeBean = CodeTransfer_TT.getZDCodeInfoByUpperCode(execReport.SecurityID.getValue());
             //    info.exchangeCode = codeBean.zdExchg;
-            var zd = Configurations.GetZDExchangeProduct(strSymbol);
+            var zd = Configurations.Instance.GetZDExchangeProduct(strSymbol);
             info.exchangeCode = zd.ZDExchange;
 
             //if (execReport.Side.getValue() == Side.BUY)
@@ -1019,7 +1023,7 @@ namespace ZDTradeClientTT
             string strSymbol = execReport.Symbol.getValue();
             //CodeBean codeBean = CodeTransfer_TT.getZDCodeInfoByUpperCode(execReport.SecurityID.getValue());
             //info.exchangeCode = codeBean.zdExchg;
-            var zd = Configurations.GetZDExchangeProduct(strSymbol);
+            var zd = Configurations.Instance.GetZDExchangeProduct(strSymbol);
             info.exchangeCode = zd.ZDExchange;
             //if (execReport.Side.getValue() == Side.BUY)
             //    info.buySale = "1";
@@ -1108,7 +1112,7 @@ namespace ZDTradeClientTT
             //}
             //else
             //{
-            var zd = Configurations.GetZDExchangeProduct(strSymbol);
+            var zd = Configurations.Instance.GetZDExchangeProduct(strSymbol);
             info.exchangeCode = zd.ZDExchange;
             //}
 
@@ -1193,7 +1197,7 @@ namespace ZDTradeClientTT
             string strSymbol = execReport.Symbol.getValue();
             //CodeBean codeBean = CodeTransfer_TT.getZDCodeInfoByUpperCode(execReport.SecurityID.getValue());
             //info.exchangeCode = codeBean.zdExchg;
-            var zd = Configurations.GetZDExchangeProduct(strSymbol);
+            var zd = Configurations.Instance.GetZDExchangeProduct(strSymbol);
             info.exchangeCode = zd.ZDExchange;
 
             info.buySale = QuerySide(execReport.Side);
@@ -1497,20 +1501,20 @@ namespace ZDTradeClientTT
 
 
                 //GHF 要求使用116，Phillip除了ICE之外不用
-                if (!string.IsNullOrEmpty(ZDTradeClientTTConfiurations.OnBehalfOfSubID))
+                if (!string.IsNullOrEmpty(ZDTradeClientTTConfiurations.Instance.OnBehalfOfSubID))
                 {
-                    if (ZDTradeClientTTConfiurations.ClearFirm.ToUpper() == "GHF")
+                    if (ZDTradeClientTTConfiurations.Instance.ClearFirm.ToUpper() == "GHF")
                     {
                         //Tag 116  
-                        newOrderSingle.OnBehalfOfSubID = new OnBehalfOfSubID(ZDTradeClientTTConfiurations.OnBehalfOfSubID);
+                        newOrderSingle.OnBehalfOfSubID = new OnBehalfOfSubID(ZDTradeClientTTConfiurations.Instance.OnBehalfOfSubID);
                     }
-                    else if (ZDTradeClientTTConfiurations.ClearFirm.ToUpper() == "PHILLIP")
+                    else if (ZDTradeClientTTConfiurations.Instance.ClearFirm.ToUpper() == "PHILLIP")
                     {
                         //phillip ice 加tag116
                         if (securityExchange == "ICE")
                         {
                             //Tag 116  
-                            newOrderSingle.OnBehalfOfSubID = new OnBehalfOfSubID(ZDTradeClientTTConfiurations.OnBehalfOfSubID);
+                            newOrderSingle.OnBehalfOfSubID = new OnBehalfOfSubID(ZDTradeClientTTConfiurations.Instance.OnBehalfOfSubID);
                         }
                     }
                 }
@@ -1526,9 +1530,9 @@ namespace ZDTradeClientTT
                 }
 
                 #region GHF Tag
-                if (ZDTradeClientTTConfiurations.ClearFirm == "GHF")
+                if (ZDTradeClientTTConfiurations.Instance.ClearFirm == "GHF")
                 {
-                    string p_Fxd_Clis_Ac_Ref = ZDTradeClientTTConfiurations.Prefix + netInfo.todayCanUse;
+                    string p_Fxd_Clis_Ac_Ref = ZDTradeClientTTConfiurations.Instance.Prefix + netInfo.todayCanUse;
                     //string p_Fxd_Clis_Ac_Ref = "ZD123456";
                     switch (securityExchange)
                     {
@@ -1565,7 +1569,7 @@ namespace ZDTradeClientTT
 
                         case "CFE":
                             //Tag 16999
-                            newOrderSingle.ClearingAccountOverride = new ClearingAccountOverride("DX0" + ZDTradeClientTTConfiurations.Pre_Agreed_Ref);
+                            newOrderSingle.ClearingAccountOverride = new ClearingAccountOverride("DX0" + ZDTradeClientTTConfiurations.Instance.Pre_Agreed_Ref);
                             //Tag 50
                             newOrderSingle.SenderSubID = new SenderSubID(p_Fxd_Clis_Ac_Ref);
                             //Tag 16558
@@ -1579,7 +1583,7 @@ namespace ZDTradeClientTT
                             newOrderSingle.TextTT = new TextTT(p_Fxd_Clis_Ac_Ref);
                             //Tag 16999 注：CME Globex没有要求填写，BMD要填写，到时候根据具体品种反推
                             //是CME Globex 还是BMD来设置此Tag值。
-                            newOrderSingle.ClearingAccountOverride = new ClearingAccountOverride(ZDTradeClientTTConfiurations.KenangaRef);
+                            newOrderSingle.ClearingAccountOverride = new ClearingAccountOverride(ZDTradeClientTTConfiurations.Instance.KenangaRef);
                             ////Tag 7928
                             //newOrderSingle.SelfMatchPreventionID = new SelfMatchPreventionID(CfgManager.getInstance().CME_SMPID);
                             ////Tag 8000
@@ -1613,7 +1617,7 @@ namespace ZDTradeClientTT
                             break;
                         case "SGX":
                             //Tag 16999
-                            newOrderSingle.ClearingAccountOverride = new ClearingAccountOverride(ZDTradeClientTTConfiurations.SGX_ClearingAccountOverride);
+                            newOrderSingle.ClearingAccountOverride = new ClearingAccountOverride(ZDTradeClientTTConfiurations.Instance.SGX_ClearingAccountOverride);
                             //Tag 16557
                             newOrderSingle.TextB = new TextB(p_Fxd_Clis_Ac_Ref);
                             //Tag 16558
@@ -1648,7 +1652,7 @@ namespace ZDTradeClientTT
                 refObj.addClientReq(newOrderSingle);
 
 
-                bool ret = TradeApp.Send(newOrderSingle);
+                bool ret = tradeApp.Send(newOrderSingle);
 
                 if (!ret)
                 {
@@ -1716,7 +1720,7 @@ namespace ZDTradeClientTT
                     //Tag 41
                     orderCancelRequest.OrigClOrdID = new OrigClOrdID(lastClOrdID);
                     refObj.addClientReq(orderCancelRequest);
-                    ret = TradeApp.Send(orderCancelRequest);
+                    ret = tradeApp.Send(orderCancelRequest);
 
                     if (!ret)
                     {
@@ -1827,7 +1831,7 @@ namespace ZDTradeClientTT
                     refObj.addClientReq(ocrr);
 
 
-                    ret = TradeApp.Send(ocrr);
+                    ret = tradeApp.Send(ocrr);
 
                     if (!ret)
                     {

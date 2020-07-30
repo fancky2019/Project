@@ -111,6 +111,7 @@
     <Compile Include="CodeTransfer_TT.cs" />
     <Compile Include="CompatibleOpenInterestContract.cs" />
     <Compile Include="CompatibleOptionCodeConverter.cs" />
+    <Compile Include="ConfigFileRefresh.cs" />
     <Compile Include="FrmLogAnalysis.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -54,7 +54,7 @@ namespace TTMarketAdapter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (!File.Exists(Configurations.SecurityDefinitionFuture))
+            if (!File.Exists(Configurations.Instance.SecurityDefinitionFuture))
             {
                 this.cbUpdateContract.Checked = true;
                 this.cbUpdateContract.Enabled = false;
@@ -122,17 +122,17 @@ namespace TTMarketAdapter
         /// <param name="e"></param>
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (int.TryParse(Configurations.LogCacheSize, out int cacheSize))
+            if (int.TryParse(Configurations.Instance.LogCacheSize, out int cacheSize))
             {
                 LogAsync.CacheSize = cacheSize;
             }
 
-            if (int.TryParse(Configurations.TimerInterval, out int timerInterval))
+            if (int.TryParse(Configurations.Instance.TimerInterval, out int timerInterval))
             {
                 LogAsync.TimerInterval = timerInterval;
             }
 
-            if (Configurations.NewMDBool)
+            if (Configurations.Instance.NewMDBool)
             {
                 MDSocket.GetInstance();
             }
@@ -183,9 +183,9 @@ namespace TTMarketAdapter
                     //if (!string.IsNullOrEmpty(Configurations.TargetFutures))
                     //{
                     //
-                    var futures = string.IsNullOrEmpty(Configurations.TargetFutures) ? null : Configurations.TargetFutures.Split(';');
-                    var spreads = string.IsNullOrEmpty(Configurations.TargetSpreads) ? null : Configurations.TargetSpreads.Split(';');
-                    var options = string.IsNullOrEmpty(Configurations.TargetOptions) ? null : Configurations.TargetOptions.Split(';');
+                    var futures = string.IsNullOrEmpty(Configurations.Instance.TargetFutures) ? null : Configurations.Instance.TargetFutures.Split(';');
+                    var spreads = string.IsNullOrEmpty(Configurations.Instance.TargetSpreads) ? null : Configurations.Instance.TargetSpreads.Split(';');
+                    var options = string.IsNullOrEmpty(Configurations.Instance.TargetOptions) ? null : Configurations.Instance.TargetOptions.Split(';');
 
 
                     List<(string TTExchange, string TTProduct, SecurityTypeEnum SecurityType)>
@@ -305,7 +305,7 @@ namespace TTMarketAdapter
                     //List<(string TTExchange, string TTProduct, TimeSpan MarketTime)> exchangeProductOpeningTime = new List<(string TTExchange, string TTProduct, TimeSpan MarketTime)>();
 
 
-                    History.Lib.ProfileService.Start(Configurations.FutureConnectStr);
+                    History.Lib.ProfileService.Start(Configurations.Instance.FutureConnectStr);
                     //int m = 5;
                     //获取交易时间
                     existList.ForEach(p =>
@@ -334,7 +334,7 @@ namespace TTMarketAdapter
 
                             //}
 
-                            var tt = Configurations.GetTTProductExchange(p.ProductCode, p.SecurityType);
+                            var tt = Configurations.Instance.GetTTProductExchange(p.ProductCode, p.SecurityType);
 
                             //var tt = Configurations.GetTTProductExchange(p.ProductCode, SecurityTypeEnum.None);
                             exchangeProductOpeningTime.Add((tt.TTExchange, tt.TTProduct, marketTime.Add(new TimeSpan(0, -15, 0))));
@@ -486,7 +486,7 @@ namespace TTMarketAdapter
 
                     //添加每天三点自动保存结算价
                     TimeSpan timeSpan;
-                    if (TimeSpan.TryParse(Configurations.SaveSettlementPriceTime, out timeSpan))
+                    if (TimeSpan.TryParse(Configurations.Instance.SaveSettlementPriceTime, out timeSpan))
                     {
                         CommonClassLib.EventDetail ed = new CommonClassLib.EventDetail();
                         ed.eventID = 999997;
@@ -506,10 +506,10 @@ namespace TTMarketAdapter
                     }
 
                     //每天晚上12点打包日志，并删除日志文件只保留打包的文件
-                    if (!string.IsNullOrEmpty(Configurations.LogSendMsg) && !string.IsNullOrEmpty(Configurations.ZipLogTime))
+                    if (!string.IsNullOrEmpty(Configurations.Instance.LogSendMsg) && !string.IsNullOrEmpty(Configurations.Instance.ZipLogTime))
                     {
                         TimeSpan zipLogTime;
-                        if (TimeSpan.TryParse(Configurations.ZipLogTime, out zipLogTime))
+                        if (TimeSpan.TryParse(Configurations.Instance.ZipLogTime, out zipLogTime))
                         {
                             CommonClassLib.EventDetail zipEventDetail = new CommonClassLib.EventDetail();
                             zipEventDetail.eventID = 999998;
@@ -555,10 +555,10 @@ namespace TTMarketAdapter
 
                     //重启系统
                     //应用程序自动退出
-                    if (!string.IsNullOrEmpty(Configurations.RestartTime))
+                    if (!string.IsNullOrEmpty(Configurations.Instance.RestartTime))
                     {
                         //TimeSpan restartTime;
-                        if (TimeSpan.TryParse(Configurations.RestartTime, out TimeSpan restartTime))
+                        if (TimeSpan.TryParse(Configurations.Instance.RestartTime, out TimeSpan restartTime))
                         {
                             CommonClassLib.EventDetail zipEventDetail = new CommonClassLib.EventDetail();
                             zipEventDetail.eventID = 999999;
@@ -595,7 +595,7 @@ namespace TTMarketAdapter
                     }
 
                     // T + 1开盘时间前清理内存的成交额数据
-                    var supportedTradeVolumeProductsTimes = Configurations.SupportedTradeVolumeProductsList.Select(p => p.OpeningTime).Distinct().ToList();
+                    var supportedTradeVolumeProductsTimes = Configurations.Instance.SupportedTradeVolumeProductsList.Select(p => p.OpeningTime).Distinct().ToList();
 
                     int eventID = 1000;
                     supportedTradeVolumeProductsTimes.ForEach(p =>
@@ -606,7 +606,7 @@ namespace TTMarketAdapter
                             zipEventDetail.eventID = eventID;
                             zipEventDetail.eventHandler = (id) =>
                             {
-                                var currentList = Configurations.SupportedTradeVolumeProductsList.Where(i => i.OpeningTime == p).ToList();
+                                var currentList = Configurations.Instance.SupportedTradeVolumeProductsList.Where(i => i.OpeningTime == p).ToList();
                                 currentList.ForEach(c =>
                                 {
                                     for (int i = 0; i < OrderBookMgr.Instance.TradingVolumeDic.Keys.Count; i++)
@@ -1294,7 +1294,7 @@ namespace TTMarketAdapter
 
             #region  快照、增量数据调试（勾选调试模式：初始化内存数据）
             QuickFix.DataDictionary.DataDictionary dd = new QuickFix.DataDictionary.DataDictionary();
-            dd.Load(Configurations.FIX42);
+            dd.Load(Configurations.Instance.FIX42);
 
             ////string snapshotStr = @"8=FIX.4.2|9=00539|35=W|49=TT_PRICE|56=daintmd|34=2|52=20190812-02:09:01.078|262=1|55=NI|107=Nickel|460=12|167=FUT|200=201911|541=20191112|205=12|18211=D|48=11988531206950636299|207=LME|100=XLME|461=F|15=USD|268=14|269=0|270=15570|271=2|290=1|269=0|270=15565|271=2|290=2|269=0|270=15560|271=1|290=3|269=0|270=15555|271=1|290=4|269=0|270=15550|271=2|290=5|269=1|270=15590|271=6|290=1|269=1|270=15605|271=3|290=2|269=1|270=15610|271=1|290=3|269=1|270=15615|271=2|290=4|269=1|270=15630|271=6|290=5|269=B|271=4540|269=6|270=15550|269=7|270=16145|269=8|270=15500|10=120|";
             //var snapshotStr = @"8=FIX.4.2|9=00563|35=W|49=TT_PRICE|56=daintmd|34=10|52=20191202-02:13:12.021|262=1|55=CA|107=Copper-Grade A|460=12|167=FUT|200=202003|541=20200302|205=2|18211=D|48=12486318480675622682|207=LME|100=XLME|461=F|15=USD|268=15|269=0|270=5901.5|271=3|290=1|269=0|270=5901|271=8|290=2|269=0|270=5900.5|271=5|290=3|269=0|270=5900|271=4|290=4|269=0|270=5899.5|271=4|290=5|269=1|270=5902.5|271=2|290=1|269=1|270=5903|271=3|290=2|269=1|270=5903.5|271=3|290=3|269=1|270=5904|271=15|290=4|269=1|270=5904.5|271=3|290=5|269=B|271=879|269=6|270=5864|269=4|270=5887.5|269=7|270=5903|269=8|270=5886|10=247|";
@@ -1394,7 +1394,7 @@ namespace TTMarketAdapter
         private void Form1_Shown(object sender, EventArgs e)
         {
             // CfgManager cfgManager = CfgManager.getInstance(null);
-            if ("Yes".Equals(Configurations.AutoStart, StringComparison.CurrentCultureIgnoreCase))
+            if ("Yes".Equals(Configurations.Instance.AutoStart, StringComparison.CurrentCultureIgnoreCase))
             {
                 btnStart_Click(sender, e);
             }
@@ -1571,7 +1571,7 @@ namespace TTMarketAdapter
             List<QuickFix.FIX42.SecurityDefinition> optionSecuDefList = new List<QuickFix.FIX42.SecurityDefinition>();
 
             QuickFix.DataDictionary.DataDictionary dd = new QuickFix.DataDictionary.DataDictionary();
-            dd.Load(Configurations.FIX42);
+            dd.Load(Configurations.Instance.FIX42);
 
             if (File.Exists(SECU_FILE))
             {
@@ -1625,7 +1625,7 @@ namespace TTMarketAdapter
 
 
             List<string> result = CodeTransfer_TT.tt2ZdMapping.Select(p => p.Value.upperProduct).Distinct().ToList();
-            List<string> list1 = Configurations.TargetFutures.Split(';').ToList();
+            List<string> list1 = Configurations.Instance.TargetFutures.Split(';').ToList();
             List<string> uperCodeList = new List<string>();
             list1.ForEach(p =>
             {
@@ -1669,7 +1669,7 @@ namespace TTMarketAdapter
         private void btnEchangeProductSort_Click(object sender, EventArgs e)
         {
 
-            var futureList = Configurations.TargetFutures.Split(';').ToList();
+            var futureList = Configurations.Instance.TargetFutures.Split(';').ToList();
             var exchangeProductList = new List<(string Exchange, string Product)>();
             futureList.ForEach(p =>
             {
@@ -1878,11 +1878,11 @@ namespace TTMarketAdapter
                 sb.Clear();
                 var currentProductList = result.Where(p => p.upperProduct == u).OrderBy(p => p.zdContractDate).ToList();
                 //获取合约的中文名部分
-                string chineseSubName = Configurations.ContractChineseNameList.Find(p => p.TTProduct == u).ContractChineseName;
+                string chineseSubName = Configurations.Instance.ContractChineseNameList.Find(p => p.TTProduct == u).ContractChineseName;
                 //获取期权的期货现货商品。
-                var optFutSpot = Configurations.OptFutSpotList.Find(p => p.TTProduct == u);
+                var optFutSpot = Configurations.Instance.OptFutSpotList.Find(p => p.TTProduct == u);
                 //获取ZD交易所
-                var zdExchange = Configurations.GetZDExchangeProduct(u).ZDExchange;
+                var zdExchange = Configurations.Instance.GetZDExchangeProduct(u).ZDExchange;
                 foreach (var p in currentProductList)
                 {
 
@@ -1926,7 +1926,7 @@ namespace TTMarketAdapter
                         currencyCode = securityDefinition.Currency.getValue().ToString();
                         //货币名称
                         //currencyName = tCommodity.CurrencyName;
-                        currencyName = Configurations.CurrencyNameDic[currencyCode]; ;
+                        currencyName = Configurations.Instance.CurrencyNameDic[currencyCode]; ;
                         //账面跳点价值
                         tickPrice = securityDefinition.ExchPointValue.getValue().ToString();
                         //最小变动单位  16552
@@ -2112,7 +2112,7 @@ namespace TTMarketAdapter
 
                         #region   new
 
-                        if (Configurations.OptionFutureMonthDic.ContainsKey(u))
+                        if (Configurations.Instance.OptionFutureMonthDic.ContainsKey(u))
                         {
                             //202009
                             string dateStr = p.zdContractDate;
@@ -2125,7 +2125,7 @@ namespace TTMarketAdapter
 
                             //}
 
-                            var optionFutureMonthSubDic = Configurations.OptionFutureMonthDic[u];
+                            var optionFutureMonthSubDic = Configurations.Instance.OptionFutureMonthDic[u];
                             var futureMonth = optionFutureMonthSubDic.First(d => d.Value.Contains(monthStr)).Key;
                             futuresContract = year + int.Parse(futureMonth).ToString("D2");
                         }
@@ -2477,9 +2477,9 @@ namespace TTMarketAdapter
                 }
                 string factorStr = stringBuilder.ToString().TrimEnd(';');
 
-                Configurations.UpdateConfig("DisplayPrxFactor", factorStr, null);
+                Configurations.Instance.UpdateConfig("DisplayPrxFactor", factorStr, null);
                 //刷新内存里配置变量的值。
-                Configurations.DisplayPrxFactor = factorStr;
+                Configurations.Instance.DisplayPrxFactor = factorStr;
                 //查看是否更新成功
                 //var val = ConfigurationManager.AppSettings["DisplayPrxFactor"];
                 NLogUtility.Info($"更新倍率配置(DisplayPrxFactor)：{factorStr}");

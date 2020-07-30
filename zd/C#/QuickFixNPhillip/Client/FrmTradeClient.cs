@@ -24,6 +24,7 @@ namespace Client
         {
             InitializeComponent();
             this.btnStop.Enabled = false;
+            ConfigFileRefresh.Refresh();
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -84,6 +85,9 @@ namespace Client
 
         private void btnTest_Click(object sender, EventArgs e)
         {
+            this.btnTest.Text = ConfigurationManager.AppSettings["RefreshTest"]?.ToString();
+         
+            return;
             //Order order = new Order();
             //order.ClientNumber = "dsdsfaadsdas";
             //order.ClientID = 100;

@@ -167,7 +167,7 @@ namespace ZDTradeClientTT
             //message.Header.SetField(tradingSysVersion); //new TradingSystemVersion("V1.0"));
             //message.Header.SetField(appSysVendor); //new ApplicationSystemVendor("DA_SOFT"));
             //CfgManager cfgManager = CfgManager.getInstance("ZDTradeClientTT.exe");
-            string password = ZDTradeClientTTConfiurations.SessionAndPsw.Split(',')[1];
+            string password = ZDTradeClientTTConfiurations.Instance.SessionAndPsw.Split(',')[1];
             message.SetField(new RawDataLength(password.Length));
             message.SetField(new RawData(password));
             message.SetField(new HeartBtInt(30));

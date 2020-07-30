@@ -16,9 +16,9 @@ namespace TTMarketAdapter
         {
             _openInterestOptions = new List<(string Contract, int Decimal)>();
             _productDecimal = new Dictionary<string, int>();
-            if (!string.IsNullOrEmpty(Configurations.OpenInterestContract))
+            if (!string.IsNullOrEmpty(Configurations.Instance.OpenInterestContract))
             {
-                var array = Configurations.OpenInterestContract.Split(';').ToList();
+                var array = Configurations.Instance.OpenInterestContract.Split(';').ToList();
                 array.ForEach(p =>
                 {
                     var contractDecimal = p.Split(',');

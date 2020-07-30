@@ -102,6 +102,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utility\ConfigFileRefresh.cs" />
     <Compile Include="FixUtility\TradeClient.cs" />
     <Compile Include="FrmTradeClient.cs">
       <SubType>Form</SubType>

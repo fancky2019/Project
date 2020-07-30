@@ -31,8 +31,8 @@ namespace TTMarketAdapter
                     if (_mDSocket == null)
                     {
                         //CfgManager cfgManager = CfgManager.getInstance(null);
-                        string ip = Configurations.MulticastTCPIP;
-                        string port = Configurations.MulticastTCPPort;
+                        string ip = Configurations.Instance.MulticastTCPIP;
+                        string port = Configurations.Instance.MulticastTCPPort;
                          _logger = new SynWriteLogger("MDSocket.log");
                         _logger.setLogLevel(ZDLogger.LVL_DEBUG);
                         _mDSocket = new MDSocket(_logger, ip, port);

@@ -147,7 +147,7 @@ namespace TTMarketAdapter.Utilities
             try
             {
                 var array = securityAltID.Split(' ');
-                var zdProduct = Configurations.GetZDExchangeProduct(array[0], securityExchange, securityType).ZDProduct;
+                var zdProduct = Configurations.Instance.GetZDExchangeProduct(array[0], securityExchange, securityType).ZDProduct;
                 if (securityExchange == "LME")
                 {
                     contract = $"{zdProduct}3M";
@@ -231,7 +231,7 @@ namespace TTMarketAdapter.Utilities
                 //Regex.IsMatch
                 SecurityTypeEnum securityType = GetSecurityType(contract);
                 orderModel.SecurityType = Enum.GetName(typeof(SecurityTypeEnum), securityType);
-                var tt = Configurations.GetTTProductExchange(GetZDProduct(contract, securityType), securityType);
+                var tt = Configurations.Instance.GetTTProductExchange(GetZDProduct(contract, securityType), securityType);
                 orderModel.SecurityExchange = tt.TTExchange;
                 orderModel.Symbol = tt.TTProduct;
                 orderModel.SecurityAltID = GetSecurityAltID(orderModel);

@@ -92,7 +92,7 @@ namespace TTMarketAdapter
         public TNewDayTimeDBHandlerImpl()
         {
             //errorLogger = zdLogger;
-            connDBShare = Configurations.ForeignShareStr;
+            connDBShare = Configurations.Instance.ForeignShareStr;
         }
 
 
@@ -136,7 +136,7 @@ namespace TTMarketAdapter
     {
         public static List<T> GetList(string selectCommand)
         {
-            using (SqlConnection con = new SqlConnection(Configurations.ForeignShareStr))
+            using (SqlConnection con = new SqlConnection(Configurations.Instance.ForeignShareStr))
             {
                 SqlDataAdapter sda = new SqlDataAdapter(selectCommand, con);
                 DataSet ds = new DataSet();

@@ -191,14 +191,14 @@ namespace TTMarketAdapter
             if (isMessageOfType(message, MsgType.LOGON))
             {
                 //CfgManager cfgManager = CfgManager.getInstance(null);
-                if (!string.IsNullOrEmpty(Configurations.SessionAndPsw))
+                if (!string.IsNullOrEmpty(Configurations.Instance.SessionAndPsw))
                 {
-                    string password = Configurations.SessionAndPsw.Split(',')[1];
+                    string password = Configurations.Instance.SessionAndPsw.Split(',')[1];
                     message.SetField(new RawDataLength(password.Length));
                     message.SetField(new RawData(password));
                     message.SetField(new HeartBtInt(55));
                 }
-                message.Header.SetField(new OnBehalfOfSubID(Configurations.OnBehalfOfSubID));
+                message.Header.SetField(new OnBehalfOfSubID(Configurations.Instance.OnBehalfOfSubID));
             }
 
             TT.Common.NLogUtility.Debug("## ToAdmin: " + message.ToString());
