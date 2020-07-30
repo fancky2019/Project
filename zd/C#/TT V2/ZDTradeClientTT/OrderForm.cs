@@ -96,7 +96,7 @@ namespace ZDTradeClientTT
             netInfo.code = CommandCode.ORDER;
             //上手号
             //obj.accountNo = "ZD_001";
-            netInfo.accountNo = ZDTradeClientTTConfiurations.Account;
+            netInfo.accountNo = ZDTradeClientTTConfiurations.Instance.Account;
             netInfo.systemCode = "system1";
             //tag 50  < add key = "SenderSubID" value = "ZD_123456" />
             netInfo.todayCanUse = tbTag50ID.Text;
@@ -215,7 +215,7 @@ namespace ZDTradeClientTT
             CommonClassLib.CancelInfo info = new CommonClassLib.CancelInfo();
 
             obj.code = CommandCode.CANCEL;
-            obj.accountNo = ZDTradeClientTTConfiurations.Account;
+            obj.accountNo = ZDTradeClientTTConfiurations.Instance.Account;
             obj.systemCode = "system1";
             obj.todayCanUse = tbTag50ID.Text;
 
@@ -386,7 +386,7 @@ namespace ZDTradeClientTT
             CommonClassLib.ModifyInfo info = new CommonClassLib.ModifyInfo();
 
             obj.code = CommandCode.MODIFY;
-            obj.accountNo = ZDTradeClientTTConfiurations.Account;
+            obj.accountNo = ZDTradeClientTTConfiurations.Instance.Account;
             obj.systemCode = "system1";
             obj.todayCanUse = tbTag50ID.Text;
             info.orderPrice = tbPrice.Text;
@@ -411,7 +411,7 @@ namespace ZDTradeClientTT
         private void button1_Click(object sender, EventArgs e)
         {
             QuickFix.Message msg = new QuickFix.Message("8=FIX.4.29=34335=D34=15749=DBECKMIFID52=20171115-06:57:5956=TTMIFIDOR1=dbeckmifid11=598731712440=LMA01316102=01338=540=244=54848=544473847=W54=255=IPE e-Gas Oil60=20051205-09:11:59167=FUT204=0207=ICE_IPE2593=22594=22595=Y2594=32595=Y453=3448=1452=1222376=24447=P448=1452=122376=24447=P448=987654452=32376=24447=P1724=510=083");
-            _tTCommunication.TradeApp.Send(msg);
+            _tTCommunication.tradeApp.Send(msg);
         }
 
 
@@ -432,11 +432,17 @@ namespace ZDTradeClientTT
         FrmOrderStatusRequest _frmOrderStatusRequest = null;
         private void btnOrderStatusRequest_Click(object sender, EventArgs e)
         {
-            if (_frmOrderStatusRequest == null||_frmOrderStatusRequest.IsDisposed)
+            if (_frmOrderStatusRequest == null || _frmOrderStatusRequest.IsDisposed)
             {
                 _frmOrderStatusRequest = new FrmOrderStatusRequest(this._tTCommunication);
             }
             _frmOrderStatusRequest.Show();
+        }
+
+        private void btnEnableHotDeployment_Click(object sender, EventArgs e)
+        {
+            this.btnEnableHotDeployment.Text = this.btnEnableHotDeployment.Text == "启用热部署" ? "禁用热部署" : "启用热部署";
+            ConfigFileRefresh.Instance.Enable = !ConfigFileRefresh.Instance.Enable;
         }
     }
 }

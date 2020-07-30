@@ -85,7 +85,7 @@ namespace TTMarketAdapter
 
                 #region  TT配置
                 // FIX app settings and related
-                QuickFix.SessionSettings settings = new QuickFix.SessionSettings(Configurations.QuickFixConfig);
+                QuickFix.SessionSettings settings = new QuickFix.SessionSettings(Configurations.Instance.QuickFixConfig);
                 // FixV1.5 -begin
                 QuickFix.IMessageStoreFactory storeFactory = new QuickFix.FileStoreFactory(settings);
                 QuickFix.ILogFactory logFactory = new QuickFix.FileLogFactory(settings);
@@ -123,17 +123,17 @@ namespace TTMarketAdapter
             List<QuickFix.FIX42.SecurityDefinition> optionSecuDefList = new List<QuickFix.FIX42.SecurityDefinition>();
 
             QuickFix.DataDictionary.DataDictionary dd = new QuickFix.DataDictionary.DataDictionary();
-            dd.Load(Configurations.FIX42);
+            dd.Load(Configurations.Instance.FIX42);
 
-            if (File.Exists(Configurations.SecurityDefinitionFuture))
+            if (File.Exists(Configurations.Instance.SecurityDefinitionFuture))
             {
-                ReadFile(Configurations.SecurityDefinitionFuture);
+                ReadFile(Configurations.Instance.SecurityDefinitionFuture);
                 TT.Common.NLogUtility.Info("init instrument from SECU_FILE file data completed.");
             }
 
-            if (File.Exists(Configurations.SecurityDefinitionOption))
+            if (File.Exists(Configurations.Instance.SecurityDefinitionOption))
             {
-                ReadFile(Configurations.SecurityDefinitionOption);
+                ReadFile(Configurations.Instance.SecurityDefinitionOption);
                 TT.Common.NLogUtility.Info("init instrument from SECU_OPT_FILE file data completed.");
             }
             void ReadFile(string fileName)
@@ -266,7 +266,7 @@ namespace TTMarketAdapter
                 //  Thread.Sleep(4000);
 
 
-                string strFutures = Configurations.TargetFutures;
+                string strFutures = Configurations.Instance.TargetFutures;
                 if (string.IsNullOrEmpty(strFutures))
                 {
                     TT.Common.NLogUtility.Info("Waring: no futures configured");
@@ -292,7 +292,7 @@ namespace TTMarketAdapter
                     lastFuturesReqID = (_sdReqIDCnt - 1).ToString();
                 }
 
-                if (string.IsNullOrEmpty(Configurations.TargetSpreads))
+                if (string.IsNullOrEmpty(Configurations.Instance.TargetSpreads))
                 {
                     TT.Common.NLogUtility.Info("Waring: no spreads configured");
                 }
@@ -300,7 +300,7 @@ namespace TTMarketAdapter
                 {
                     TT.Common.NLogUtility.Info("Download spreads beginning... ");
 
-                    string[] arrSpreads = Configurations.TargetSpreads.Split(';');
+                    string[] arrSpreads = Configurations.Instance.TargetSpreads.Split(';');
 
                     SecurityType spreadsSecuType = new SecurityType("MLEG");
                     for (int i = 0; i < arrSpreads.Length; i++)
@@ -318,7 +318,7 @@ namespace TTMarketAdapter
                 }
 
                 //添加期权 20180130   fancky
-                if (string.IsNullOrEmpty(Configurations.TargetOptions))
+                if (string.IsNullOrEmpty(Configurations.Instance.TargetOptions))
                 {
                     TT.Common.NLogUtility.Info("Waring: no TargetOptions configured");
                 }
@@ -326,7 +326,7 @@ namespace TTMarketAdapter
                 {
                     TT.Common.NLogUtility.Info("Download TargetOptions beginning... ");
 
-                    string[] arrOptions = Configurations.TargetOptions.Split(';');
+                    string[] arrOptions = Configurations.Instance.TargetOptions.Split(';');
 
                     SecurityType spreadsSecuType = new SecurityType("OPT");
                     for (int i = 0; i < arrOptions.Length; i++)
@@ -720,16 +720,16 @@ namespace TTMarketAdapter
             List<QuickFix.FIX42.SecurityDefinition> spreadSecuDefList = new List<QuickFix.FIX42.SecurityDefinition>();
             List<QuickFix.FIX42.SecurityDefinition> optionSecuDefList = new List<QuickFix.FIX42.SecurityDefinition>();
             QuickFix.DataDictionary.DataDictionary dd = new QuickFix.DataDictionary.DataDictionary();
-            dd.Load(Configurations.FIX42);
-            if (File.Exists(Configurations.SecurityDefinitionFuture))
+            dd.Load(Configurations.Instance.FIX42);
+            if (File.Exists(Configurations.Instance.SecurityDefinitionFuture))
             {
-                ReadFile(Configurations.SecurityDefinitionFuture);
+                ReadFile(Configurations.Instance.SecurityDefinitionFuture);
                 TT.Common.NLogUtility.Info("compareContract:   init instrument from SECU_FILE file data completed.");
             }
 
-            if (File.Exists(Configurations.SecurityDefinitionOption))
+            if (File.Exists(Configurations.Instance.SecurityDefinitionOption))
             {
-                ReadFile(Configurations.SecurityDefinitionOption);
+                ReadFile(Configurations.Instance.SecurityDefinitionOption);
                 TT.Common.NLogUtility.Info("compareContract:    init instrument from SECU_OPT_FILE file data completed.");
             }
             //待优化
@@ -794,16 +794,16 @@ namespace TTMarketAdapter
             //GlobalData.allSecuriryList = totalSecuDefList;
             TT.Common.NLogUtility.Info("compareContract:   backup old contract files.");
             //备份之前文件
-            var extension = Path.GetExtension(Configurations.SecurityDefinitionFuture);
-            if (File.Exists(Configurations.SecurityDefinitionFuture))
+            var extension = Path.GetExtension(Configurations.Instance.SecurityDefinitionFuture);
+            if (File.Exists(Configurations.Instance.SecurityDefinitionFuture))
             {
-                TT.Common.NLogUtility.Info("compareContract:   backup " + Configurations.SecurityDefinitionFuture);
-                File.Move(Configurations.SecurityDefinitionFuture, @"config\" + Path.GetFileNameWithoutExtension(Configurations.SecurityDefinitionFuture) + DateTime.Now.ToString("_yyyyMMdd_HHmmss") + extension);
+                TT.Common.NLogUtility.Info("compareContract:   backup " + Configurations.Instance.SecurityDefinitionFuture);
+                File.Move(Configurations.Instance.SecurityDefinitionFuture, @"config\" + Path.GetFileNameWithoutExtension(Configurations.Instance.SecurityDefinitionFuture) + DateTime.Now.ToString("_yyyyMMdd_HHmmss") + extension);
             }
-            if (File.Exists(Configurations.SecurityDefinitionOption))
+            if (File.Exists(Configurations.Instance.SecurityDefinitionOption))
             {
-                TT.Common.NLogUtility.Info("compareContract:   backup " + Configurations.SecurityDefinitionOption);
-                File.Move(Configurations.SecurityDefinitionOption, @"config\" + Path.GetFileNameWithoutExtension(Configurations.SecurityDefinitionOption) + DateTime.Now.ToString("_yyyyMMdd_HHmmss") + extension);
+                TT.Common.NLogUtility.Info("compareContract:   backup " + Configurations.Instance.SecurityDefinitionOption);
+                File.Move(Configurations.Instance.SecurityDefinitionOption, @"config\" + Path.GetFileNameWithoutExtension(Configurations.Instance.SecurityDefinitionOption) + DateTime.Now.ToString("_yyyyMMdd_HHmmss") + extension);
             }
             TT.Common.NLogUtility.Info("backup old contract files completed......");
 

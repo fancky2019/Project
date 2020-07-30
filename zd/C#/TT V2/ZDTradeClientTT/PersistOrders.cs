@@ -15,7 +15,7 @@ namespace ZDTradeClientTT
 
         public static void LoadOrder(ConcurrentDictionary<long, RefObj> xReference, ConcurrentDictionary<string, RefObj> downReference)
         {
-            var fileName = ZDTradeClientTTConfiurations.PersistOrders;
+            var fileName = ZDTradeClientTTConfiurations.Instance.PersistOrders;
             if (File.Exists(fileName))
             {
                 using (StreamReader sReader = new StreamReader(File.Open(fileName, FileMode.Open), System.Text.Encoding.ASCII))
@@ -113,7 +113,7 @@ namespace ZDTradeClientTT
 
         public static void PersistOrder(ConcurrentDictionary<long, RefObj> xReference)
         {
-            var fileName = ZDTradeClientTTConfiurations.PersistOrders;
+            var fileName = ZDTradeClientTTConfiurations.Instance.PersistOrders;
             var directory = Path.GetDirectoryName(fileName);
             if (!Directory.Exists(directory))
             {

@@ -55,9 +55,9 @@ namespace TTMarketAdapter
         {
             udpSendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-            int port = Convert.ToInt32(Configurations.MulticastPort);
+            int port = Convert.ToInt32(Configurations.Instance.MulticastPort);
 
-            string[] udpTargetIP = Configurations.MulticastIP.Split(';');
+            string[] udpTargetIP = Configurations.Instance.MulticastIP.Split(';');
             destEndPointArr = new EndPoint[udpTargetIP.Length];
             for (int i = 0; i < destEndPointArr.Length; i++)
                 destEndPointArr[i] = new IPEndPoint(IPAddress.Parse(udpTargetIP[i]), port);
@@ -120,7 +120,7 @@ namespace TTMarketAdapter
         /// <param name="orderBookAll"></param>
         public static void pumpTrade(OrderBookALL orderBookAll, MarketDataIncrementalRefresh incrementalRefresh)
         {
-            if (Configurations.NewMDBool)
+            if (Configurations.Instance.NewMDBool)
             {
                 PumpTradeNew(orderBookAll, incrementalRefresh);
                 return;
@@ -146,7 +146,7 @@ namespace TTMarketAdapter
 
             //TT.Common.SendMessageLog.Log(bool.Parse(Configurations.LogSendMsg?.ToLower()),orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{Enum.GetName(typeof(MessageType), MessageType.Trade)} {strMarket}");
             var msgSeqNum = incrementalRefresh.Header.GetField(Tags.MsgSeqNum);
-            if (Configurations.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
+            if (Configurations.Instance.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
             {
                 LogAsync.Log(orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")} {LogMessageType.Trade} MsgSeqNum:{msgSeqNum} - {strMarket}");
             }
@@ -161,7 +161,7 @@ namespace TTMarketAdapter
 
             try
             {
-                if (Configurations.NewMDBool)
+                if (Configurations.Instance.NewMDBool)
                 {
                     PumpSnapshotQuickFastNew(orderBookAll, logHeader);
                     return;
@@ -374,7 +374,7 @@ namespace TTMarketAdapter
 
                 //Common.Log(orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{new StackTrace().GetFrame(1).GetMethod().Name} {strMarket}");
                 //TT.Common.SendMessageLog.Log(bool.Parse(Configurations.LogSendMsg?.ToLower()), orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{Enum.GetName(typeof(MessageType),messageType)} {strMarket}");
-                if (Configurations.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
+                if (Configurations.Instance.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
                 {
                     LogAsync.Log(orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")} {logHeader} - {strMarket}");
                 }
@@ -515,7 +515,7 @@ namespace TTMarketAdapter
             sendUDPPacket(strMarket);
             //  Common.Log(orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{new StackTrace().GetFrame(2).GetMethod().Name}_F {strMarket}");
             //TT.Common.SendMessageLog.Log(bool.Parse(Configurations.LogSendMsg?.ToLower()), orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{Enum.GetName(typeof(MessageType), MessageType.FracPrx)} {strMarket}");
-            if (Configurations.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
+            if (Configurations.Instance.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
             {
                 LogAsync.Log(orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")} {logHeader} - {strMarket}");
             }
@@ -736,7 +736,7 @@ namespace TTMarketAdapter
             sb.Clear();
             MyDataPool.StringBuilderPool.PutObject(sb);
             sendUDPPacket(strMarket);
-            TT.Common.SendMessageLog.Log(bool.Parse(Configurations.LogSendMsg?.ToLower()), orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{new StackTrace().GetFrame(1).GetMethod().Name} {strMarket}");
+            TT.Common.SendMessageLog.Log(bool.Parse(Configurations.Instance.LogSendMsg?.ToLower()), orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{new StackTrace().GetFrame(1).GetMethod().Name} {strMarket}");
         }
 
         public static string formatFracPrx(OrderBookALL orderBookAll, double rawPrx)
@@ -857,7 +857,7 @@ namespace TTMarketAdapter
                 MDSocket.GetInstance().Send(bytes,length+2);
                 //sendUDPPacket(strMarket);
                 var msgSeqNum = incrementalRefresh.Header.GetField(Tags.MsgSeqNum);
-                if (Configurations.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
+                if (Configurations.Instance.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
                 {
                     LogAsync.Log(orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")} {LogMessageType.Trade} MsgSeqNum:{msgSeqNum} - {zDMDMsgProtocol.ToString()}");
                 }
@@ -999,7 +999,7 @@ namespace TTMarketAdapter
 
                 //sendUDPPacket(zDMDMsgProtocolStr);
                 sendUDPPacketNew(zDMDMsgProtocol.GetBytes(), strMarket.Length+12);
-                if (Configurations.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
+                if (Configurations.Instance.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
                 {
                     LogAsync.Log(orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")} {logHeader} - {zDMDMsgProtocol.ToString()}");
                 }
@@ -1094,7 +1094,7 @@ namespace TTMarketAdapter
                     lastSendedOrderBookAllDic[orderBookAll.codeBean.zdCode] = copy;
                 }
 
-                if (Configurations.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
+                if (Configurations.Instance.LogSendMsgSecurityTypes.Contains(orderBookAll.codeBean.contractType))
                 {
                     LogAsync.Log(orderBookAll.codeBean.zdProduct, orderBookAll.codeBean.zdCode, $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")} {logHeader} - {zDMDMsgProtocol.ToString()}");
                 }

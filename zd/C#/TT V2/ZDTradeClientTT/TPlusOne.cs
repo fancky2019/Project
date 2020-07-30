@@ -31,8 +31,8 @@ namespace ZDTradeClientTT
                     if (_socketEngine == null)
                     {
                         //CfgManager cfgManager = CfgManager.getInstance(null);
-                        string ip = ZDTradeClientTTConfiurations.Gate_FUT_IP;
-                        string port = ZDTradeClientTTConfiurations.Gate_FUT_Port;
+                        string ip = ZDTradeClientTTConfiurations.Instance.Gate_FUT_IP;
+                        string port = ZDTradeClientTTConfiurations.Instance.Gate_FUT_Port;
                         ZDLogger logger = new SynWriteLogger("HistoryGate.log");
                         logger.setLogLevel(ZDLogger.LVL_DEBUG);
                         _socketEngine = new SocketEngine(logger, ip, port);

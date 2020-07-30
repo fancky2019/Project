@@ -83,6 +83,7 @@
     <Compile Include="ClOrderIDGen.cs" />
     <Compile Include="CMEFixStrategy.cs" />
     <Compile Include="CfgManager.cs" />
+    <Compile Include="ConfigFileRefresh.cs" />
     <Compile Include="FrmOrderStatusRequest.cs">
       <SubType>Form</SubType>
     </Compile>

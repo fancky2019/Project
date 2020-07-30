@@ -17,11 +17,11 @@ namespace ZDTradeClientTT
         /// <summary>
         /// 兼容rainer的壳
         /// </summary>
-        public string SessionAndPsw => ZDTradeClientTTConfiurations.SessionAndPsw;
+        public string SessionAndPsw => ZDTradeClientTTConfiurations.Instance.SessionAndPsw;
         /// <summary>
         /// 兼容rainer的壳
         /// </summary>
-        public string ClearFirm => ZDTradeClientTTConfiurations.ClearFirm;
+        public string ClearFirm => ZDTradeClientTTConfiurations.Instance.ClearFirm;
         private static CfgManager cfgInstance = null;
         public CfgManager(string exeCfgPath)
         {

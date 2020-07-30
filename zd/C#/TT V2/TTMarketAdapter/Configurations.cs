@@ -14,49 +14,49 @@ namespace TTMarketAdapter
 {
     public class Configurations
     {
-
-        public static readonly string QuickFixConfig;
-        public static readonly string FIX42;
-        public static readonly string SecurityDefinitionFuture;
-        public static readonly string SecurityDefinitionOption;
+        public static Configurations Instance { get; }
+        public string QuickFixConfig { get; private set; }
+        public string FIX42 { get; private set; }
+        public string SecurityDefinitionFuture { get; private set; }
+        public string SecurityDefinitionOption { get; private set; }
         /// <summary>
         ///  先映射ZD的品种名称 配置格式：TT交易所,TT品种：ZD品种
         ///  根据 "TT交易所,TT品种" 找 "ZD的品种"
         /// </summary>
-        public static readonly string MappingZDProducts;
+        public string MappingZDProducts { get; private set; }
 
         /// <summary>
         /// ZD交易所,ZD品种,倍率，开盘时间
         /// </summary>
-        public static readonly string SupportedTradeVolumeProducts;
+        public string SupportedTradeVolumeProducts { get; private set; }
         /// <summary>
         /// 根据映射ZD的品种名称之后，映射ZD的交易所名称 配置格式：ZD交易所,ZD品种
         /// 根据 "ZD品种" 找 "ZD交易所"
         /// </summary>
-        public static readonly string MappingZDExchanges;
+        public string MappingZDExchanges { get; private set; }
 
         /// <summary>
         /// Future 期货的配置
         /// 配置格式:TT的交易所名称和品种名称
         /// </summary>
-        public static readonly string TargetFutures;
+        public string TargetFutures { get; private set; }
 
         /// <summary>
         ///Spreads  配置格式: TT的交易所名称和品种名称
         /// </summary>
-        public static readonly string TargetSpreads;
+        public string TargetSpreads { get; private set; }
         /// <summary>
         /// 显示倍率
         /// </summary>
-        public static string DisplayPrxFactor;
+        public string DisplayPrxFactor { get;  set; }
         /// <summary>
         /// 
         /// </summary>
-        public static readonly string SessionAndPsw;
+        public string SessionAndPsw { get; private set; }
         /// <summary>
         /// 
         /// </summary>
-        public static readonly string OnBehalfOfSubID;
+        public string OnBehalfOfSubID { get; private set; }
         ///// <summary>
         ///// 
         ///// </summary>
@@ -64,53 +64,53 @@ namespace TTMarketAdapter
         /// <summary>
         /// 发送到二级行情UDP端口号
         /// </summary>
-        public static readonly string MulticastPort;
+        public string MulticastPort { get; private set; }
         /// <summary>
         /// 发送到二级行情UDPIP，可用127.0.0.1代替
         /// </summary>
-        public static readonly string MulticastIP;
+        public string MulticastIP { get; private set; }
 
         /// <summary>
         /// 发送到二级行情TCP端口号
         /// </summary>
-        public static readonly string MulticastTCPPort;
+        public string MulticastTCPPort { get; private set; }
         /// <summary>
         /// 发送到二级行情TCPIP，可用127.0.0.1代替
         /// </summary>
-        public static readonly string MulticastTCPIP;
-        public static readonly string NewMD;
+        public string MulticastTCPIP;
+        public string NewMD { get; private set; }
         /// <summary>
         /// 是新版行情
         /// </summary>
-        public static readonly bool NewMDBool;
+        public bool NewMDBool { get; private set; }
 
         /// <summary>
         /// 程序启动时自动启动服务
         /// </summary>
-        public static readonly string AutoStart;
+        public string AutoStart { get; private set; }
         /// <summary>
         /// 定时清结算价功能数据库配置
         /// </summary>
-        public static readonly string FutureConnectStr;
+        public string FutureConnectStr { get; private set; }
         /// <summary>
         /// 定时清结算价功能数据库配置
         /// </summary>
-        public static readonly string ForeignShareStr;
+        public string ForeignShareStr { get; private set; }
         /// <summary>
         /// 之前每天下午重启，重启之前保存结算价
         /// 每天三点自动保存结算价
         /// </summary>
-        public static readonly string SaveSettlementPriceTime;
+        public string SaveSettlementPriceTime { get; private set; }
         /// <summary>
         /// 触发点击stop服务时间，防止杀进程造成数据丢失
         /// </summary>
-        public static readonly string RestartTime;
+        public string RestartTime { get; private set; }
 
         /// <summary>
         ///Option 期权的配置
         ///  配置格式:TT的交易所名称和品种名称
         /// </summary>
-        public static readonly string TargetOptions;
+        public string TargetOptions { get; private set; }
         //{
         //    get
         //    {
@@ -121,82 +121,94 @@ namespace TTMarketAdapter
         /// <summary>
         /// 压缩日志时间 0:0:0
         /// </summary>
-        public static readonly string ZipLogTime;
+        public string ZipLogTime { get; private set; }
         /// <summary>
         /// 是否记录发送给二级行情的数据日志
         /// </summary>
-        public static readonly string LogSendMsg;// => _instance.AppSettings.Settings["LogSendMsg"]?.Value;
+        public string LogSendMsg { get; private set; }// => _instance.AppSettings.Settings["LogSendMsg"]?.Value;
 
 
         /// <summary>
         /// 记录发送给二级行情的合约类型，多个用逗号分隔（FUT,MLEG,OPT）。
         /// </summary>
-        public static readonly string LogSendMsgSecurityType;// => _instance.AppSettings.Settings["LogSendMsg"]?.Value;
+        public string LogSendMsgSecurityType { get; private set; }// => _instance.AppSettings.Settings["LogSendMsg"]?.Value;
         /// <summary>
         /// 记录发送给二级行情的合约类型，多个用逗号分隔（FUT,MLEG,OPT）。
         /// </summary>
-        public static readonly List<string> LogSendMsgSecurityTypes;
-        public static readonly string LogCacheSize;
-        public static readonly string TimerInterval;
+        public List<string> LogSendMsgSecurityTypes { get; private set; }
+        public string LogCacheSize { get; private set; }
+        public string TimerInterval { get; private set; }
 
         /// <summary>
         /// 期权期货现货,配置格式：TT品种:期货商品,现货商品。条之间分号隔开
         /// </summary>
-        public static readonly string OptFutSpot;
+        public string OptFutSpot { get; private set; }
         /// <summary>
         /// 货币名称，配置格式：TT tag15值,ZD名称
         /// </summary>
-        public static readonly string CurrencyName;
+        public string CurrencyName { get; private set; }
         /// <summary>
         /// 合约名称的汉字部分,配置格式：TT品种,合约名称的汉字部分
         /// </summary>
-        public static readonly string ContractChineseName;
+        public string ContractChineseName { get; private set; }
         /// <summary>
         ///期权对应标递的月份不是连续的,即期权月份是连续的（1-12月），其对应的期货合约月份不是连续的（1-12月）
         ///配置格式：TT期权名称:期货月份[期权月份(多个已逗号隔开)]+期货月份[期权月份(多个已逗号隔开)]
         ///配置实例:DX:3[1,2,3]+6[4,5,6]
         /// </summary>
-        public static readonly string OptionFutureMonth;
+        public string OptionFutureMonth { get; private set; }
 
         /// <summary>
         /// 兼容的老格式期权 配置格式：TT交易所,TT期权。多个以分号隔开
         /// </summary>
-        public static readonly string CompatibleOption;
+        public string CompatibleOption { get; private set; }
 
 
 
         /// <summary>
         /// 兼容老TT有持仓的期权：老TT合约的StrikePrice有多余零。配置格式：ZD合约代码,小数点位数
         /// </summary>
-        public static readonly string OpenInterestContract;
+        public string OpenInterestContract { get; private set; }
         /// <summary>
         /// 
         /// </summary>
-        public static readonly Dictionary<string, Dictionary<string, List<string>>> OptionFutureMonthDic;
+        public Dictionary<string, Dictionary<string, List<string>>> OptionFutureMonthDic { get; private set; }
 
         /// <summary>
         /// 期权期货现货,配置格式：TT品种:期货商品,现货商品。条之间分号隔开
         /// </summary>
-        public static readonly List<(string TTProduct, string Future, string Spot)> OptFutSpotList;
+        public List<(string TTProduct, string Future, string Spot)> OptFutSpotList { get; private set; }
         /// <summary>
         /// 货币名称，配置格式：TT tag15值,ZD名称
         /// </summary>
-        public static readonly Dictionary<string, string> CurrencyNameDic;
+        public Dictionary<string, string> CurrencyNameDic { get; private set; }
         /// <summary>
         /// 合约名称的汉字部分,配置格式：TT品种,合约名称的汉字部分
         /// </summary>
-        public static readonly List<(string TTProduct, string ContractChineseName)> ContractChineseNameList;
+        public List<(string TTProduct, string ContractChineseName)> ContractChineseNameList { get; private set; }
 
-        public static List<(string TTProduct, string TTExchange, string ZDProduct)> MappingZDProductsTupleList { get; private set; }
-        public static List<(string TTProduct, string TTExchange)> TargetFuturesTupleList { get; private set; }
-        public static List<(string TTProduct, string TTExchange)> TargetSpreadsTupleList { get; private set; }
-        public static List<(string TTProduct, string TTExchange)> TargetOptionsTupleList { get; private set; }
+        public List<(string TTProduct, string TTExchange, string ZDProduct)> MappingZDProductsTupleList { get; private set; }
+        public List<(string TTProduct, string TTExchange)> TargetFuturesTupleList { get; private set; }
+        public List<(string TTProduct, string TTExchange)> TargetSpreadsTupleList { get; private set; }
+        public List<(string TTProduct, string TTExchange)> TargetOptionsTupleList { get; private set; }
         /// <summary>
         /// ZD交易所,ZD品种,倍率，开盘时间
         /// </summary>
-        public static List<(string ZDExchange, string ZDProduct, decimal Factor, string OpeningTime)> SupportedTradeVolumeProductsList { get; private set; }
+        public List<(string ZDExchange, string ZDProduct, decimal Factor, string OpeningTime)> SupportedTradeVolumeProductsList { get; private set; }
+
+        public string RefreshTest { get; private set; }
 
         static Configurations()
+        {
+            Instance = new Configurations();
+        }
+
+        private Configurations()
+        {
+            Refresh();
+        }
+
+        public void Refresh()
         {
 
             try
@@ -226,10 +238,11 @@ namespace TTMarketAdapter
                 MulticastTCPPort = configuration.AppSettings.Settings["multicastTCPPort"]?.Value;
                 MulticastTCPIP = configuration.AppSettings.Settings["multicastTCPIP"]?.Value;
                 NewMD = configuration.AppSettings.Settings["NewMD"]?.Value;
-                NewMDBool = false;
+                var newMDBool = false;
                 if (!string.IsNullOrEmpty(NewMD))
                 {
-                    bool.TryParse(NewMD, out NewMDBool);
+                    bool.TryParse(NewMD, out newMDBool);
+                    NewMDBool = newMDBool;
                 }
 
                 AutoStart = configuration.AppSettings.Settings["AutoStart"]?.Value;
@@ -255,8 +268,13 @@ namespace TTMarketAdapter
                 OptionFutureMonth = configuration.AppSettings.Settings["OptionFutureMonth"]?.Value;
                 CompatibleOption = configuration.AppSettings.Settings["CompatibleOption"]?.Value;
                 OpenInterestContract = configuration.AppSettings.Settings["OpenInterestContract"]?.Value;
-                OptionFutureMonthDic = new Dictionary<string, Dictionary<string, List<string>>>();
 
+                RefreshTest = configuration.AppSettings.Settings["RefreshTest"]?.Value;
+
+
+
+
+                OptionFutureMonthDic = new Dictionary<string, Dictionary<string, List<string>>>();
                 if (!string.IsNullOrEmpty(OptionFutureMonth))
                 {
 
@@ -396,6 +414,7 @@ namespace TTMarketAdapter
                     }
                 }
 
+
             }
             catch (Exception ex)
             {
@@ -408,7 +427,7 @@ namespace TTMarketAdapter
         /// 根据直达的品种获取对应的TT的交易所、品种
         /// </summary>
         /// <returns></returns>
-        public static (string TTExchange, string TTProduct) GetTTProductExchange(string zdProduct, SecurityTypeEnum securityType)
+        public (string TTExchange, string TTProduct) GetTTProductExchange(string zdProduct, SecurityTypeEnum securityType)
         {
 
             var tuple = MappingZDProductsTupleList.Find(p => p.ZDProduct == zdProduct);
@@ -447,7 +466,7 @@ namespace TTMarketAdapter
             return (ttExchange, ttProduct);
         }
 
-        public static void UpdateConfig(string nodeName, string nodeValue, string configPath = "")
+        public  void UpdateConfig(string nodeName, string nodeValue, string configPath = "")
         {
             //var v = ConfigurationManager.AppSettings["CL_ORDER_ID"].ToString();
             if (string.IsNullOrEmpty(configPath))
@@ -471,7 +490,7 @@ namespace TTMarketAdapter
         /// <param name="ttExchange"></param>
         /// <param name="securityType">枚举SecurityTypeEnum</param>
         /// <returns></returns>
-        public static (string ZDExchange, string ZDProduct) GetZDExchangeProduct(string ttProduct, string ttExchange = "", SecurityTypeEnum securityType = SecurityTypeEnum.None)
+        public (string ZDExchange, string ZDProduct) GetZDExchangeProduct(string ttProduct, string ttExchange = "", SecurityTypeEnum securityType = SecurityTypeEnum.None)
         {
 
             //出始认为和TT的一样
