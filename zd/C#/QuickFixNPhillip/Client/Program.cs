@@ -12,7 +12,7 @@ namespace Client
         /*
          * github:https://github.com/kennystone/quickfixn
          */
-
+        private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
@@ -21,7 +21,21 @@ namespace Client
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmTradeClient());
+
+
+            FrmTradeClient frmTradeClient = new FrmTradeClient();
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+            {
+                _nLog.Error(e.ToString());
+                frmTradeClient.btnStop_Click(null, null);
+            };
+
+            Application.ThreadException += (sender, e) =>
+            {
+                _nLog.Error(e.ToString());
+                frmTradeClient.btnStop_Click(null, null);
+            };
+            Application.Run(frmTradeClient);
 
         }
     }

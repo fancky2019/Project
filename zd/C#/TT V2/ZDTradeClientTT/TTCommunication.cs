@@ -28,7 +28,7 @@ namespace ZDTradeClientTT
     public class TTCommunication
     {
 
-        public TradeApp tradeApp { get; set; }
+        public TradeApp tradeApp;
         private ManualOrderIndicator moi = new ManualOrderIndicator(true);
         
         private bool IsTestMode;
@@ -518,6 +518,7 @@ namespace ZDTradeClientTT
         /// <summary>
         ///如果rainer壳勾选了“交易日中紧急停止”CheckBox，调用此方法。
         /// 
+        /// 此方法功能替换成到shutsown方法的 PersistOrder
         /// 保存未成交的日单
         /// </summary>
         public void persistDayRefObj()

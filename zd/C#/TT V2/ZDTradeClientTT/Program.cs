@@ -43,10 +43,24 @@ namespace ZDTradeClientTT
             //AllocConsole();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            FrmTradeClient frmTradeClient = new FrmTradeClient();
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+            {
+                TT.Common.NLogUtility.Error(e.ToString());
+                frmTradeClient.btnStop_Click(null, null);
+            };
+
+            Application.ThreadException += (sender, e) =>
+            {
+                TT.Common.NLogUtility.Error(e.ToString());
+                frmTradeClient.btnStop_Click(null, null);
+            };
+
+
             Process instance = RunningInstance();
             if (instance == null)
             {
-                Application.Run(new FrmTradeClient());
+                Application.Run(frmTradeClient);
             }
             else
             {

@@ -29,7 +29,7 @@ namespace ZDTradeClientTT
         private TTCommunication globexCommu = null;
         //private ICustomFixStrategy fixStrategy = null;
 
-        private void btnStop_Click(object sender, EventArgs e)
+        public void btnStop_Click(object sender, EventArgs e)
         {
             try
             {
