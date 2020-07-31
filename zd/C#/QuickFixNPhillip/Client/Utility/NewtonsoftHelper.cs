@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,6 +35,17 @@ namespace Client.Utility
             };
             serializer.Serialize(jsonWriter, obj);
             return textWriter.ToString();
+        }
+
+
+        public static string SerializeObject(object model)
+        {
+           return JsonConvert.SerializeObject(model);
+        }
+
+        public static T DeserializeObject<T>(string jsonStr)
+        {
+            return JsonConvert.DeserializeObject<T>(jsonStr);
         }
     }
 }

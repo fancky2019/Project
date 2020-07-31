@@ -4,6 +4,7 @@ using Client.Service;
 using Client.Utility;
 using CommonClassLib;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
@@ -30,8 +31,8 @@ namespace Client
         private void btnStart_Click(object sender, EventArgs e)
         {
 
-            TradeClient.Instance.SocketInitiator.Start();
-            TradeClient.Instance.Logon += (msg =>
+            TradeClientAppService.Instance.Start();
+            TradeClientAppService.Instance.Logon += (msg =>
               {
                   if (this.InvokeRequired)
                   {
@@ -49,7 +50,7 @@ namespace Client
 
               });
 
-            TradeClient.Instance.LogOut += (msg =>
+            TradeClientAppService.Instance.Logout += (msg =>
             {
                 if (this.InvokeRequired)
                 {
@@ -78,9 +79,9 @@ namespace Client
 
         internal void btnStop_Click(object sender, EventArgs e)
         {
-            TradeClient.Instance.SocketInitiator.Stop();
+            TradeClientAppService.Instance.Stop();
 
-            TxtFile.SaveTxtFile(ConfigurationManager.AppSettings["OrderIDFilePath"].ToString(), new List<string> { MemoryDataManager.LastOrderID.ToString() });
+
         }
 
         private void FrmTradeClient_FormClosing(object sender, FormClosingEventArgs e)
@@ -104,9 +105,22 @@ namespace Client
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            this.btnTest.Text = ConfigurationManager.AppSettings["RefreshTest"]?.ToString();
+            try
+            {
+                //this.btnTest.Text = ConfigurationManager.AppSettings["RefreshTest"]?.ToString();
+                Order o = new Order();
+                var orders = new ConcurrentDictionary<string, Order>();
+                orders.TryAdd("ddddd", o);
+                var str = NewtonsoftHelper.SerializeObject(orders);
+                var o1 = NewtonsoftHelper.DeserializeObject<ConcurrentDictionary<string, Order>>(str);
+                return;
+            }
+            catch (Exception ex)
+            {
 
-            return;
+            }
+
+
             //Order order = new Order();
             //order.ClientNumber = "dsdsfaadsdas";
             //order.ClientID = 100;

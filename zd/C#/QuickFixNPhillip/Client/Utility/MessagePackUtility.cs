@@ -42,16 +42,18 @@ namespace Client.Utility
             return MessagePackSerializer.Deserialize<T>(bytes);
         }
 
-        public static string SerializeToJson<T>(T data)
-        {
-            return MessagePackSerializer.SerializeToJson(data);
-        }
+        //public static string SerializeToJson<T>(T data)
+        //{
+        //    return MessagePackSerializer.SerializeToJson(data);
+        //}
 
-        public static T DeserializeFromJson<T>(string jsonStr)
-        {
-            var bytesFromJson = MessagePackSerializer.ConvertFromJson(jsonStr);
-            return MessagePackSerializer.Deserialize<T>(bytesFromJson);
-        }
+        //反序列化ConcurrentDictionary报错
+
+        //public static T DeserializeFromJson<T>(string jsonStr)
+        //{
+        //    var bytesFromJson = MessagePackSerializer.ConvertFromJson(jsonStr);
+        //    return MessagePackSerializer.Deserialize<T>(bytesFromJson);
+        //}
 
     }
 }

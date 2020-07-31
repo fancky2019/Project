@@ -14,14 +14,14 @@ namespace Client.Utility
 
 
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
-        
+
         internal static ConcurrentDictionary<string, Order> Orders { get; set; }
         //static Dictionary<string, long> _systemCodeCliOrderID = null;
-        internal static long LastOrderID { get; private set; }
+        internal static long LastClientOrderID { get; private set; }
 
         static long _beginOrderId = 0;
         static long _endOrderId = 0;
-    
+
 
 
 
@@ -38,13 +38,6 @@ namespace Client.Utility
             }
             _beginOrderId = long.Parse(cliOrderIDScope.Split(',')[0]);
             _endOrderId = long.Parse(cliOrderIDScope.Split(',')[1]);
-            LastOrderID = 0;
-
-            var datas = TxtFile.ReadTxtFile(ConfigurationManager.AppSettings["OrderIDFilePath"].ToString());
-            if (datas.Count > 0)
-            {
-                LastOrderID = long.Parse(datas[0]);
-            }
 
         }
 
@@ -52,19 +45,74 @@ namespace Client.Utility
         public static long GetNextClOrderID()
         {
 
-            LastOrderID++;
-            LastOrderID = LastOrderID <= _beginOrderId ? _beginOrderId + 1 : LastOrderID;
-            LastOrderID = LastOrderID >= _endOrderId ? _beginOrderId + 1 : LastOrderID;
+            LastClientOrderID++;
+            LastClientOrderID = LastClientOrderID <= _beginOrderId ? _beginOrderId + 1 : LastClientOrderID;
+            LastClientOrderID = LastClientOrderID >= _endOrderId ? _beginOrderId + 1 : LastClientOrderID;
 
-            if (Orders.Values.Select(p => p.CurrentCliOrderID).ToList().Contains(LastOrderID.ToString()))
+            if (Orders.Values.Select(p => p.CurrentCliOrderID).ToList().Contains(LastClientOrderID.ToString()))
             {
                 GetNextClOrderID();
             }
 
-            return LastOrderID;
+            return LastClientOrderID;
         }
 
+        public static void Persist()
+        {
+            try
+            {
+                TxtFile.SaveTxtFile(ConfigurationManager.AppSettings["OrderIDFilePath"].ToString(), new List<string> { MemoryDataManager.LastClientOrderID.ToString() });
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error("Save LastOrderID Failed");
+                _nLog.Error(ex.ToString());
+            }
+            try
+            {
+                var jsonStr = NewtonsoftHelper.SerializeObject(Orders);
+                //var jsonStr = MessagePackUtility.SerializeToJson<ConcurrentDictionary<string, Order>>(Orders);
+                TxtFile.SaveString(ConfigurationManager.AppSettings["PersistOrdersPath"].ToString(), jsonStr);
 
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error("Save Orders Failed");
+                _nLog.Error(ex.ToString());
+            }
+
+        }
+
+        public static void Load()
+        {
+            try
+            {
+                var clientOrderID = TxtFile.ReadString(ConfigurationManager.AppSettings["OrderIDFilePath"].ToString());
+                if (!string.IsNullOrEmpty(clientOrderID))
+                {
+                    LastClientOrderID = long.Parse(clientOrderID);
+                }
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error("Load Orders Failed");
+                _nLog.Error(ex.ToString());
+            }
+            try
+            {
+                var ordersStr = TxtFile.ReadString(ConfigurationManager.AppSettings["PersistOrdersPath"].ToString());
+                if (!string.IsNullOrEmpty(ordersStr))
+                {
+                    Orders = NewtonsoftHelper.DeserializeObject<ConcurrentDictionary<string, Order>>(ordersStr);
+                    //Orders =  MessagePackUtility.DeserializeFromJson<ConcurrentDictionary<string, Order>>(ordersStr);
+                }
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error("Load Orders Failed");
+                _nLog.Error(ex.ToString());
+            }
+        }
 
         //static internal void SetSystemCodeCurrentCliOrderID(string systemCode, long currentClientOrderID)
         //{
