@@ -99,6 +99,7 @@
             this.Name = "FrmTradeClient";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmTradeClient";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTradeClient_FormClosing);
             this.ResumeLayout(false);
 
         }

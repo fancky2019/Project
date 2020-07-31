@@ -11,6 +11,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -81,6 +82,25 @@ namespace Client
 
             TxtFile.SaveTxtFile(ConfigurationManager.AppSettings["OrderIDFilePath"].ToString(), new List<string> { MemoryDataManager.LastOrderID.ToString() });
         }
+
+        private void FrmTradeClient_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (this.btnStop.Enabled)
+            {
+                for (int i = 1; i <= 3; i++)
+                {
+                    this.btnStop.BackColor = Color.Red;
+                    System.Windows.Forms.Application.DoEvents();
+                    Thread.Sleep(100);
+                    this.btnStop.BackColor = Color.Transparent;
+                    System.Windows.Forms.Application.DoEvents();
+                    Thread.Sleep(100);
+                }
+                e.Cancel = true;
+                return;
+            }
+        }
+
 
         private void btnTest_Click(object sender, EventArgs e)
         {

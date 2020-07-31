@@ -53,3 +53,19 @@ zd/C#/QuickFixNPhillip/Server/Properties/
 zd/C#/QuickFixNPhillip/Client/bin/Debug/QuickFixLog/
 
 zd/C#/QuickFixNPhillip/Client/bin/Debug/
+
+zd/C#/QuickFixNPhillip/Messages/FIX50SP1/bin/Debug/netstandard2.0/
+
+zd/C#/QuickFixN/Messages/FIX43/bin/Debug/
+
+zd/C#/QuickFixN/Messages/FIX50/bin/Debug/netstandard2.0/
+
+zd/C#/QuickFixN/Messages/FIX50SP1/bin/Debug/
+
+zd/C#/QuickFixN/Messages/FIX50SP2/bin/Debug/
+
+zd/C#/QuickFixNPhillip/Messages/FIX42/bin/Debug/
+
+zd/C#/QuickFixNPhillip/Messages/FIX42/bin/
+
+zd/C#/QuickFixNPhillip/QuickFIXn/Properties/

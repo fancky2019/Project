@@ -11,14 +11,17 @@ namespace Client.Utility
 {
     class MemoryDataManager
     {
+
+
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
         
         internal static ConcurrentDictionary<string, Order> Orders { get; set; }
         //static Dictionary<string, long> _systemCodeCliOrderID = null;
+        internal static long LastOrderID { get; private set; }
 
         static long _beginOrderId = 0;
         static long _endOrderId = 0;
-        internal static long LastOrderID { get; private set; }
+    
 
 
 
