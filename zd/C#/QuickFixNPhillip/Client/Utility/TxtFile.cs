@@ -8,13 +8,25 @@ namespace Client.Utility
 {
     public class TxtFile
     {
+        public static string ReadString(string filePath)
+        {
+            string jsonStr = "";
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+            {
+                fileStream.Seek(0, SeekOrigin.Begin);
+                var bytes = new byte[fileStream.Length];
+                fileStream.Read(bytes, 0, bytes.Length);
+                jsonStr = Encoding.UTF8.GetString(bytes);
+            }
+            return jsonStr;
+        }
 
-        public static List<string> ReadTxtFile(string fllPath)
+        public static List<string> ReadTxtFile(string filePath)
         {
             List<string> content = new List<string>();
-            if (File.Exists(fllPath))
+            if (File.Exists(filePath))
             {
-                using (StreamReader sr = new StreamReader(new FileStream(fllPath, FileMode.Open)))
+                using (StreamReader sr = new StreamReader(new FileStream(filePath, FileMode.Open)))
                 {
                     try
                     {
@@ -34,9 +46,9 @@ namespace Client.Utility
         }
 
 
-        public static void SaveTxtFile(string fllPath, List<string> content, FileMode fileMode = FileMode.Create)
+        public static void SaveTxtFile(string filePath, List<string> content, FileMode fileMode = FileMode.Create)
         {
-            using (StreamWriter sw = new StreamWriter(File.Open(fllPath, fileMode, FileAccess.ReadWrite), System.Text.Encoding.UTF8))
+            using (StreamWriter sw = new StreamWriter(File.Open(filePath, fileMode, FileAccess.ReadWrite), System.Text.Encoding.UTF8))
             {
                 foreach (string str in content)
                 {
@@ -44,5 +56,16 @@ namespace Client.Utility
                 }
             }
         }
+
+
+        public static void SaveString(string filePath, string content)
+        {
+            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            {
+                byte[] data = System.Text.Encoding.UTF8.GetBytes(content);
+                fs.Write(data, 0, data.Length);
+            }
+        }
+
     }
 }

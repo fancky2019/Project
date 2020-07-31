@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using static QuickFix.FIX42.Advertisement;
 using static QuickFix.FIX42.NewOrderSingle;
@@ -29,7 +30,7 @@ namespace Client.Service
         public static TradeClientAppService Instance { get; private set; }
         public event Action<string> ExecutionReport;
         public event Action<string> Logon;
-        public event Action<string> LogonOut;
+        public event Action<string> Logout;
         #endregion
 
         static TradeClientAppService()
@@ -42,20 +43,24 @@ namespace Client.Service
             TradeClient.Instance.Logon += (msg =>
             {
                 Logon?.Invoke(msg);
-
+                Init();
             });
 
             TradeClient.Instance.LogOut += (msg =>
             {
-                LogonOut?.Invoke(msg);
+                Logout?.Invoke(msg);
             });
 
             TradeClient.Instance.ReceiveMsgFromApp += (message, sessionID) =>
             {
-                if (!_receiveFromAppMsgs.TryAdd(message, 1000))
+                if (!_receiveFromAppMsgs.IsAddingCompleted)
                 {
-                    //异常
+                    if (!_receiveFromAppMsgs.TryAdd(message, 1000))
+                    {
+                        //异常
+                    }
                 }
+
 
             };
 
@@ -74,29 +79,49 @@ namespace Client.Service
 
 
 
-        public void Connect()
+        public void Start()
         {
             TradeClient.Instance.SocketInitiator.Start();
         }
 
-        public void Disnnect()
+        private void Init()
+        {
+            MemoryDataManager.Load();
+        }
+
+        public void Stop()
         {
             TradeClient.Instance.SocketInitiator.Stop();
             WaitForAdding();
+            MemoryDataManager.Persist();
         }
 
         private void WaitForAdding()
         {
+            _orderQueue.CompleteAdding();
+            _receiveFromAppMsgs.CompleteAdding();
             //为了避免异常--未扔到交易所的单在内存就丢失
-            while (!_orderQueue.IsAddingCompleted && !_receiveFromAppMsgs.IsAddingCompleted)
+            while (_orderQueue.Count != 0 || _receiveFromAppMsgs.Count != 0)
             {
-                //所有的单据不送交易所处理。
+                //直到所有的单据处理完成。
+                Thread.Sleep(1);
+
             }
+
+
         }
+
 
         public void Order(NetInfo netInfo)
         {
-            _orderQueue.TryAdd(netInfo, 100);
+            if (!_orderQueue.IsAddingCompleted)
+            {
+                if (!_orderQueue.TryAdd(netInfo, 1000))
+                {
+                    //异常
+                }
+            }
+
         }
 
         private void ConsumerOrders()
@@ -642,7 +667,7 @@ namespace Client.Service
                 netInfo.clientNo = order.OrderNetInfo.clientNo;
                 netInfo.localSystemCode = order.OrderNetInfo.localSystemCode;
 
-       
+
             }
             catch (Exception ex)
             {
@@ -743,8 +768,12 @@ namespace Client.Service
             var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
             MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
 
-            CancelInfo cancelInfo = new CancelInfo();
-            cancelInfo.MyReadString(order.CancelNetInfo.infoT);
+            //CancelInfo cancelInfo = new CancelInfo();
+            //cancelInfo.MyReadString(order.CancelNetInfo.infoT);
+
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.MyReadString(order.OrderNetInfo.infoT);
+
 
             info.exchangeCode = order.CancelNetInfo.exchangeCode;
             //if (execReport.Side.getValue() == Side.BUY)
@@ -752,20 +781,20 @@ namespace Client.Service
             //else
             //    info.buySale = "2";
 
-            info.buySale = cancelInfo.buySale;
+            info.buySale = orderInfo.buySale;
 
 
-            info.orderNo = cancelInfo.orderNo;
+            info.orderNo = order.NewOrderSingleClientID;
             //系统号
             info.accountNo = order.CancelNetInfo.accountNo;
-            info.systemNo = cancelInfo.systemNo;
+            info.systemNo = order.OrderNetInfo.systemCode;
             info.code = order.CancelNetInfo.code;
 
             char ordType = execReport.OrdType.getValue();
-            info.priceType = cancelInfo.priceType;
+            info.priceType = orderInfo.priceType;
 
 
-            info.orderPrice = cancelInfo.orderPrice;
+            //info.orderPrice = orderInfo.orderPrice;
 
             info.cancelNumber = execReport.LeavesQty.ToString();
             info.orderNumber = execReport.OrderQty.ToString();
@@ -789,7 +818,7 @@ namespace Client.Service
             NetInfo.clientNo = order.CancelNetInfo.clientNo;
 
 
-      
+
             return NetInfo;
         }
         #endregion
@@ -810,7 +839,11 @@ namespace Client.Service
             }
             var currentCliOrderID = execReport.ClOrdID.getValue();
             var order = MemoryDataManager.Orders.Values.Where(p => p.CurrentCliOrderID == currentCliOrderID).FirstOrDefault();
-
+            if (order == null)
+            {
+                _nLog.Error($"ClientOrderID - {currentCliOrderID} 数据丢失! ");
+                return null;
+            }
             info.exchangeCode = order.OrderNetInfo.exchangeCode;
 
             //if (execReport.Side.getValue() == Side.BUY)

@@ -103,6 +103,10 @@ namespace Client
 
         private void lbMsgs_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (this.lbMsgs.SelectedItem == null)
+            {
+                return;
+            }
             NetInfo netinfo = new NetInfo();
             var netInfoStr = this.lbMsgs.SelectedItem.ToString();
             netinfo.MyReadString(netInfoStr);
