@@ -67,6 +67,16 @@ namespace Client.FixUtility
 
 
         }
+        public void OnLogonFailed(SessionID sessionID,Message message)
+        {
+            //FIX.4.4:ZDDEV->EXECUTOR|
+            var sendAndTargetIDs = sessionID.ToString().Split(':')[1];
+            _nLog.Info($"LogonFailed - { sendAndTargetIDs}");
+            Logon?.Invoke(sendAndTargetIDs);
+
+
+        }
+        
         public void OnLogout(SessionID sessionID)
         {
             var sendAndTargetIDs = sessionID.ToString().Split(':')[1];

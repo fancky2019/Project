@@ -21,8 +21,7 @@ namespace Client
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-
+        
             FrmTradeClient frmTradeClient = new FrmTradeClient();
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {
@@ -36,6 +35,9 @@ namespace Client
                 frmTradeClient.btnStop_Click(null, null);
             };
             Application.Run(frmTradeClient);
+
+
+            //Application.Run(new FrmTradeClient());
 
         }
     }
