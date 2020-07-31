@@ -58,27 +58,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.btnAmendOrder = new System.Windows.Forms.Button();
+            this.txtAmendPrice = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.label20 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
             this.txtCancelOrderClOrderID = new System.Windows.Forms.TextBox();
@@ -88,6 +70,14 @@
             this.label30 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnOpenDirectory = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.txtAmendSysCode = new System.Windows.Forms.TextBox();
+            this.txtAmendClOrderID = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.nudAmendQty = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.txtAmendStopPrice = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl2.SuspendLayout();
@@ -98,12 +88,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudQrdQty)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             this.tabPage5.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudAmendQty)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -400,208 +388,49 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.numericUpDown4);
-            this.panel2.Controls.Add(this.numericUpDown5);
-            this.panel2.Controls.Add(this.numericUpDown6);
-            this.panel2.Controls.Add(this.button1);
-            this.panel2.Controls.Add(this.textBox1);
-            this.panel2.Controls.Add(this.label9);
-            this.panel2.Controls.Add(this.textBox2);
-            this.panel2.Controls.Add(this.label11);
-            this.panel2.Controls.Add(this.label13);
-            this.panel2.Controls.Add(this.label14);
+            this.panel2.Controls.Add(this.txtAmendStopPrice);
             this.panel2.Controls.Add(this.label15);
-            this.panel2.Controls.Add(this.textBox3);
-            this.panel2.Controls.Add(this.label16);
-            this.panel2.Controls.Add(this.label17);
-            this.panel2.Controls.Add(this.textBox4);
-            this.panel2.Controls.Add(this.label18);
-            this.panel2.Controls.Add(this.comboBox1);
-            this.panel2.Controls.Add(this.comboBox2);
-            this.panel2.Controls.Add(this.label19);
-            this.panel2.Controls.Add(this.comboBox3);
-            this.panel2.Controls.Add(this.label20);
+            this.panel2.Controls.Add(this.nudAmendQty);
+            this.panel2.Controls.Add(this.label14);
+            this.panel2.Controls.Add(this.label13);
+            this.panel2.Controls.Add(this.txtAmendClOrderID);
+            this.panel2.Controls.Add(this.txtAmendSysCode);
+            this.panel2.Controls.Add(this.label9);
+            this.panel2.Controls.Add(this.btnAmendOrder);
+            this.panel2.Controls.Add(this.txtAmendPrice);
+            this.panel2.Controls.Add(this.label11);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(311, 492);
             this.panel2.TabIndex = 13;
             // 
-            // numericUpDown4
+            // btnAmendOrder
             // 
-            this.numericUpDown4.Location = new System.Drawing.Point(120, 205);
-            this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(120, 21);
-            this.numericUpDown4.TabIndex = 40;
+            this.btnAmendOrder.Location = new System.Drawing.Point(164, 203);
+            this.btnAmendOrder.Name = "btnAmendOrder";
+            this.btnAmendOrder.Size = new System.Drawing.Size(78, 23);
+            this.btnAmendOrder.TabIndex = 37;
+            this.btnAmendOrder.Text = "改单";
+            this.btnAmendOrder.UseVisualStyleBackColor = true;
+            this.btnAmendOrder.Click += new System.EventHandler(this.btnAmendOrder_Click);
             // 
-            // numericUpDown5
+            // txtAmendPrice
             // 
-            this.numericUpDown5.Location = new System.Drawing.Point(120, 177);
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(120, 21);
-            this.numericUpDown5.TabIndex = 39;
-            // 
-            // numericUpDown6
-            // 
-            this.numericUpDown6.Location = new System.Drawing.Point(120, 147);
-            this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(120, 21);
-            this.numericUpDown6.TabIndex = 38;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(162, 311);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(78, 23);
-            this.button1.TabIndex = 37;
-            this.button1.Text = "下单";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(119, 268);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(121, 21);
-            this.textBox1.TabIndex = 36;
-            this.textBox1.Text = "42.59";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(30, 271);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(83, 12);
-            this.label9.TabIndex = 35;
-            this.label9.Text = "TriggerPrice:";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(119, 235);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(121, 21);
-            this.textBox2.TabIndex = 24;
-            this.textBox2.Text = "42.59";
+            this.txtAmendPrice.Location = new System.Drawing.Point(121, 115);
+            this.txtAmendPrice.Name = "txtAmendPrice";
+            this.txtAmendPrice.Size = new System.Drawing.Size(121, 21);
+            this.txtAmendPrice.TabIndex = 24;
+            this.txtAmendPrice.Text = "42.59";
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(66, 238);
+            this.label11.Location = new System.Drawing.Point(66, 115);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(41, 12);
             this.label11.TabIndex = 23;
             this.label11.Text = "Price:";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(54, 207);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(59, 12);
-            this.label13.TabIndex = 22;
-            this.label13.Text = "Max show:";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(54, 180);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(53, 12);
-            this.label14.TabIndex = 20;
-            this.label14.Text = "Min qty:";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(48, 151);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(65, 12);
-            this.label15.TabIndex = 17;
-            this.label15.Text = "Order qty:";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(119, 117);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(121, 21);
-            this.textBox3.TabIndex = 16;
-            this.textBox3.Text = "BRN2009";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(54, 120);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(59, 12);
-            this.label16.TabIndex = 15;
-            this.label16.Text = "Security:";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(54, 91);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(59, 12);
-            this.label17.TabIndex = 14;
-            this.label17.Text = "Exchange:";
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(119, 88);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(121, 21);
-            this.textBox4.TabIndex = 13;
-            this.textBox4.Text = "ICE";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(78, 62);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(35, 12);
-            this.label18.TabIndex = 12;
-            this.label18.Text = "Side:";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(119, 62);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 20);
-            this.comboBox1.TabIndex = 11;
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(119, 31);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(121, 20);
-            this.comboBox2.TabIndex = 10;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(24, 34);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(89, 12);
-            this.label19.TabIndex = 9;
-            this.label19.Text = "Time in force:";
-            // 
-            // comboBox3
-            // 
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(119, 4);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(121, 20);
-            this.comboBox3.TabIndex = 8;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(42, 7);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(71, 12);
-            this.label20.TabIndex = 1;
-            this.label20.Text = "Order type:";
             // 
             // tabPage5
             // 
@@ -691,6 +520,77 @@
             this.btnOpenDirectory.UseVisualStyleBackColor = true;
             this.btnOpenDirectory.Click += new System.EventHandler(this.btnOpenDirectory_Click);
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(36, 22);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(71, 12);
+            this.label9.TabIndex = 38;
+            this.label9.Text = "SystemCode:";
+            // 
+            // txtAmendSysCode
+            // 
+            this.txtAmendSysCode.Location = new System.Drawing.Point(119, 19);
+            this.txtAmendSysCode.Name = "txtAmendSysCode";
+            this.txtAmendSysCode.Size = new System.Drawing.Size(121, 21);
+            this.txtAmendSysCode.TabIndex = 40;
+            // 
+            // txtAmendClOrderID
+            // 
+            this.txtAmendClOrderID.Location = new System.Drawing.Point(120, 51);
+            this.txtAmendClOrderID.Name = "txtAmendClOrderID";
+            this.txtAmendClOrderID.Size = new System.Drawing.Size(121, 21);
+            this.txtAmendClOrderID.TabIndex = 41;
+            this.txtAmendClOrderID.Text = "1000001";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(18, 51);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(89, 12);
+            this.label13.TabIndex = 42;
+            this.label13.Text = "ClOrderID(11):";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(36, 81);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(71, 12);
+            this.label14.TabIndex = 43;
+            this.label14.Text = "OrdQty(38):";
+            // 
+            // nudAmendQty
+            // 
+            this.nudAmendQty.Location = new System.Drawing.Point(121, 81);
+            this.nudAmendQty.Name = "nudAmendQty";
+            this.nudAmendQty.Size = new System.Drawing.Size(120, 21);
+            this.nudAmendQty.TabIndex = 44;
+            this.nudAmendQty.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(36, 150);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(71, 12);
+            this.label15.TabIndex = 45;
+            this.label15.Text = "StopPx(99):";
+            // 
+            // txtAmendStopPrice
+            // 
+            this.txtAmendStopPrice.Location = new System.Drawing.Point(121, 145);
+            this.txtAmendStopPrice.Name = "txtAmendStopPrice";
+            this.txtAmendStopPrice.Size = new System.Drawing.Size(121, 21);
+            this.txtAmendStopPrice.TabIndex = 46;
+            this.txtAmendStopPrice.Text = "42.59";
+            // 
             // OrderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -714,13 +614,11 @@
             this.tabPage4.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
             this.tabPage5.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.nudAmendQty)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -759,27 +657,9 @@
         private System.Windows.Forms.NumericUpDown nudMinQty;
         private System.Windows.Forms.NumericUpDown nudQrdQty;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.NumericUpDown numericUpDown4;
-        private System.Windows.Forms.NumericUpDown numericUpDown5;
-        private System.Windows.Forms.NumericUpDown numericUpDown6;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button btnAmendOrder;
+        private System.Windows.Forms.TextBox txtAmendPrice;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button btnOrderCancelRequest;
         private System.Windows.Forms.Label label30;
@@ -787,5 +667,13 @@
         private System.Windows.Forms.TextBox txtCancelOrderClOrderID;
         private System.Windows.Forms.TextBox txtOrderCancelSystemCode;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox txtAmendClOrderID;
+        private System.Windows.Forms.TextBox txtAmendSysCode;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown nudAmendQty;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox txtAmendStopPrice;
     }
 }

@@ -121,7 +121,7 @@ namespace Client
             msgStr = msgStr.Replace('|', (char)1);
             QuickFix.FIX42.Message msg = new QuickFix.FIX42.NewOrderSingle();
             msg.FromString(msgStr, false, null, null);
-            order.NewOrderSingle = msgStr;
+            //order.NewOrderSingle = msgStr;
 
             //for (int i = 0; i < 11; i++)
             //{
