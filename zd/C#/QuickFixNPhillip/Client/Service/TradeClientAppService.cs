@@ -116,7 +116,7 @@ namespace Client.Service
                     }
                     else if (netInfo.code == CommandCode.MODIFY)
                     {
-                        //  order.AmendNetInfo = netInfo;
+                        OrderCancelReplaceRequest(netInfo);
                     }
                     else if (netInfo.code == CommandCode.CANCEL)
                     {
@@ -216,11 +216,12 @@ namespace Client.Service
                     newOrderSingle.Price = new Price(price);
                 }
 
+                var stopPx = decimal.Parse(orderInfo.triggerPrice);
                 // Tag99
                 if (charOrdType == OrdType.STOP || charOrdType == OrdType.STOP_LIMIT)
                 {
                     //decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.triggerPrice, newOrderSingle.Symbol.getValue());
-                    newOrderSingle.StopPx = new StopPx(price);
+                    newOrderSingle.StopPx = new StopPx(stopPx);
                 }
                 //tag 77
                 //newOrderSingle.OpenClose = new OpenClose('O');
@@ -275,7 +276,8 @@ namespace Client.Service
                     order.SystemCode = netInfo.systemCode;
                     order.TempCliOrderID = newOrderSingle.ClOrdID.getValue();
                     // newOrderSingle.FromString()
-                    order.NewOrderSingle = newOrderSingle.ToString();
+                    order.CreateNewOrderSingleTime = DateTime.Now;
+                    //order.NewOrderSingle = newOrderSingle.ToString();
                     MemoryDataManager.Orders.TryAdd(order.SystemCode, order);
                     //OrderException(netInfo, "can not connect to TT server!");
                 }
@@ -359,71 +361,87 @@ namespace Client.Service
 
                 var order = MemoryDataManager.Orders[netInfo.systemCode];
                 order.CommandCode = netInfo.code;
-                QuickFix.FIX42.OrderCancelReplaceRequest ocrr = new QuickFix.FIX42.OrderCancelReplaceRequest();
+                NetInfo orderNetInfo = order.OrderNetInfo;
+                OrderInfo orderInfo = new OrderInfo();
+                orderInfo.MyReadString(orderNetInfo.infoT);
 
-                NewOrderSingle newOrderSingle = new NewOrderSingle();
-                newOrderSingle.FromString(order.NewOrderSingle, false, null, null);
+                QuickFix.FIX42.OrderCancelReplaceRequest orderCancelReplaceRequest = new QuickFix.FIX42.OrderCancelReplaceRequest();
+
+                //NewOrderSingle newOrderSingle = new NewOrderSingle();
+                //newOrderSingle.FromString(order.NewOrderSingle, false, null, null);
+
+
                 //Tag 37
-                ocrr.OrderID = new OrderID(order.OrderID);
+                orderCancelReplaceRequest.OrderID = new OrderID(order.OrderID);
 
 
 
                 //Tag 41
-                ocrr.OrigClOrdID = new OrigClOrdID(order.CurrentCliOrderID);
+                orderCancelReplaceRequest.OrigClOrdID = new OrigClOrdID(order.CurrentCliOrderID);
+
+                var clOrdID = MemoryDataManager.GetNextClOrderID().ToString();
                 //Tag 11
-
-                ocrr.ClOrdID = new ClOrdID(MemoryDataManager.GetNextClOrderID().ToString());
+                orderCancelReplaceRequest.ClOrdID = new ClOrdID(clOrdID);
                 // Tag1
-                ocrr.Account = new Account(netInfo.accountNo);
+                orderCancelReplaceRequest.Account = new Account(netInfo.accountNo);
                 // Tag38
-                ocrr.OrderQty = new OrderQty(decimal.Parse(modifyInfo.modifyNumber));
+                orderCancelReplaceRequest.OrderQty = new OrderQty(decimal.Parse(modifyInfo.modifyNumber));
+
                 // Tag54
-                ocrr.Side = newOrderSingle.Side;
+                var side = !string.IsNullOrEmpty(modifyInfo.buySale) ? modifyInfo.buySale : orderInfo.buySale;
+                orderCancelReplaceRequest.Side = ZDUperTagValueConvert.QuerySide(side);
 
 
+                var priceType = "";
+                if (string.IsNullOrEmpty(modifyInfo.priceType))
+                {
+                    modifyInfo.priceType = orderInfo.priceType;
+                }
+                priceType = modifyInfo.priceType;
 
-
+                string orderType = ZDUperTagValueConvert.ConvertToTTOrdType(priceType);
+                char charOrdType = char.Parse(orderType);
                 // Tag40 ,不能用QueryOrdType(info.priceType);方法，有的客户端LME交易所不传值
-                ocrr.OrdType = newOrderSingle.OrdType;
-                modifyInfo.priceType = newOrderSingle.OrdType.ToString();
-
-                char ordType = Char.Parse(modifyInfo.priceType);
-                string symbol = newOrderSingle.Symbol.getValue();
+                orderCancelReplaceRequest.OrdType = new OrdType(charOrdType);
 
 
-                var price = decimal.Parse(modifyInfo.orderPrice);
+
+
+                //string symbol = newOrderSingle.Symbol.getValue();
+
+
+                var price = decimal.Parse(modifyInfo.modifyPrice);
                 // Tag44
-                if (ordType == OrdType.LIMIT || ordType == OrdType.STOP_LIMIT)
+                if (charOrdType == OrdType.LIMIT || charOrdType == OrdType.STOP_LIMIT)
                 {
                     //decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.orderPrice, newOrderSingle.Symbol.getValue());
-                    ocrr.Price = new Price(price);
+                    orderCancelReplaceRequest.Price = new Price(price);
                 }
 
-                // Tag99
-                if (ordType == OrdType.STOP || ordType == OrdType.STOP_LIMIT)
+                var stopPx = decimal.Parse(modifyInfo.modifyTriggerPrice);
+                //Tag99
+                if (charOrdType == OrdType.STOP || charOrdType == OrdType.STOP_LIMIT)
                 {
                     //decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.triggerPrice, newOrderSingle.Symbol.getValue());
-                    ocrr.StopPx = new StopPx(price);
+                    orderCancelReplaceRequest.StopPx = new StopPx(stopPx);
                 }
 
-                //tag 77
-                ocrr.OpenClose = new OpenClose('O');
+                ////tag 77
+                //orderCancelReplaceRequest.OpenClose = new OpenClose('O');
+
+                string timeInForce = ZDUperTagValueConvert.ConvertToTTTimeInForce(orderInfo.validDate);
+
+
                 //tag 59
-                ocrr.TimeInForce = newOrderSingle.TimeInForce;
+                orderCancelReplaceRequest.TimeInForce = new TimeInForce(char.Parse(timeInForce));
 
 
-
-
-
-
-                var ret = TradeClient.Instance.SendMessage(ocrr);
+                var ret = TradeClient.Instance.SendMessage(orderCancelReplaceRequest);
 
                 if (ret)
                 {
-
-                    order.SystemCode = netInfo.systemCode;
-                    order.CurrentCliOrderID = ocrr.ClOrdID.getValue();
-                    order.OrderCancelReplaceRequest = ocrr.ToString();
+                    order.TempCliOrderID = clOrdID;
+                    //order.OrderCancelReplaceRequest = orderCancelReplaceRequest.ToString();
                 }
 
 
@@ -447,7 +465,6 @@ namespace Client.Service
             {
                 foreach (var message in _receiveFromAppMsgs.GetConsumingEnumerable())
                 {
-
                     ConsumerFromAppMsg(message);
                 }
             }
@@ -485,7 +502,7 @@ namespace Client.Service
                                 break;
 
                             case ExecType.REJECTED:
-                                netInfo = ExecType_Rejected(executionReport);
+                                netInfo = ExecType_Rejected(message);
                                 break;
 
                             case ExecType.PENDING_CANCEL:
@@ -507,6 +524,7 @@ namespace Client.Service
                         }
                         break;
                     case OrderCancelReject orderCancelReject:
+                        netInfo = ExecType_Rejected(message);
                         break;
                     case News news:
                         break;
@@ -526,6 +544,8 @@ namespace Client.Service
         }
 
         #region ExecutionReport
+
+        #region  New
         NetInfo ExecType_New(ExecutionReport execReport)
         {
             NetInfo netInfo = new NetInfo();
@@ -534,6 +554,9 @@ namespace Client.Service
                 var currentCliOrderID = execReport.ClOrdID.getValue();
                 var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
                 order.OrderID = execReport.OrderID.getValue();
+                order.CurrentCliOrderID = order.TempCliOrderID;
+                order.TempCliOrderID = "";
+
                 OrderResponseInfo info = new OrderResponseInfo();
 
                 info.orderNo = execReport.ClOrdID.getValue();
@@ -619,8 +642,7 @@ namespace Client.Service
                 netInfo.clientNo = order.OrderNetInfo.clientNo;
                 netInfo.localSystemCode = order.OrderNetInfo.localSystemCode;
 
-                order.CurrentCliOrderID = order.TempCliOrderID;
-                order.TempCliOrderID = "";
+       
             }
             catch (Exception ex)
             {
@@ -628,7 +650,9 @@ namespace Client.Service
             }
             return netInfo;
         }
+        #endregion
 
+        #region  Replaced
         public NetInfo Replaced(QuickFix.FIX42.ExecutionReport execReport)
         {
             OrderResponseInfo info = new OrderResponseInfo();
@@ -638,11 +662,13 @@ namespace Client.Service
             var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
 
             order.OrderID = execReport.OrderID.getValue();
+            order.CurrentCliOrderID = order.TempCliOrderID;
+            order.TempCliOrderID = "";
 
-            ModifyInfo modifyInfo = new ModifyInfo();
-            modifyInfo.MyReadString(order.AmendNetInfo.infoT);
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.MyReadString(order.OrderNetInfo.infoT);
 
-            info.exchangeCode = modifyInfo.exchangeCode;
+            info.exchangeCode = orderInfo.exchangeCode;
 
             info.buySale = execReport.Side.getValue().ToString();
             info.tradeType = "1";
@@ -678,7 +704,7 @@ namespace Client.Service
 
             //info.validDate = ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
             info.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
-            info.orderNo = modifyInfo.orderNo;
+            info.orderNo = order.NewOrderSingleClientID;
             info.origOrderNo = execReport.ClOrdID.getValue();
             //盘房和TT对单用，关联字段。
             if (execReport.IsSetField(Tags.SecondaryClOrdID))
@@ -699,20 +725,23 @@ namespace Client.Service
             netInfo.accountNo = info.accountNo;
             netInfo.systemCode = info.systemNo;
             //obj.todayCanUse = execReport.Header.GetField(Tags.TargetSubID);
-            netInfo.todayCanUse = order.AmendNetInfo.todayCanUse;
-            netInfo.clientNo = order.AmendNetInfo.clientNo;
+            netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
+            netInfo.clientNo = order.OrderNetInfo.clientNo;
 
 
 
             return netInfo;
         }
+        #endregion
 
+        #region Cancelled
         public NetInfo Cancelled(QuickFix.FIX42.ExecutionReport execReport)
         {
             CancelResponseInfo info = new CancelResponseInfo();
 
             var currentCliOrderID = execReport.ClOrdID.getValue();
             var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
+            MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
 
             CancelInfo cancelInfo = new CancelInfo();
             cancelInfo.MyReadString(order.CancelNetInfo.infoT);
@@ -748,23 +777,24 @@ namespace Client.Service
             info.cancelTime = transTime.ToString("HH:mm:ss");
             info.cancelDate = transTime.ToString("yyyy-MM-dd");
 
-            NetInfo obj = new NetInfo();
-            obj.infoT = info.MyToString();
-            obj.exchangeCode = info.exchangeCode;
-            obj.errorCode = ErrorCode.SUCCESS;
-            obj.code = CommandCode.CANCEL;
-            obj.accountNo = info.accountNo;
-            obj.systemCode = info.systemNo;
+            NetInfo NetInfo = new NetInfo();
+            NetInfo.infoT = info.MyToString();
+            NetInfo.exchangeCode = info.exchangeCode;
+            NetInfo.errorCode = ErrorCode.SUCCESS;
+            NetInfo.code = CommandCode.CANCEL;
+            NetInfo.accountNo = info.accountNo;
+            NetInfo.systemCode = info.systemNo;
             //obj.todayCanUse = execReport.Header.GetField(Tags.TargetSubID);
-            obj.todayCanUse = order.CancelNetInfo.todayCanUse;
-            obj.clientNo = order.CancelNetInfo.clientNo;
+            NetInfo.todayCanUse = order.CancelNetInfo.todayCanUse;
+            NetInfo.clientNo = order.CancelNetInfo.clientNo;
 
 
-            MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
-            return obj;
+      
+            return NetInfo;
         }
+        #endregion
 
-
+        #region PartiallyFilledOrFilled
         public NetInfo PartiallyFilledOrFilled(QuickFix.FIX42.ExecutionReport execReport)
         {
             FilledResponseInfo info = new FilledResponseInfo();
@@ -873,36 +903,48 @@ namespace Client.Service
 
             return obj;
         }
+        #endregion
 
-        NetInfo ExecType_Rejected(ExecutionReport executionReport)
+        #region Rejected
+        NetInfo ExecType_Rejected(QuickFix.Message message)
         {
-            NetInfo netInfo = new NetInfo();
+            NetInfo netInfo = null;
             try
             {
-                var currentCliOrderID = executionReport.ClOrdID.getValue();
+                if (!message.IsSetField(Tags.ClOrdID))
+                {
+                    _nLog.Error("Message is not set tag 11 ");
+                    return netInfo;
+                }
+                var clOrdID = message.GetString(Tags.ClOrdID);
+                //var currentCliOrderID = message.ClOrdID.getValue();
+
+                var currentCliOrderID = clOrdID;
                 var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
                 var errorMessage = "";
-                if (executionReport.IsSetText())
+
+                if (message.IsSetField(Tags.Text))
                 {
-                    errorMessage = executionReport.Text.getValue();
+                    errorMessage = message.GetString(Tags.Text);
 
                 }
+                netInfo = order.OrderNetInfo.Clone(); ;
                 if (order.CommandCode == CommandCode.ORDER)
                 {
-                    netInfo = order.OrderNetInfo;
+                    //netInfo = order.OrderNetInfo.Clone();
                     netInfo.NewOrderSingleException(errorMessage);
                     MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
                 }
                 else if (order.CommandCode == CommandCode.MODIFY)
                 {
-                    netInfo = order.AmendNetInfo;
-                    netInfo.OrderCancelReplaceRequestException(errorMessage);
+                    //netInfo = order.AmendNetInfo;
+                    //netInfo = order.OrderNetInfo.Clone(); 
+                    netInfo.OrderCancelReplaceRequestException(errorMessage, order.NewOrderSingleClientID);
                 }
                 else if (order.CommandCode == CommandCode.CANCEL)
                 {
-
-                    netInfo = order.CancelNetInfo;
-                    netInfo.OrderCancelRequestException(errorMessage);
+                    //netInfo = order.OrderNetInfo.Clone(); 
+                    netInfo.OrderCancelRequestException(errorMessage, order.NewOrderSingleClientID);
                 }
             }
             catch (Exception ex)
@@ -911,6 +953,8 @@ namespace Client.Service
             }
             return netInfo;
         }
+        #endregion
+
         #endregion
 
         #endregion

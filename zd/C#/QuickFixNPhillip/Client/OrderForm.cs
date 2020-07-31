@@ -200,5 +200,23 @@ namespace Client
             //globexCommu.CancelOrder(obj,  info, tifDict[combTIF.Text]);
             TradeClientAppService.Instance.Order(netInfo);
         }
+
+        private void btnAmendOrder_Click(object sender, EventArgs e)
+        {
+            CommonClassLib.NetInfo netInfo = new CommonClassLib.NetInfo();
+            CommonClassLib.ModifyInfo modifyInfo = new CommonClassLib.ModifyInfo();
+
+            netInfo.code = CommandCode.MODIFY;
+            netInfo.accountNo = "ZD_001";
+            netInfo.systemCode = this.txtAmendSysCode.Text.Trim();
+
+            modifyInfo.modifyNumber = this.nudAmendQty.Text;
+            modifyInfo.modifyPrice = this.txtAmendPrice.Text.Trim();
+            modifyInfo.modifyTriggerPrice = this.txtAmendStopPrice.Text.Trim();
+
+            netInfo.infoT = modifyInfo.MyToString();
+
+            TradeClientAppService.Instance.Order(netInfo);
+        }
     }
 }

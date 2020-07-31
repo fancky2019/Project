@@ -21,10 +21,14 @@ namespace Client.Models
         public string CurrentCliOrderID { get; set; }
 
         /// <summary>
-        /// 此CliOrderID可能不成功，暂存客户端生产的单号
+        /// 暂存客户端生产的单号,订单请求可能不成功，请求成功将此值赋值给CurrentCliOrderID，
+        /// 同时清空此值
         /// </summary>
         public string TempCliOrderID { get; set; }
 
+        /// <summary>
+        /// orderNo
+        /// </summary>
         public string NewOrderSingleClientID { get; set; }
 
         /// <summary>
@@ -56,6 +60,10 @@ namespace Client.Models
         /// </summary>
         public string CommandCode { get; set; }
         
+        /// <summary>
+        /// 订单生成时间，订单持久化用，不保存过期的日单，只保存GTC单
+        /// </summary>
+        public DateTime CreateNewOrderSingleTime { get; set; }
         /// <summary>
         /// 下单FIX
         /// </summary>

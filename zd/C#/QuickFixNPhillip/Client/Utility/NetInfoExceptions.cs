@@ -16,7 +16,7 @@ namespace Client.Utility
      * 
      * 下单、撤单可以没有消息体，改单必须有消息体
      */
-    internal static class OrderExceptions
+    internal static class NetInfoExceptions
     {
         internal static NetInfo NewOrderSingleException(this NetInfo netInfo, string errorMsg)
         {
@@ -32,37 +32,53 @@ namespace Client.Utility
             return netInfo;
         }
 
-        internal static NetInfo OrderCancelRequestException(this NetInfo netInfo, string errorMsg)
+        internal static NetInfo OrderCancelRequestException(this NetInfo netInfo, string errorMsg, string newOrderSingleClientID)
         {
-            CancelInfo cancelInfo = new CancelInfo();
-            cancelInfo.MyReadString(netInfo.infoT);
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.MyReadString(netInfo.infoT);
             CancelResponseInfo cancelResponseInfo = new CancelResponseInfo();
-            cancelResponseInfo.orderNo = cancelInfo.orderNo;
+            cancelResponseInfo.orderNo = newOrderSingleClientID;
             netInfo.errorMsg = errorMsg;
             netInfo.infoT = cancelResponseInfo.MyToString();
-            netInfo.exchangeCode = cancelInfo.exchangeCode;
-            netInfo.accountNo = cancelInfo.accountNo;
-            netInfo.systemCode = cancelInfo.systemNo;
+            netInfo.exchangeCode = orderInfo.exchangeCode;
+            netInfo.accountNo = orderInfo.accountNo;
+            netInfo.systemCode = netInfo.systemCode;
             netInfo.errorCode = ErrorCode.ERR_ORDER_0014;
             netInfo.code = CommandCode.CANCELCAST;
 
             return netInfo;
         }
 
-        internal static NetInfo OrderCancelReplaceRequestException(this NetInfo netInfo, string errorMsg)
+        internal static NetInfo OrderCancelReplaceRequestException(this NetInfo netInfo, string errorMsg, string newOrderSingleClientID)
         {
-            ModifyInfo modifyInfo = new ModifyInfo();
-            modifyInfo.MyReadString(netInfo.infoT);
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.MyReadString(netInfo.infoT);
             OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
+            orderResponseInfo.orderNo = newOrderSingleClientID;
             netInfo.errorMsg = errorMsg;
-            orderResponseInfo.orderNo = modifyInfo.orderNo;
+            netInfo.systemCode = netInfo.systemCode;
             netInfo.infoT = orderResponseInfo.MyToString();
-            netInfo.exchangeCode = modifyInfo.exchangeCode;
-            netInfo.accountNo = modifyInfo.accountNo;
+            netInfo.exchangeCode = orderInfo.exchangeCode;
+            netInfo.accountNo = orderInfo.accountNo;
             netInfo.errorCode = ErrorCode.ERR_ORDER_0016;
             netInfo.code = CommandCode.MODIFY;
             return netInfo;
 
         }
+
+        internal static NetInfo Clone(this NetInfo netInfo)
+        {
+            NetInfo netInfo1 = new NetInfo();
+            netInfo1.infoT = netInfo.MyToString();
+            netInfo1.exchangeCode = netInfo.exchangeCode;
+            netInfo1.accountNo = netInfo.accountNo;
+            netInfo1.systemCode = netInfo.systemCode;
+            netInfo1.clientNo = netInfo.clientNo;
+            netInfo1.todayCanUse = netInfo.todayCanUse;
+   
+
+            return netInfo1;
+        }
+        
     }
 }
