@@ -21,7 +21,6 @@ namespace Client
     partial class FrmTradeClient : Form
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
-        TradeClientAppService _tradeClientAppService = null;
         public FrmTradeClient()
         {
             InitializeComponent();
@@ -110,9 +109,10 @@ namespace Client
                 //this.btnTest.Text = ConfigurationManager.AppSettings["RefreshTest"]?.ToString();
                 Order o = new Order();
                 var orders = new ConcurrentDictionary<string, Order>();
-                orders.TryAdd("ddddd", o);
-                var str = NewtonsoftHelper.SerializeObject(orders);
-                var o1 = NewtonsoftHelper.DeserializeObject<ConcurrentDictionary<string, Order>>(str);
+                orders.TryAdd("1", o);
+
+                //var str = NewtonsoftHelper.SerializeObject(orders);
+                //var o1 = NewtonsoftHelper.DeserializeObject<ConcurrentDictionary<string, Order>>(str);
                 return;
             }
             catch (Exception ex)
