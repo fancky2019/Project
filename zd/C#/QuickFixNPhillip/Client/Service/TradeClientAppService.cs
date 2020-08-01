@@ -961,7 +961,7 @@ namespace Client.Service
                     errorMessage = message.GetString(Tags.Text);
 
                 }
-                netInfo = order.OrderNetInfo.Clone(); ;
+                netInfo = order.OrderNetInfo.Clone(); 
                 if (order.CommandCode == CommandCode.ORDER)
                 {
                     //netInfo = order.OrderNetInfo.Clone();

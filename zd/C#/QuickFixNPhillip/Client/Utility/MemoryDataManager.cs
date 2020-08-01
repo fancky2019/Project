@@ -16,7 +16,25 @@ namespace Client.Utility
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
 
         internal static ConcurrentDictionary<string, Order> Orders { get; set; }
-        //static Dictionary<string, long> _systemCodeCliOrderID = null;
+
+
+        /*
+         *加段锁
+         *Orders.TryAdd、 Orders.TryRemove
+         *由于ConcurrentDictionary获取所有Values、Keys要加整个锁，而通过Key Volatile.Read度不需要枷锁
+         *性能优化用，暂时不设计。
+         * 
+         * 
+         * Orders用CurrentCliOrderID做Key,不能用NewOrderSingleClientID应为改单。
+         * 
+         * 或者
+         * 
+         * 
+         * 
+         */
+        //internal static ConcurrentDictionary<long, string> CurrentCliOrderIDSystemCode = null;
+        //internal static ConcurrentDictionary<long, string> TempCliOrderIDSystemCode = null;
+
         internal static long LastClientOrderID { get; private set; }
 
         static long _beginOrderId = 0;
@@ -56,6 +74,9 @@ namespace Client.Utility
 
             return LastClientOrderID;
         }
+
+
+
 
         public static void Persist()
         {
