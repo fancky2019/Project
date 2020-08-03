@@ -146,10 +146,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Config\TradeClient - Phillip.cfg">
+    <None Include="Config\TradeClient.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\TradeClient.cfg">
+    <None Include="Config\TradeClient - Phillip.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Config\TradeClient - TT.cfg">
