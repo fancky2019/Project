@@ -32,7 +32,7 @@ namespace Client.Models
         public string NewOrderSingleClientID { get; set; }
 
         /// <summary>
-        /// 上手的ID
+        /// 上手的ID tag 37 (TT平台类似我们的sysCode不会变的）
         /// </summary>
         public string OrderID { get; set; }
         

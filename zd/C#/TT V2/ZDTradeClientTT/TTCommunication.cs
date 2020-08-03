@@ -943,12 +943,12 @@ namespace ZDTradeClientTT
             info.filledTime = transTime.ToString("HH:mm:ss");
             info.filledDate = transTime.ToString("yyyy-MM-dd");
 
-            int mReportType = 1;
+            int multiLegReportingType = 1;
 
             // 1 = Outright;2 = Leg of spread;3 = Spread
             if (execReport.IsSetMultiLegReportingType())
             {
-                mReportType = execReport.GetInt(Tags.MultiLegReportingType);
+                multiLegReportingType = execReport.GetInt(Tags.MultiLegReportingType);
             }
 
             //系统号
@@ -959,7 +959,7 @@ namespace ZDTradeClientTT
                 TT.Common.NLogUtility.Error($"订单成交返回，ClOrdID:{execReport.ClOrdID.getValue()}内存数据丢失");
                 return null;
             }
-            if (mReportType == 1 || mReportType == 3)
+            if (multiLegReportingType == 1 || multiLegReportingType == 3)
             {
                 decimal cumQty = execReport.CumQty.getValue();
                 if (refObj.cumFilled + execReport.LastShares.getValue() != cumQty)
@@ -987,7 +987,7 @@ namespace ZDTradeClientTT
             obj.todayCanUse = refObj.strArray[6];
 
 
-            if (mReportType == 1)//FUT
+            if (multiLegReportingType == 1)//FUT
             {
                 TradeServerFacade.SendString(obj);
                 if (execReport.LeavesQty.getValue() == 0)
@@ -996,7 +996,7 @@ namespace ZDTradeClientTT
                     _downReference.TryRemove(refObj.orderID, out refObj);
                 }
             }
-            else if (mReportType == 2)// multi-leg 
+            else if (multiLegReportingType == 2)// multi-leg 
             {
                 QuickFix.Group g2 = execReport.GetGroup(2, Tags.NoSecurityAltID);
                 //BRN Jul19
@@ -1006,7 +1006,7 @@ namespace ZDTradeClientTT
                 obj.infoT = info.MyToString();
                 TradeServerFacade.SendString(obj);
             }
-            else if (mReportType == 3)
+            else if (multiLegReportingType == 3)
             {
                 // Can not clear because each leg execution will follow
                 //if (execReport.LeavesQty.getValue() == 0)
