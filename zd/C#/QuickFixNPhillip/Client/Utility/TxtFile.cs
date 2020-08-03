@@ -45,9 +45,18 @@ namespace Client.Utility
             return content;
         }
 
+        private static void CheckDirectory(string filePath )
+        {
+            var directory = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+        }
 
         public static void SaveTxtFile(string filePath, List<string> content, FileMode fileMode = FileMode.Create)
         {
+            CheckDirectory(filePath);
             using (StreamWriter sw = new StreamWriter(File.Open(filePath, fileMode, FileAccess.ReadWrite), System.Text.Encoding.UTF8))
             {
                 foreach (string str in content)
@@ -58,8 +67,11 @@ namespace Client.Utility
         }
 
 
+
+
         public static void SaveString(string filePath, string content)
         {
+            CheckDirectory(filePath);
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 byte[] data = System.Text.Encoding.UTF8.GetBytes(content);

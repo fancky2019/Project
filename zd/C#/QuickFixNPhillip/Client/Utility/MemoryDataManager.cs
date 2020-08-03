@@ -32,7 +32,7 @@ namespace Client.Utility
          * 
          * 
          */
-        internal static ConcurrentDictionary<long, string> CurrentCliOrderIDSystemCode { get; private set; }
+        internal static ConcurrentDictionary<long, string> TempCliOrderIDSystemCode { get; private set; }
 
         internal static long LastClientOrderID { get; private set; }
 
@@ -43,7 +43,7 @@ namespace Client.Utility
         static MemoryDataManager()
         {
             Orders = new ConcurrentDictionary<string, Order>();
-            CurrentCliOrderIDSystemCode = new ConcurrentDictionary<long, string>();
+            TempCliOrderIDSystemCode = new ConcurrentDictionary<long, string>();
 
 
             var cliOrderIDScope = ConfigurationManager.AppSettings["CliOrderIDScope"].ToString();
@@ -135,12 +135,12 @@ namespace Client.Utility
 
         static internal void AddCurrentCliOrderIDSystemCode(long currentCliOrderID,string systemCode)
         {
-            CurrentCliOrderIDSystemCode.TryAdd(currentCliOrderID, systemCode);
+            TempCliOrderIDSystemCode.TryAdd(currentCliOrderID, systemCode);
         }
 
         static internal void RemoveCurrentCliOrderIDSystemCode(long currentCliOrderID, string systemCode)
         {
-            CurrentCliOrderIDSystemCode.TryRemove(currentCliOrderID, out _);
+            TempCliOrderIDSystemCode.TryRemove(currentCliOrderID, out _);
         }
 
         //static internal void SetSystemCodeCurrentCliOrderID(string systemCode, long currentClientOrderID)

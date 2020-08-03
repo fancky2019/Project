@@ -160,10 +160,11 @@ namespace Client.Service
 
         private void NewOrderSingle(Order order)
         {
+            NetInfo netInfo = order.OrderNetInfo;
             try
             {
 
-                NetInfo netInfo = order.OrderNetInfo;
+
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(netInfo.infoT);
 
@@ -311,9 +312,9 @@ namespace Client.Service
             catch (Exception ex)
             {
                 //去掉汉字
-                //string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}";
-                //OrderException(netInfo, msg);
-
+                string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}";
+                netInfo.NewOrderSingleException(msg);
+                ExecutionReport?.Invoke(netInfo?.MyToString());
             }
         }
 
@@ -331,9 +332,17 @@ namespace Client.Service
                 CancelInfo cancelInfo = new CancelInfo();
                 cancelInfo.MyReadString(netInfo.infoT);
 
-                var order = MemoryDataManager.Orders[netInfo.systemCode];
+                Order order;
+                if (!MemoryDataManager.Orders.TryGetValue(netInfo.systemCode, out order))
+                {
+                    throw new Exception($"Can not find SystemCode - {netInfo.systemCode}");
+                }
+                if (order.NewOrderSingleClientID != cancelInfo.orderNo)
+                {
+                    throw new Exception($"SystemCode do't match accountNo .SystemCode- {netInfo.systemCode},accountNo - {cancelInfo.accountNo}");
+                }
                 order.CommandCode = netInfo.code;
-                order.CancelNetInfo = netInfo;
+                //order.CancelNetInfo = netInfo;
                 QuickFix.FIX42.OrderCancelRequest orderCancelRequest = new QuickFix.FIX42.OrderCancelRequest();
 
                 //NewOrderSingle newOrderSingle = new NewOrderSingle();
@@ -363,8 +372,11 @@ namespace Client.Service
             catch (Exception ex)
             {
                 //去掉汉字
-                string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}";
-
+                string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}.";
+                netInfo.OrderCancelRequestException(msg, "");
+                ExecutionReport?.Invoke(netInfo?.MyToString());
+                _nLog.Error($"SystemCode -  { netInfo.systemCode}");
+                _nLog.Error(ex.ToString());
             }
 
         }
@@ -383,8 +395,15 @@ namespace Client.Service
                 ModifyInfo modifyInfo = new ModifyInfo();
                 modifyInfo.MyReadString(netInfo.infoT);
 
-
-                var order = MemoryDataManager.Orders[netInfo.systemCode];
+                Order order;
+                if (!MemoryDataManager.Orders.TryGetValue(netInfo.systemCode, out order))
+                {
+                    throw new Exception($"Can not find SystemCode - {netInfo.systemCode}");
+                }
+                if (order.NewOrderSingleClientID != modifyInfo.orderNo)
+                {
+                    throw new Exception($"SystemCode do't match accountNo .SystemCode- {netInfo.systemCode},accountNo - {modifyInfo.accountNo}");
+                }
                 order.CommandCode = netInfo.code;
                 NetInfo orderNetInfo = order.OrderNetInfo;
                 OrderInfo orderInfo = new OrderInfo();
@@ -476,9 +495,11 @@ namespace Client.Service
             catch (Exception ex)
             {
                 //去掉汉字
-                string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}";
-                //obj.errorMsg = msg;
-
+                string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}.";
+                netInfo.OrderCancelReplaceRequestException(msg, "");
+                ExecutionReport?.Invoke(netInfo?.MyToString());
+                _nLog.Error($"SystemCode -  { netInfo.systemCode}");
+                _nLog.Error(ex.ToString());
             }
         }
 
@@ -563,9 +584,12 @@ namespace Client.Service
             {
 
             }
-            var responseMsg = netInfo != null ? netInfo?.MyToString() : "";
 
-            ExecutionReport?.Invoke(responseMsg);
+            if (netInfo != null)
+            {
+                ExecutionReport?.Invoke(netInfo?.MyToString());
+            }
+
         }
 
         #region ExecutionReport
@@ -579,9 +603,10 @@ namespace Client.Service
                 var currentCliOrderID = execReport.ClOrdID.getValue();
                 var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
                 order.OrderID = execReport.OrderID.getValue();
-                order.CurrentCliOrderID = order.TempCliOrderID;
+                order.NewOrderSingleClientID = execReport.ClOrdID.getValue();
+                order.CurrentCliOrderID = execReport.ClOrdID.getValue();
                 order.TempCliOrderID = "";
-
+          
                 OrderResponseInfo info = new OrderResponseInfo();
 
                 info.orderNo = execReport.ClOrdID.getValue();
@@ -687,7 +712,7 @@ namespace Client.Service
             var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
 
             order.OrderID = execReport.OrderID.getValue();
-            order.CurrentCliOrderID = order.TempCliOrderID;
+            order.CurrentCliOrderID = execReport.ClOrdID.getValue();
             order.TempCliOrderID = "";
 
             OrderInfo orderInfo = new OrderInfo();
@@ -775,7 +800,7 @@ namespace Client.Service
             orderInfo.MyReadString(order.OrderNetInfo.infoT);
 
 
-            info.exchangeCode = order.CancelNetInfo.exchangeCode;
+            info.exchangeCode = orderInfo.exchangeCode;
             //if (execReport.Side.getValue() == Side.BUY)
             //    info.buySale = "1";
             //else
@@ -786,9 +811,9 @@ namespace Client.Service
 
             info.orderNo = order.NewOrderSingleClientID;
             //系统号
-            info.accountNo = order.CancelNetInfo.accountNo;
+            info.accountNo = orderInfo.accountNo;
             info.systemNo = order.OrderNetInfo.systemCode;
-            info.code = order.CancelNetInfo.code;
+            info.code = orderInfo.code;
 
             char ordType = execReport.OrdType.getValue();
             info.priceType = orderInfo.priceType;
@@ -814,8 +839,8 @@ namespace Client.Service
             NetInfo.accountNo = info.accountNo;
             NetInfo.systemCode = info.systemNo;
             //obj.todayCanUse = execReport.Header.GetField(Tags.TargetSubID);
-            NetInfo.todayCanUse = order.CancelNetInfo.todayCanUse;
-            NetInfo.clientNo = order.CancelNetInfo.clientNo;
+            NetInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
+            NetInfo.clientNo = order.OrderNetInfo.clientNo;
 
 
 
@@ -861,12 +886,12 @@ namespace Client.Service
             info.filledTime = transTime.ToString("HH:mm:ss");
             info.filledDate = transTime.ToString("yyyy-MM-dd");
 
-            int mReportType = 1;
+            int multiLegReportingType = 1;
 
             // 1 = Outright;2 = Leg of spread;3 = Spread
             if (execReport.IsSetMultiLegReportingType())
             {
-                mReportType = execReport.GetInt(Tags.MultiLegReportingType);
+                multiLegReportingType = execReport.GetInt(Tags.MultiLegReportingType);
             }
 
             //系统号
@@ -880,7 +905,7 @@ namespace Client.Service
 
 
 
-            if (mReportType == 1 || mReportType == 3)
+            if (multiLegReportingType == 1 || multiLegReportingType == 3)
             {
                 decimal cumQty = execReport.CumQty.getValue();
                 if (order.CumQty + execReport.LastShares.getValue() != cumQty)
@@ -909,7 +934,7 @@ namespace Client.Service
             obj.todayCanUse = order.OrderNetInfo.todayCanUse;
 
 
-            if (mReportType == 1)//FUT
+            if (multiLegReportingType == 1)//FUT
             {
 
                 if (execReport.LeavesQty.getValue() == 0)
@@ -917,7 +942,7 @@ namespace Client.Service
                     MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
                 }
             }
-            else if (mReportType == 2)// multi-leg 
+            else if (multiLegReportingType == 2)// multi-leg 
             {
                 QuickFix.Group g2 = execReport.GetGroup(2, Tags.NoSecurityAltID);
                 //BRN Jul19
@@ -927,7 +952,7 @@ namespace Client.Service
                 obj.infoT = info.MyToString();
 
             }
-            else if (mReportType == 3)
+            else if (multiLegReportingType == 3)
             {
                 // Can not clear because each leg execution will follow
                 //if (execReport.LeavesQty.getValue() == 0)
@@ -961,7 +986,7 @@ namespace Client.Service
                     errorMessage = message.GetString(Tags.Text);
 
                 }
-                netInfo = order.OrderNetInfo.Clone(); 
+                netInfo = order.OrderNetInfo.Clone();
                 if (order.CommandCode == CommandCode.ORDER)
                 {
                     //netInfo = order.OrderNetInfo.Clone();

@@ -213,7 +213,7 @@ namespace Client
             netInfo.code = CommandCode.MODIFY;
             netInfo.accountNo = "ZD_001";
             netInfo.systemCode = this.txtAmendSysCode.Text.Trim();
-
+            modifyInfo.orderNo = this.txtAmendClOrderID.Text.Trim();
             modifyInfo.modifyNumber = this.nudAmendQty.Text;
             modifyInfo.modifyPrice = this.txtAmendPrice.Text.Trim();
             modifyInfo.modifyTriggerPrice = this.txtAmendStopPrice.Text.Trim();
