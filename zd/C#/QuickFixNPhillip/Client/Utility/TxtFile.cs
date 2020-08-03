@@ -38,7 +38,7 @@ namespace Client.Utility
                     }
                     catch (Exception ex)
                     {
-                        //TT.Common.NLogUtility.Error(ex.ToString());
+                        throw ex;
                     }
                 }
             }

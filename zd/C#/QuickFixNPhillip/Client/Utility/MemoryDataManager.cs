@@ -32,7 +32,7 @@ namespace Client.Utility
          * 
          * 
          */
-        internal static ConcurrentDictionary<long, string> TempCliOrderIDSystemCode { get; private set; }
+        internal static ConcurrentDictionary<string, string> TempCliOrderIDSystemCode { get; set; }
 
         internal static long LastClientOrderID { get; private set; }
 
@@ -43,7 +43,7 @@ namespace Client.Utility
         static MemoryDataManager()
         {
             Orders = new ConcurrentDictionary<string, Order>();
-            TempCliOrderIDSystemCode = new ConcurrentDictionary<long, string>();
+            TempCliOrderIDSystemCode = new ConcurrentDictionary<string, string>();
 
 
             var cliOrderIDScope = ConfigurationManager.AppSettings["CliOrderIDScope"].ToString();
@@ -79,13 +79,14 @@ namespace Client.Utility
         {
             try
             {
-                TxtFile.SaveTxtFile(ConfigurationManager.AppSettings["OrderIDFilePath"].ToString(), new List<string> { MemoryDataManager.LastClientOrderID.ToString() });
+                TxtFile.SaveString(ConfigurationManager.AppSettings["OrderIDFilePath"].ToString(), LastClientOrderID.ToString());
             }
             catch (Exception ex)
             {
                 _nLog.Error("Save LastOrderID Failed");
                 _nLog.Error(ex.ToString());
             }
+
             try
             {
                 var jsonStr = NewtonsoftHelper.SerializeObject(Orders);
@@ -99,13 +100,26 @@ namespace Client.Utility
                 _nLog.Error(ex.ToString());
             }
 
+            try
+            {
+                var jsonStr = NewtonsoftHelper.SerializeObject(TempCliOrderIDSystemCode);
+                //var jsonStr = MessagePackUtility.SerializeToJson<ConcurrentDictionary<string, Order>>(Orders);
+                TxtFile.SaveString(ConfigurationManager.AppSettings["TempCliOrderIDSystemCode"].ToString(), jsonStr);
+
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error("Save TempCliOrderIDSystemCode Failed");
+                _nLog.Error(ex.ToString());
+            }
+
         }
 
         public static void Load()
         {
             try
             {
-                var clientOrderID = TxtFile.ReadString(ConfigurationManager.AppSettings["OrderIDFilePath"].ToString());
+                var clientOrderID = TxtFile.ReadString(ConfigurationManager.AppSettings["OrderIDFilePath"].ToString()).Trim();
                 if (!string.IsNullOrEmpty(clientOrderID))
                 {
                     LastClientOrderID = long.Parse(clientOrderID);
@@ -130,30 +144,43 @@ namespace Client.Utility
                 _nLog.Error("Load Orders Failed");
                 _nLog.Error(ex.ToString());
             }
+            try
+            {
+                var ordersStr = TxtFile.ReadString(ConfigurationManager.AppSettings["TempCliOrderIDSystemCode"].ToString());
+                if (!string.IsNullOrEmpty(ordersStr))
+                {
+                    TempCliOrderIDSystemCode = NewtonsoftHelper.DeserializeObject<ConcurrentDictionary<string, string>>(ordersStr);
+                    //Orders =  MessagePackUtility.DeserializeFromJson<ConcurrentDictionary<string, Order>>(ordersStr);
+                }
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error("Load TempCliOrderIDSystemCode Failed");
+                _nLog.Error(ex.ToString());
+            }
+
+
         }
 
 
-        static internal void AddCurrentCliOrderIDSystemCode(long currentCliOrderID,string systemCode)
+        internal static Order GetOrderByCliOrderID(string cliOrderID)
         {
-            TempCliOrderIDSystemCode.TryAdd(currentCliOrderID, systemCode);
+            string systemCode;
+            TempCliOrderIDSystemCode.TryGetValue(cliOrderID, out systemCode);
+            if (string.IsNullOrEmpty(systemCode))
+            {
+                throw new Exception($"TempCliOrderIDSystemCode can not find CliOrderID - {cliOrderID}");
+            }
+            Order order;
+            Orders.TryGetValue(systemCode, out order);
+            if (order == null)
+            {
+                throw new Exception($"Orders  can not find systemCode - {systemCode}! ");
+            }
+
+            return order;
         }
 
-        static internal void RemoveCurrentCliOrderIDSystemCode(long currentCliOrderID, string systemCode)
-        {
-            TempCliOrderIDSystemCode.TryRemove(currentCliOrderID, out _);
-        }
-
-        //static internal void SetSystemCodeCurrentCliOrderID(string systemCode, long currentClientOrderID)
-        //{
-        //    if(_systemCodeCliOrderID.ContainsKey(systemCode))
-        //    {
-        //        _systemCodeCliOrderID[systemCode] = currentClientOrderID;
-        //    }
-        //    else
-        //    {
-        //        _systemCodeCliOrderID.Add(systemCode, currentClientOrderID);
-        //    }
-        //}
 
 
     }
