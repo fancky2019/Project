@@ -180,41 +180,17 @@ namespace Client.Service
                 newOrderSingle.ClOrdID = new ClOrdID(clOrdID);
                 //// Tag60
                 //newOrderSingle.TransactTime = new TransactTime(DateTime.UtcNow);
-                var securityExchange = orderInfo.exchangeCode;
+                //var securityExchange = orderInfo.exchangeCode;
 
-                #region When specifying by alternate security ID
-                //
-                var newCode = orderInfo.code;
-                //var securityType = TTMarketAdapterCommon.GetSecurityType(orderInfo.code);
-                //if (securityType == SecurityTypeEnum.OPT)
-                //{
-                //    //newCode = CompatibleOpenInterestContract.ConvertToNewTTContract(info.code);
-                //    CompatibleOptionCodeConverter.IsCompatibleOption(orderInfo.code, ref newCode);
-                //}
-
-                //TTMarketAdapter.Model.OrderModel orderModel = TTMarketAdapterCommon.GetOrderModel(newCode);
-                //var validate = orderModel.Validate();
-                //if (!validate.Success)
-                //{
-                //    OrderException(netInfo, validate.ErrorMessage);
-                //    return;
-                //}
+                //tag21
+                newOrderSingle.HandlInst = new HandlInst('1');
                 // Tag55
-                //newOrderSingle.Symbol = sd.Symbol;
-                newOrderSingle.Symbol = new Symbol("BRN");
+                newOrderSingle.Symbol = new Symbol(orderInfo.code);
                 // Tag207
-                newOrderSingle.SecurityExchange = new SecurityExchange("ICE");
-
+                newOrderSingle.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
                 //167
-                newOrderSingle.SecurityType = new SecurityType("FUT");
-                //454
-                NoSecurityAltIDGroup noSecurityAltIDGroup = new NoSecurityAltIDGroup();
-                //455
-                noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("BRN Dec20");
-                //456
-                noSecurityAltIDGroup.SecurityAltIDSource = new SecurityAltIDSource("97");
-                newOrderSingle.AddGroup(noSecurityAltIDGroup);
-                #endregion
+                //newOrderSingle.SecurityType = new SecurityType(SecurityType.COMMON_STOCK);
+
 
 
                 //委托量
@@ -223,14 +199,11 @@ namespace Client.Service
                 newOrderSingle.OrderQty = new OrderQty(orderQty);
                 // Tag54
                 newOrderSingle.Side = ZDUperTagValueConvert.QuerySide(orderInfo.buySale);
+                //tag109
+                newOrderSingle.ClientID = new ClientID("C005");
 
 
-
-                //客户端用的是FIX 7X和 新TT的FIX版本 不一样
-                //两个版本的OrderType值1和2反了
-                string orderType = ZDUperTagValueConvert.ConvertToTTOrdType(orderInfo.priceType);
-
-                char charOrdType = char.Parse(orderType);
+                char charOrdType = char.Parse(orderInfo.priceType);
                 // Tag40
                 newOrderSingle.OrdType = new OrdType(charOrdType);// QueryOrdType(info.priceType);
 
@@ -257,7 +230,6 @@ namespace Client.Service
                 string timeInForce = orderInfo.validDate;
 
 
-                timeInForce = ZDUperTagValueConvert.ConvertToTTTimeInForce(timeInForce);
                 /*
                  * CME官网：Fill and Kill (FAK) and Fill or Kill (FOK) - 
                  *          order is immediately executed against any available quantity and any remaining quantity is eliminated (FAK)
@@ -280,7 +252,8 @@ namespace Client.Service
 
                 //tag 59
                 newOrderSingle.TimeInForce = new TimeInForce(char.Parse(timeInForce));
-
+                //tag60
+                newOrderSingle.TransactTime = new TransactTime(DateTime.UtcNow, true);
                 // Tag1  上手号
                 newOrderSingle.Account = new Account(netInfo.accountNo);
 

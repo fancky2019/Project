@@ -155,7 +155,7 @@ namespace Client
 
             netInfo.code = CommandCode.ORDER;
             //tag1:zd上手号
-            netInfo.accountNo = "ZD_001";
+            netInfo.accountNo = "9111111";
             netInfo.systemCode = $"SystemCode{DateTime.Now.GetTimeStamp()}";
             //tag 50  
             netInfo.todayCanUse = "0047";
@@ -174,8 +174,7 @@ namespace Client
 
 
 
-            orderInfo.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(orderInfo.priceType);
-            orderInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(orderInfo.validDate);
+
             netInfo.infoT = orderInfo.MyToString();
 
             StopwatchHelper.Instance.Stopwatch.Restart();

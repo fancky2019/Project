@@ -58,6 +58,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.txtAmendStopPrice = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.nudAmendQty = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.txtAmendClOrderID = new System.Windows.Forms.TextBox();
+            this.txtAmendSysCode = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.btnAmendOrder = new System.Windows.Forms.Button();
             this.txtAmendPrice = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -70,14 +78,6 @@
             this.label30 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnOpenDirectory = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.txtAmendSysCode = new System.Windows.Forms.TextBox();
-            this.txtAmendClOrderID = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.nudAmendQty = new System.Windows.Forms.NumericUpDown();
-            this.label15 = new System.Windows.Forms.Label();
-            this.txtAmendStopPrice = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl2.SuspendLayout();
@@ -88,10 +88,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudQrdQty)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudAmendQty)).BeginInit();
             this.tabPage5.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudAmendQty)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -209,12 +209,22 @@
             // 
             // nudQrdQty
             // 
+            this.nudQrdQty.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.nudQrdQty.Location = new System.Drawing.Point(156, 144);
+            this.nudQrdQty.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
             this.nudQrdQty.Name = "nudQrdQty";
             this.nudQrdQty.Size = new System.Drawing.Size(120, 21);
             this.nudQrdQty.TabIndex = 38;
             this.nudQrdQty.Value = new decimal(new int[] {
-            1,
+            1000,
             0,
             0,
             0});
@@ -235,7 +245,7 @@
             this.txtStopPx.Name = "txtStopPx";
             this.txtStopPx.Size = new System.Drawing.Size(121, 21);
             this.txtStopPx.TabIndex = 36;
-            this.txtStopPx.Text = "42.59";
+            this.txtStopPx.Text = "105";
             // 
             // label12
             // 
@@ -252,7 +262,7 @@
             this.txtPrice.Name = "txtPrice";
             this.txtPrice.Size = new System.Drawing.Size(121, 21);
             this.txtPrice.TabIndex = 24;
-            this.txtPrice.Text = "42.59";
+            this.txtPrice.Text = "105";
             // 
             // label10
             // 
@@ -296,7 +306,7 @@
             this.txtSecurityAltID.Name = "txtSecurityAltID";
             this.txtSecurityAltID.Size = new System.Drawing.Size(121, 21);
             this.txtSecurityAltID.TabIndex = 16;
-            this.txtSecurityAltID.Text = "BRN2012";
+            this.txtSecurityAltID.Text = "AAPL";
             // 
             // label3
             // 
@@ -322,7 +332,7 @@
             this.txtSecurityExchange.Name = "txtSecurityExchange";
             this.txtSecurityExchange.Size = new System.Drawing.Size(121, 21);
             this.txtSecurityExchange.TabIndex = 13;
-            this.txtSecurityExchange.Text = "ICE";
+            this.txtSecurityExchange.Text = "US";
             // 
             // label7
             // 
@@ -404,6 +414,77 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(311, 492);
             this.panel2.TabIndex = 13;
+            // 
+            // txtAmendStopPrice
+            // 
+            this.txtAmendStopPrice.Location = new System.Drawing.Point(121, 145);
+            this.txtAmendStopPrice.Name = "txtAmendStopPrice";
+            this.txtAmendStopPrice.Size = new System.Drawing.Size(121, 21);
+            this.txtAmendStopPrice.TabIndex = 46;
+            this.txtAmendStopPrice.Text = "42.59";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(36, 150);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(71, 12);
+            this.label15.TabIndex = 45;
+            this.label15.Text = "StopPx(99):";
+            // 
+            // nudAmendQty
+            // 
+            this.nudAmendQty.Location = new System.Drawing.Point(121, 81);
+            this.nudAmendQty.Name = "nudAmendQty";
+            this.nudAmendQty.Size = new System.Drawing.Size(120, 21);
+            this.nudAmendQty.TabIndex = 44;
+            this.nudAmendQty.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(36, 81);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(71, 12);
+            this.label14.TabIndex = 43;
+            this.label14.Text = "OrdQty(38):";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(18, 51);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(89, 12);
+            this.label13.TabIndex = 42;
+            this.label13.Text = "ClOrderID(11):";
+            // 
+            // txtAmendClOrderID
+            // 
+            this.txtAmendClOrderID.Location = new System.Drawing.Point(120, 51);
+            this.txtAmendClOrderID.Name = "txtAmendClOrderID";
+            this.txtAmendClOrderID.Size = new System.Drawing.Size(121, 21);
+            this.txtAmendClOrderID.TabIndex = 41;
+            this.txtAmendClOrderID.Text = "1000001";
+            // 
+            // txtAmendSysCode
+            // 
+            this.txtAmendSysCode.Location = new System.Drawing.Point(119, 19);
+            this.txtAmendSysCode.Name = "txtAmendSysCode";
+            this.txtAmendSysCode.Size = new System.Drawing.Size(121, 21);
+            this.txtAmendSysCode.TabIndex = 40;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(36, 22);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(71, 12);
+            this.label9.TabIndex = 38;
+            this.label9.Text = "SystemCode:";
             // 
             // btnAmendOrder
             // 
@@ -520,77 +601,6 @@
             this.btnOpenDirectory.UseVisualStyleBackColor = true;
             this.btnOpenDirectory.Click += new System.EventHandler(this.btnOpenDirectory_Click);
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(36, 22);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(71, 12);
-            this.label9.TabIndex = 38;
-            this.label9.Text = "SystemCode:";
-            // 
-            // txtAmendSysCode
-            // 
-            this.txtAmendSysCode.Location = new System.Drawing.Point(119, 19);
-            this.txtAmendSysCode.Name = "txtAmendSysCode";
-            this.txtAmendSysCode.Size = new System.Drawing.Size(121, 21);
-            this.txtAmendSysCode.TabIndex = 40;
-            // 
-            // txtAmendClOrderID
-            // 
-            this.txtAmendClOrderID.Location = new System.Drawing.Point(120, 51);
-            this.txtAmendClOrderID.Name = "txtAmendClOrderID";
-            this.txtAmendClOrderID.Size = new System.Drawing.Size(121, 21);
-            this.txtAmendClOrderID.TabIndex = 41;
-            this.txtAmendClOrderID.Text = "1000001";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(18, 51);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(89, 12);
-            this.label13.TabIndex = 42;
-            this.label13.Text = "ClOrderID(11):";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(36, 81);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(71, 12);
-            this.label14.TabIndex = 43;
-            this.label14.Text = "OrdQty(38):";
-            // 
-            // nudAmendQty
-            // 
-            this.nudAmendQty.Location = new System.Drawing.Point(121, 81);
-            this.nudAmendQty.Name = "nudAmendQty";
-            this.nudAmendQty.Size = new System.Drawing.Size(120, 21);
-            this.nudAmendQty.TabIndex = 44;
-            this.nudAmendQty.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(36, 150);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(71, 12);
-            this.label15.TabIndex = 45;
-            this.label15.Text = "StopPx(99):";
-            // 
-            // txtAmendStopPrice
-            // 
-            this.txtAmendStopPrice.Location = new System.Drawing.Point(121, 145);
-            this.txtAmendStopPrice.Name = "txtAmendStopPrice";
-            this.txtAmendStopPrice.Size = new System.Drawing.Size(121, 21);
-            this.txtAmendStopPrice.TabIndex = 46;
-            this.txtAmendStopPrice.Text = "42.59";
-            // 
             // OrderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -614,11 +624,11 @@
             this.tabPage4.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudAmendQty)).EndInit();
             this.tabPage5.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.nudAmendQty)).EndInit();
             this.ResumeLayout(false);
 
         }
