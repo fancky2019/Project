@@ -170,14 +170,14 @@ namespace Client.Service
 
 
 
-                long clOrdID = MemoryDataManager.GetNextClOrderID();
+                string clOrdID = MemoryDataManager.GetNextClOrderID().ToString();
 
 
 
 
                 NewOrderSingle newOrderSingle = new NewOrderSingle();
                 // Tag11
-                newOrderSingle.ClOrdID = new ClOrdID(clOrdID.ToString());
+                newOrderSingle.ClOrdID = new ClOrdID(clOrdID);
                 //// Tag60
                 //newOrderSingle.TransactTime = new TransactTime(DateTime.UtcNow);
                 var securityExchange = orderInfo.exchangeCode;
@@ -300,12 +300,16 @@ namespace Client.Service
                 if (ret)
                 {
                     order.SystemCode = netInfo.systemCode;
-                    order.TempCliOrderID = newOrderSingle.ClOrdID.getValue();
+                    order.TempCliOrderID = clOrdID;
                     // newOrderSingle.FromString()
                     order.CreateNewOrderSingleTime = DateTime.Now;
                     //order.NewOrderSingle = newOrderSingle.ToString();
                     MemoryDataManager.Orders.TryAdd(order.SystemCode, order);
-                    //OrderException(netInfo, "can not connect to TT server!");
+                    MemoryDataManager.TempCliOrderIDSystemCode.TryAdd(clOrdID, netInfo.systemCode);
+                }
+                else
+                {
+                    throw new Exception("Server socket throw exception! Can not sent to uper!");
                 }
 
             }
@@ -365,8 +369,12 @@ namespace Client.Service
                 if (ret)
                 {
                     order.TempCliOrderID = clOrdID;
+                    MemoryDataManager.TempCliOrderIDSystemCode.TryAdd(clOrdID, netInfo.systemCode);
                 }
-
+                else
+                {
+                    throw new Exception("Server socket throw exception! Can not sent to uper!");
+                }
 
             }
             catch (Exception ex)
@@ -388,7 +396,6 @@ namespace Client.Service
         /// <param name="netInfo"></param>
         public void OrderCancelReplaceRequest(NetInfo netInfo)
         {
-
             try
             {
 
@@ -408,7 +415,6 @@ namespace Client.Service
                 NetInfo orderNetInfo = order.OrderNetInfo;
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(orderNetInfo.infoT);
-
                 QuickFix.FIX42.OrderCancelReplaceRequest orderCancelReplaceRequest = new QuickFix.FIX42.OrderCancelReplaceRequest();
 
                 //NewOrderSingle newOrderSingle = new NewOrderSingle();
@@ -485,12 +491,13 @@ namespace Client.Service
                 if (ret)
                 {
                     order.TempCliOrderID = clOrdID;
+                    MemoryDataManager.TempCliOrderIDSystemCode.TryAdd(clOrdID, netInfo.systemCode);
                     //order.OrderCancelReplaceRequest = orderCancelReplaceRequest.ToString();
                 }
-
-
-
-
+                else
+                {
+                    throw new Exception("Server socket throw exception! Can not sent to uper!");
+                }
             }
             catch (Exception ex)
             {
@@ -582,12 +589,16 @@ namespace Client.Service
             }
             catch (Exception ex)
             {
-
+                _nLog.Error(ex.ToString());
             }
 
             if (netInfo != null)
             {
-                ExecutionReport?.Invoke(netInfo?.MyToString());
+                ExecutionReport?.Invoke(netInfo.MyToString());
+            }
+            else
+            {
+                _nLog.Error($"Deal Failed:{message.ToString()}");
             }
 
         }
@@ -601,12 +612,13 @@ namespace Client.Service
             try
             {
                 var currentCliOrderID = execReport.ClOrdID.getValue();
-                var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
+                //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
+                var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
                 order.OrderID = execReport.OrderID.getValue();
                 order.NewOrderSingleClientID = execReport.ClOrdID.getValue();
                 order.CurrentCliOrderID = execReport.ClOrdID.getValue();
                 order.TempCliOrderID = "";
-          
+
                 OrderResponseInfo info = new OrderResponseInfo();
 
                 info.orderNo = execReport.ClOrdID.getValue();
@@ -685,9 +697,8 @@ namespace Client.Service
                 netInfo.errorCode = ErrorCode.SUCCESS;
                 netInfo.code = CommandCode.ORDER;
 
-                netInfo.accountNo = info.accountNo;
-                netInfo.systemCode = info.systemNo;
-                //obj.todayCanUse = execReport.Header.GetField(Tags.TargetSubID);
+                netInfo.accountNo = order.OrderNetInfo.accountNo;
+                netInfo.systemCode = order.SystemCode;
                 netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
                 netInfo.clientNo = order.OrderNetInfo.clientNo;
                 netInfo.localSystemCode = order.OrderNetInfo.localSystemCode;
@@ -705,12 +716,12 @@ namespace Client.Service
         #region  Replaced
         public NetInfo Replaced(QuickFix.FIX42.ExecutionReport execReport)
         {
-            OrderResponseInfo info = new OrderResponseInfo();
+            OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
 
 
             var currentCliOrderID = execReport.ClOrdID.getValue();
-            var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
-
+            //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
+            var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
             order.OrderID = execReport.OrderID.getValue();
             order.CurrentCliOrderID = execReport.ClOrdID.getValue();
             order.TempCliOrderID = "";
@@ -718,25 +729,25 @@ namespace Client.Service
             OrderInfo orderInfo = new OrderInfo();
             orderInfo.MyReadString(order.OrderNetInfo.infoT);
 
-            info.exchangeCode = orderInfo.exchangeCode;
+            orderResponseInfo.exchangeCode = orderInfo.exchangeCode;
 
-            info.buySale = execReport.Side.getValue().ToString();
-            info.tradeType = "1";
+            orderResponseInfo.buySale = execReport.Side.getValue().ToString();
+            orderResponseInfo.tradeType = "1";
 
             char ordType = execReport.OrdType.getValue();
 
 
-            info.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(ordType.ToString());
+            orderResponseInfo.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(ordType.ToString());
 
             if (ordType == OrdType.LIMIT || ordType == OrdType.STOP_LIMIT)
             {
-                info.orderPrice = execReport.Price.getValue().ToString();
+                orderResponseInfo.orderPrice = execReport.Price.getValue().ToString();
             }
             // changed by Rainer on 20150304 -begin
             //else if (ordType == OrdType.STOP || ordType == OrdType.STOP_LIMIT)
             if (ordType == OrdType.STOP || ordType == OrdType.STOP_LIMIT)
             {
-                info.triggerPrice = execReport.StopPx.getValue().ToString();
+                orderResponseInfo.triggerPrice = execReport.StopPx.getValue().ToString();
             }
             // changed by Rainer on 20150304 -end
 
@@ -744,22 +755,22 @@ namespace Client.Service
             //info.validDate = QueryValidDate(tif);
 
             //info.modifyNumber = execReport.OrderQty.getValue().ToString();
-            info.orderNumber = execReport.OrderQty.getValue().ToString();
-            info.filledNumber = "0";
+            orderResponseInfo.orderNumber = execReport.OrderQty.getValue().ToString();
+            orderResponseInfo.filledNumber = "0";
 
             DateTime transTime = execReport.TransactTime.getValue();
-            info.orderTime = transTime.ToString("HH:mm:ss");
-            info.orderDate = transTime.ToString("yyyy-MM-dd");
+            orderResponseInfo.orderTime = transTime.ToString("HH:mm:ss");
+            orderResponseInfo.orderDate = transTime.ToString("yyyy-MM-dd");
 
 
             //info.validDate = ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
-            info.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
-            info.orderNo = order.NewOrderSingleClientID;
-            info.origOrderNo = execReport.ClOrdID.getValue();
+            orderResponseInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
+            orderResponseInfo.orderNo = order.NewOrderSingleClientID;
+            orderResponseInfo.origOrderNo = execReport.ClOrdID.getValue();
             //盘房和TT对单用，关联字段。
             if (execReport.IsSetField(Tags.SecondaryClOrdID))
             {
-                info.origOrderNo = execReport.GetString(Tags.SecondaryClOrdID);
+                orderResponseInfo.origOrderNo = execReport.GetString(Tags.SecondaryClOrdID);
             }
 
 
@@ -768,13 +779,12 @@ namespace Client.Service
 
             NetInfo netInfo = new NetInfo();
 
-            netInfo.infoT = info.MyToString();
-            netInfo.exchangeCode = info.exchangeCode;
+            netInfo.infoT = orderResponseInfo.MyToString();
+            netInfo.exchangeCode = orderResponseInfo.exchangeCode;
             netInfo.errorCode = ErrorCode.SUCCESS;
             netInfo.code = CommandCode.MODIFY;
-            netInfo.accountNo = info.accountNo;
-            netInfo.systemCode = info.systemNo;
-            //obj.todayCanUse = execReport.Header.GetField(Tags.TargetSubID);
+            netInfo.accountNo = order.OrderNetInfo.accountNo;
+            netInfo.systemCode = order.SystemCode;
             netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
             netInfo.clientNo = order.OrderNetInfo.clientNo;
 
@@ -790,7 +800,8 @@ namespace Client.Service
             CancelResponseInfo info = new CancelResponseInfo();
 
             var currentCliOrderID = execReport.ClOrdID.getValue();
-            var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
+            //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
+            var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
             MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
 
             //CancelInfo cancelInfo = new CancelInfo();
@@ -863,12 +874,7 @@ namespace Client.Service
                 }
             }
             var currentCliOrderID = execReport.ClOrdID.getValue();
-            var order = MemoryDataManager.Orders.Values.Where(p => p.CurrentCliOrderID == currentCliOrderID).FirstOrDefault();
-            if (order == null)
-            {
-                _nLog.Error($"ClientOrderID - {currentCliOrderID} 数据丢失! ");
-                return null;
-            }
+            var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
             info.exchangeCode = order.OrderNetInfo.exchangeCode;
 
             //if (execReport.Side.getValue() == Side.BUY)
@@ -978,7 +984,8 @@ namespace Client.Service
                 //var currentCliOrderID = message.ClOrdID.getValue();
 
                 var currentCliOrderID = clOrdID;
-                var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
+                //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
+                var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
                 var errorMessage = "";
 
                 if (message.IsSetField(Tags.Text))

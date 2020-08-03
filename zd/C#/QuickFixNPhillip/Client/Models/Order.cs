@@ -12,11 +12,11 @@ namespace Client.Models
     {
         public bool Pending { get; set; }
         /// <summary>
-        /// 客户号  --redis hash key
+        /// 客户号  
         /// </summary>
         public string SystemCode { get; set; }
         /// <summary>
-        /// 最新单的TAG 11--- redis key
+        /// 最新单的TAG 11
         /// </summary>
         public string CurrentCliOrderID { get; set; }
 
@@ -48,12 +48,12 @@ namespace Client.Models
         /// <summary>
         /// 改单
         /// </summary>
-        public NetInfo AmendNetInfo { get; set; }
+        //public NetInfo AmendNetInfo { get; set; }
 
         /// <summary>
         /// 撤单
         /// </summary>
-        public NetInfo CancelNetInfo { get; set; }
+        //public NetInfo CancelNetInfo { get; set; }
 
         /// <summary>
         /// 下改撤

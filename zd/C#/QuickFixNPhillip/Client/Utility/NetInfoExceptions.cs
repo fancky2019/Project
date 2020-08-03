@@ -1,4 +1,5 @@
-﻿using CommonClassLib;
+﻿using Client.Models;
+using CommonClassLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +71,7 @@ namespace Client.Utility
             {
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(netInfo.infoT);
+
                 OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
                 orderResponseInfo.orderNo = newOrderSingleClientID;
                 netInfo.errorMsg = errorMsg;
