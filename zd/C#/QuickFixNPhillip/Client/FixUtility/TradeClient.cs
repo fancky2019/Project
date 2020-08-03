@@ -91,7 +91,7 @@ namespace Client.FixUtility
         /// <param name="sessionID"></param>
         public void FromAdmin(Message message, SessionID sessionID)
         {
-            _nLog.Info(message.ToString());
+            //_nLog.Info(message.ToString());
         }
         public void ToAdmin(Message message, SessionID sessionID)
         {
@@ -111,7 +111,7 @@ namespace Client.FixUtility
         }
 
         /// <summary>
-        /// Client receive messages from brker
+        /// Client receive messages from broker
         /// </summary>
         /// <param name="message"></param>
         /// <param name="sessionID"></param>
