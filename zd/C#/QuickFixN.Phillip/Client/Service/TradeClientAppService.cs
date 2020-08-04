@@ -397,6 +397,7 @@ namespace Client.Service
                 //Tag 37
                 orderCancelReplaceRequest.OrderID = new OrderID(order.OrderID);
 
+                orderCancelReplaceRequest.HandlInst = new HandlInst('1');
 
 
                 //Tag 41
@@ -422,17 +423,13 @@ namespace Client.Service
                 }
                 priceType = modifyInfo.priceType;
 
-                string orderType = ZDUperTagValueConvert.ConvertToTTOrdType(priceType);
+                //string orderType = ZDUperTagValueConvert.ConvertToTTOrdType(priceType);
+                string orderType = priceType;
                 char charOrdType = char.Parse(orderType);
                 // Tag40 ,不能用QueryOrdType(info.priceType);方法，有的客户端LME交易所不传值
                 orderCancelReplaceRequest.OrdType = new OrdType(charOrdType);
-
-
-
-
-                //string symbol = newOrderSingle.Symbol.getValue();
-
-
+                //tag55
+                orderCancelReplaceRequest.Symbol = new Symbol(orderInfo.code);
                 var price = decimal.Parse(modifyInfo.modifyPrice);
                 // Tag44
                 if (charOrdType == OrdType.LIMIT || charOrdType == OrdType.STOP_LIMIT)
@@ -452,12 +449,14 @@ namespace Client.Service
                 ////tag 77
                 //orderCancelReplaceRequest.OpenClose = new OpenClose('O');
 
-                string timeInForce = ZDUperTagValueConvert.ConvertToTTTimeInForce(orderInfo.validDate);
+                //string timeInForce = ZDUperTagValueConvert.ConvertToTTTimeInForce(orderInfo.validDate);
 
-
+                // Tag207
+                //orderCancelReplaceRequest.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
                 //tag 59
-                orderCancelReplaceRequest.TimeInForce = new TimeInForce(char.Parse(timeInForce));
-
+                orderCancelReplaceRequest.TimeInForce = new TimeInForce(char.Parse(orderInfo.validDate));
+                //tag60
+                orderCancelReplaceRequest.TransactTime = new TransactTime(DateTime.UtcNow, true);
 
                 var ret = TradeClient.Instance.SendMessage(orderCancelReplaceRequest);
 

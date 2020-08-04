@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "QuickFix": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}

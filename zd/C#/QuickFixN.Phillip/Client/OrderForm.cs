@@ -190,7 +190,7 @@ namespace Client
 
             netInfo.code = CommandCode.CANCEL;
             //tag1:zd上手号
-            netInfo.accountNo = "ZD_001";
+            netInfo.accountNo = "9111111";
             netInfo.systemCode = this.txtOrderCancelSystemCode.Text.Trim();
 
             //tag 50  
@@ -210,7 +210,7 @@ namespace Client
             CommonClassLib.ModifyInfo modifyInfo = new CommonClassLib.ModifyInfo();
 
             netInfo.code = CommandCode.MODIFY;
-            netInfo.accountNo = "ZD_001";
+            netInfo.accountNo = "9111111";
             netInfo.systemCode = this.txtAmendSysCode.Text.Trim();
             modifyInfo.orderNo = this.txtAmendClOrderID.Text.Trim();
             modifyInfo.modifyNumber = this.nudAmendQty.Text;
