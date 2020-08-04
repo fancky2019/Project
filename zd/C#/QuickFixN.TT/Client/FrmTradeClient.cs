@@ -27,6 +27,7 @@ namespace Client
             this.btnStop.Enabled = false;
         }
 
+        #region 基本
         private void btnStart_Click(object sender, EventArgs e)
         {
 
@@ -79,8 +80,6 @@ namespace Client
         internal void btnStop_Click(object sender, EventArgs e)
         {
             TradeClientAppService.Instance.Stop();
-
-
         }
 
         private void FrmTradeClient_FormClosing(object sender, FormClosingEventArgs e)
@@ -100,8 +99,9 @@ namespace Client
                 return;
             }
         }
+        #endregion
 
-
+        #region  Test
         private void btnTest_Click(object sender, EventArgs e)
         {
             /*
@@ -118,7 +118,7 @@ namespace Client
             ni.MyReadString(newOrderStr);
             ni.MyReadString(modifyOrderStr);
             ni.MyReadString(cancelOrderStr);
-        
+
             try
             {
                 //this.btnTest.Text = ConfigurationManager.AppSettings["RefreshTest"]?.ToString();
@@ -182,7 +182,9 @@ namespace Client
 
             //StopwatchHelper.Instance.Stopwatch.Restart();
         }
+        #endregion
 
+        #region OrderForm
         private OrderForm _orderForm;
         private void btnShowOrderForm_Click(object sender, EventArgs e)
         {
@@ -192,5 +194,6 @@ namespace Client
             }
             _orderForm.Show();
         }
+        #endregion
     }
 }
