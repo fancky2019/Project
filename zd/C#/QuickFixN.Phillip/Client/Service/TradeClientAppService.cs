@@ -319,6 +319,10 @@ namespace Client.Service
                     throw new Exception($"SystemCode do't match accountNo .SystemCode- {netInfo.systemCode},accountNo - {cancelInfo.accountNo}");
                 }
                 order.CommandCode = netInfo.code;
+
+
+                OrderInfo orderInfo = new OrderInfo();
+                orderInfo.MyReadString(order.OrderNetInfo.infoT);
                 //order.CancelNetInfo = netInfo;
                 QuickFix.FIX42.OrderCancelRequest orderCancelRequest = new QuickFix.FIX42.OrderCancelRequest();
 
@@ -335,6 +339,20 @@ namespace Client.Service
                 orderCancelRequest.ClOrdID = new ClOrdID(clOrdID);
                 //Tag 41
                 orderCancelRequest.OrigClOrdID = new OrigClOrdID(order.CurrentCliOrderID.ToString());
+
+
+
+                //傻x辉立还要发送这些tag。
+                //tag55
+                orderCancelRequest.Symbol = new Symbol(orderInfo.code);
+                // Tag54
+                orderCancelRequest.Side = ZDUperTagValueConvert.QuerySide(orderInfo.buySale);
+                //tag60
+                orderCancelRequest.TransactTime = new TransactTime(DateTime.UtcNow, true);
+                // Tag207
+                orderCancelRequest.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
+
+
 
 
                 var ret = TradeClient.Instance.SendMessage(orderCancelRequest);
@@ -408,6 +426,9 @@ namespace Client.Service
                 orderCancelReplaceRequest.ClOrdID = new ClOrdID(clOrdID);
                 // Tag1
                 orderCancelReplaceRequest.Account = new Account(netInfo.accountNo);
+
+                orderCancelReplaceRequest.ClientID = new ClientID("C005");
+
                 // Tag38
                 orderCancelReplaceRequest.OrderQty = new OrderQty(decimal.Parse(modifyInfo.modifyNumber));
 
@@ -452,7 +473,7 @@ namespace Client.Service
                 //string timeInForce = ZDUperTagValueConvert.ConvertToTTTimeInForce(orderInfo.validDate);
 
                 // Tag207
-                //orderCancelReplaceRequest.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
+                orderCancelReplaceRequest.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
                 //tag 59
                 orderCancelReplaceRequest.TimeInForce = new TimeInForce(char.Parse(orderInfo.validDate));
                 //tag60
