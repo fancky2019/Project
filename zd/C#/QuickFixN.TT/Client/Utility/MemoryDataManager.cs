@@ -14,28 +14,26 @@ namespace Client.Utility
 
 
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
-
+        /// <summary>
+        /// Key:SystemCode , Value:Order
+        /// </summary>
         internal static ConcurrentDictionary<string, Order> Orders { get; set; }
 
-
-        /*
-         *加段锁
-         *Orders.TryAdd、 Orders.TryRemove
-         *由于ConcurrentDictionary获取所有Values、Keys要加整个锁，而通过Key Volatile.Read度不需要枷锁
-         *性能优化用，暂时不设计。
-         * 
-         * 
-         * Orders用CurrentCliOrderID做Key,不能用NewOrderSingleClientID应为改单。
-         * 
-         * 或者
-         * 
-         * 
-         * 
-         */
+        /// <summary>
+        /// 根据ExecutionReport里CliOrderID映射到SystemCode
+        /// </summary>
         internal static ConcurrentDictionary<string, string> TempCliOrderIDSystemCode { get; set; }
 
-        internal static long LastClientOrderID { get; private set; }
+        // SortedDictionary O(logn)、ConcurrentDictionary O(1)
+        /// <summary>
+        /// 当前使用的CliOrderID,一个交易日内CliOrderID不能重复。
+        /// </summary>
+        internal static ConcurrentDictionary<long, long> UsingCliOrderID { get; set; }
 
+
+
+
+        internal static long LastClientOrderID { get; private set; }
         static long _beginOrderId = 0;
         static long _endOrderId = 0;
 
@@ -44,7 +42,7 @@ namespace Client.Utility
         {
             Orders = new ConcurrentDictionary<string, Order>();
             TempCliOrderIDSystemCode = new ConcurrentDictionary<string, string>();
-
+            UsingCliOrderID = new ConcurrentDictionary<long, long>();
 
             var cliOrderIDScope = ConfigurationManager.AppSettings["CliOrderIDScope"].ToString();
             if (string.IsNullOrEmpty(cliOrderIDScope))
@@ -57,14 +55,24 @@ namespace Client.Utility
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static long GetNextClOrderID()
         {
 
             LastClientOrderID++;
             LastClientOrderID = LastClientOrderID <= _beginOrderId ? _beginOrderId + 1 : LastClientOrderID;
             LastClientOrderID = LastClientOrderID >= _endOrderId ? _beginOrderId + 1 : LastClientOrderID;
+            //UsingCliOrderID 待优化
+            if (Orders.ContainsKey(LastClientOrderID.ToString()))
+            {
+                GetNextClOrderID();
+            }
 
-            if (Orders.Values.Select(p => p.CurrentCliOrderID).ToList().Contains(LastClientOrderID.ToString()))
+
+            if (UsingCliOrderID.ContainsKey(LastClientOrderID))
             {
                 GetNextClOrderID();
             }
@@ -113,6 +121,8 @@ namespace Client.Utility
                 _nLog.Error(ex.ToString());
             }
 
+
+
         }
 
         public static void Load()
@@ -130,6 +140,7 @@ namespace Client.Utility
                 _nLog.Error("Load Orders Failed");
                 _nLog.Error(ex.ToString());
             }
+
             try
             {
                 var ordersStr = TxtFile.ReadString(ConfigurationManager.AppSettings["PersistOrdersPath"].ToString());
@@ -144,6 +155,7 @@ namespace Client.Utility
                 _nLog.Error("Load Orders Failed");
                 _nLog.Error(ex.ToString());
             }
+
             try
             {
                 var ordersStr = TxtFile.ReadString(ConfigurationManager.AppSettings["TempCliOrderIDSystemCode"].ToString());
@@ -160,8 +172,30 @@ namespace Client.Utility
             }
 
 
+            try
+            {
+                foreach (var item in Orders.Values)
+                {
+                    var cliOrderID = long.Parse(item.CurrentCliOrderID);
+                    UsingCliOrderID.TryAdd(cliOrderID, cliOrderID);
+                }
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error("Load UsingCliOrderID Failed");
+                _nLog.Error(ex.ToString());
+            }
+
+
+
         }
 
+        /// <summary>
+        /// 公司遗留的数据库设计不合理问题。设计成int存储CliOrderID。
+        /// CliOrderID fix 是string 类型;利用snowflake 算法来生成此CliOrderID
+        /// </summary>
+        /// <param name="cliOrderID"></param>
+        /// <returns></returns>
 
         internal static Order GetOrderByCliOrderID(string cliOrderID)
         {
