@@ -15,6 +15,7 @@ namespace Client
 {
     public partial class OrderForm : Form
     {
+        #region  私有字段
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
         /// <summary>
         /// tag 40
@@ -28,10 +29,14 @@ namespace Client
         /// tag 59
         /// </summary>
         private Dictionary<string, string> _timeInForceDict = new Dictionary<string, string>();
+        #endregion
+
+        #region Constructor Load
         public OrderForm()
         {
             InitializeComponent();
         }
+
 
         private void OrderForm_Load(object sender, EventArgs e)
         {
@@ -75,10 +80,6 @@ namespace Client
             cmbSide.SelectedIndex = 0;
 
 
-
-
-
-
             TradeClientAppService.Instance.ExecutionReport += (p) =>
               {
 
@@ -92,7 +93,9 @@ namespace Client
                   }));
               };
         }
+        #endregion
 
+        #region  ExecutionReport
         private void lbMsgs_KeyUp(object sender, KeyEventArgs e)
         {
             if ((e.Control) && e.KeyCode == Keys.C)
@@ -153,12 +156,16 @@ namespace Client
             }
             this.rtbNetInfo.Text = sb.ToString();
         }
+        #endregion
 
+        #region  目录
         private void btnOpenDirectory_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory);
         }
+        #endregion 
 
+        #region 下单
         private void btnNewOrderSingle_Click(object sender, EventArgs e)
         {
             CommonClassLib.NetInfo netInfo = new CommonClassLib.NetInfo();
@@ -185,10 +192,6 @@ namespace Client
             orderInfo.MinQty = this.nudMinQty.Text;
             orderInfo.triggerPrice = this.txtStopPx.Text.Trim();
 
-
-
-
-
             orderInfo.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(orderInfo.priceType);
             orderInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(orderInfo.validDate);
             netInfo.infoT = orderInfo.MyToString();
@@ -202,7 +205,9 @@ namespace Client
             TradeClientAppService.Instance.Order(netInfo);
 
         }
+        #endregion
 
+        #region 改单
         private void btnAmendOrder_Click(object sender, EventArgs e)
         {
             CommonClassLib.NetInfo netInfo = MemoryDataManager.Orders[this.txtAmendSysCode.Text.Trim()].OrderNetInfo.CloneWithNewCode("", CommandCode.MODIFY);
@@ -222,8 +227,9 @@ namespace Client
 
             TradeClientAppService.Instance.Order(netInfo);
         }
+        #endregion
 
-
+        #region 撤单
         private void btnOrderCancelRequest_Click(object sender, EventArgs e)
         {
             CommonClassLib.NetInfo netInfo = MemoryDataManager.Orders[this.txtAmendSysCode.Text.Trim()].OrderNetInfo.CloneWithNewCode("", CommandCode.CANCEL);
@@ -232,7 +238,7 @@ namespace Client
             cancelInfo.orderNo = this.txtCancelOrderClOrderID.Text.Trim();
 
             netInfo.infoT = cancelInfo.MyToString();
-       
+
 
             // var cancelOrderStr = "CANCEL01@20200804000019@0007262813000041@100091@@ZD_001 @ICE@@@&ZD_001@192.168.1.207@ZD_001@888888@@0007262813000041@1500000082@ICE @BRN2010@1@1@@0@@@@C@@@@@@";
             //NetInfo ni = new NetInfo();
@@ -240,7 +246,7 @@ namespace Client
 
             TradeClientAppService.Instance.Order(netInfo);
         }
-
+        #endregion
 
     }
 }
