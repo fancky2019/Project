@@ -299,6 +299,7 @@ namespace Client.Service
 
                 if (ret)
                 {
+                    order.Pending = true;
                     order.SystemCode = netInfo.systemCode;
                     order.TempCliOrderID = clOrdID;
                     // newOrderSingle.FromString()
@@ -368,6 +369,7 @@ namespace Client.Service
 
                 if (ret)
                 {
+                    order.Pending = true;
                     order.TempCliOrderID = clOrdID;
                     MemoryDataManager.TempCliOrderIDSystemCode.TryAdd(clOrdID, netInfo.systemCode);
                 }
@@ -490,6 +492,7 @@ namespace Client.Service
 
                 if (ret)
                 {
+                    order.Pending = true;
                     order.TempCliOrderID = clOrdID;
                     MemoryDataManager.TempCliOrderIDSystemCode.TryAdd(clOrdID, netInfo.systemCode);
                     //order.OrderCancelReplaceRequest = orderCancelReplaceRequest.ToString();
@@ -614,6 +617,7 @@ namespace Client.Service
                 var currentCliOrderID = execReport.ClOrdID.getValue();
                 //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
                 var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
+                order.Pending = false;
                 order.OrderID = execReport.OrderID.getValue();
                 order.NewOrderSingleClientID = execReport.ClOrdID.getValue();
                 order.CurrentCliOrderID = execReport.ClOrdID.getValue();
@@ -722,6 +726,7 @@ namespace Client.Service
             var currentCliOrderID = execReport.ClOrdID.getValue();
             //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
             var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
+            order.Pending = false;
             order.OrderID = execReport.OrderID.getValue();
             order.CurrentCliOrderID = execReport.ClOrdID.getValue();
             order.TempCliOrderID = "";
@@ -802,6 +807,7 @@ namespace Client.Service
             var currentCliOrderID = execReport.ClOrdID.getValue();
             //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
             var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
+            order.Pending = false;
             MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
 
             //CancelInfo cancelInfo = new CancelInfo();
@@ -986,6 +992,7 @@ namespace Client.Service
                 var currentCliOrderID = clOrdID;
                 //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
                 var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
+                order.Pending = false;
                 var errorMessage = "";
 
                 if (message.IsSetField(Tags.Text))

@@ -421,7 +421,7 @@
             this.txtAmendStopPrice.Name = "txtAmendStopPrice";
             this.txtAmendStopPrice.Size = new System.Drawing.Size(121, 21);
             this.txtAmendStopPrice.TabIndex = 46;
-            this.txtAmendStopPrice.Text = "42.59";
+            this.txtAmendStopPrice.Text = "105";
             // 
             // label15
             // 
@@ -434,15 +434,20 @@
             // 
             // nudAmendQty
             // 
-            this.nudAmendQty.Location = new System.Drawing.Point(121, 81);
-            this.nudAmendQty.Name = "nudAmendQty";
-            this.nudAmendQty.Size = new System.Drawing.Size(120, 21);
-            this.nudAmendQty.TabIndex = 44;
-            this.nudAmendQty.Value = new decimal(new int[] {
-            1,
+            this.nudAmendQty.Increment = new decimal(new int[] {
+            1000,
             0,
             0,
             0});
+            this.nudAmendQty.Location = new System.Drawing.Point(121, 81);
+            this.nudAmendQty.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.nudAmendQty.Name = "nudAmendQty";
+            this.nudAmendQty.Size = new System.Drawing.Size(120, 21);
+            this.nudAmendQty.TabIndex = 44;
             // 
             // label14
             // 
@@ -502,7 +507,7 @@
             this.txtAmendPrice.Name = "txtAmendPrice";
             this.txtAmendPrice.Size = new System.Drawing.Size(121, 21);
             this.txtAmendPrice.TabIndex = 24;
-            this.txtAmendPrice.Text = "42.59";
+            this.txtAmendPrice.Text = "105";
             // 
             // label11
             // 
