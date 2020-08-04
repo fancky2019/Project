@@ -101,6 +101,12 @@ namespace Client
             }
         }
 
+        /*
+         * 50=0:ErrorCode.ERR_ORDER_0000;CommandCode.ORDER
+         * 150=5:ErrorCode.ERR_ORDER_0016;CommandCode.MODIFY
+         * 150=4:ErrorCode.ERR_ORDER_0014;CommandCode.CANCELCAST
+         * 150=2:ErrorCode.SUCCESS;CommandCode.FILLEDCAST;
+         */
         private void lbMsgs_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.lbMsgs.SelectedItem == null)
@@ -126,7 +132,7 @@ namespace Client
                     //@@@@@ICE@BRN2012@1@1@42.59@@1@@@42.59@1@@@@0
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
                     break;
-                case "CANCEL01":
+                case "CANCST01":
                     CancelResponseInfo cancelInfo = new CancelResponseInfo();
                     cancelInfo.MyReadString(netinfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(cancelInfo));
@@ -135,6 +141,11 @@ namespace Client
                     OrderResponseInfo modifyInfo = new OrderResponseInfo();
                     modifyInfo.MyReadString(netinfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(modifyInfo));
+                    break;
+                case "FILCST01":
+                    FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
+                    filledResponseInfo.MyReadString(netinfo.infoT);
+                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(filledResponseInfo));
                     break;
                 default:
                     MessageBox.Show("订单指令有误！");

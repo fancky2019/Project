@@ -101,6 +101,12 @@ namespace Client
             }
         }
 
+        /*
+         * 50=0:ErrorCode.ERR_ORDER_0000;CommandCode.ORDER
+         * 150=5:ErrorCode.ERR_ORDER_0016;CommandCode.MODIFY
+         * 150=4:ErrorCode.ERR_ORDER_0014;CommandCode.CANCELCAST
+         * 150=2:ErrorCode.SUCCESS;CommandCode.FILLEDCAST;
+         */
         private void lbMsgs_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.lbMsgs.SelectedItem == null)
@@ -126,7 +132,7 @@ namespace Client
                     //@@@@@ICE@BRN2012@1@1@42.59@@1@@@42.59@1@@@@0
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
                     break;
-                case "CANCEL01":
+                case "CANCST01":
                     CancelResponseInfo cancelInfo = new CancelResponseInfo();
                     cancelInfo.MyReadString(netinfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(cancelInfo));
@@ -135,6 +141,11 @@ namespace Client
                     OrderResponseInfo modifyInfo = new OrderResponseInfo();
                     modifyInfo.MyReadString(netinfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(modifyInfo));
+                    break;
+                case "FILCST01":
+                    FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
+                    filledResponseInfo.MyReadString(netinfo.infoT);
+                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(filledResponseInfo));
                     break;
                 default:
                     MessageBox.Show("订单指令有误！");
@@ -151,15 +162,19 @@ namespace Client
         private void btnNewOrderSingle_Click(object sender, EventArgs e)
         {
             CommonClassLib.NetInfo netInfo = new CommonClassLib.NetInfo();
-            CommonClassLib.OrderInfo orderInfo = new CommonClassLib.OrderInfo();
+
 
             netInfo.code = CommandCode.ORDER;
             //tag1:zd上手号
             netInfo.accountNo = "ZD_001";
+            netInfo.clientNo = "000365";
             netInfo.systemCode = $"SystemCode{DateTime.Now.GetTimeStamp()}";
+            netInfo.localSystemCode = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            netInfo.exchangeCode = this.txtSecurityExchange.Text.Trim();
             //tag 50  
             netInfo.todayCanUse = "0047";
 
+            CommonClassLib.OrderInfo orderInfo = new CommonClassLib.OrderInfo();
             orderInfo.exchangeCode = this.txtSecurityExchange.Text.Trim();
             orderInfo.code = this.txtSecurityAltID.Text;
             orderInfo.orderPrice = this.txtPrice.Text;
@@ -179,40 +194,20 @@ namespace Client
             netInfo.infoT = orderInfo.MyToString();
 
             StopwatchHelper.Instance.Stopwatch.Restart();
+
+            //var netInfoStr = "ORDER001@20200804000019@0007262813000041@100091@@ZD_001@ICE@@100091@&ZD_001@@ZD_001@888888@C@ICE@BRN2010@1@1@43.52@@1@@@0.0@1@1@@0@0@BRN@2010@@@@@@@@@@@@0@";
+            //NetInfo ni = new NetInfo();
+            //ni.MyReadString(netInfoStr);
+
             TradeClientAppService.Instance.Order(netInfo);
-            //"ORDER001@@SystemCode1595929502113@0047@@ZD_001@@@@&@@@@@ICE@BRN2012@1@1@42.59@@1@@@42.59@1@@@@0"
 
-        }
-
-        private void btnOrderCancelRequest_Click(object sender, EventArgs e)
-        {
-            CommonClassLib.NetInfo netInfo = new CommonClassLib.NetInfo();
-            CommonClassLib.CancelInfo cancelInfo = new CommonClassLib.CancelInfo();
-
-            netInfo.code = CommandCode.CANCEL;
-            //tag1:zd上手号
-            netInfo.accountNo = "ZD_001";
-            netInfo.systemCode = this.txtOrderCancelSystemCode.Text.Trim();
-
-            //tag 50  
-            netInfo.todayCanUse = "0047";
-
-
-            cancelInfo.orderNo = this.txtCancelOrderClOrderID.Text.Trim();
-
-            netInfo.infoT = cancelInfo.MyToString();
-            //globexCommu.CancelOrder(obj,  info, tifDict[combTIF.Text]);
-            TradeClientAppService.Instance.Order(netInfo);
         }
 
         private void btnAmendOrder_Click(object sender, EventArgs e)
         {
-            CommonClassLib.NetInfo netInfo = new CommonClassLib.NetInfo();
-            CommonClassLib.ModifyInfo modifyInfo = new CommonClassLib.ModifyInfo();
+            CommonClassLib.NetInfo netInfo = MemoryDataManager.Orders[this.txtAmendSysCode.Text.Trim()].OrderNetInfo.CloneWithNewCode("", CommandCode.MODIFY);
 
-            netInfo.code = CommandCode.MODIFY;
-            netInfo.accountNo = "ZD_001";
-            netInfo.systemCode = this.txtAmendSysCode.Text.Trim();
+            CommonClassLib.ModifyInfo modifyInfo = new CommonClassLib.ModifyInfo();
             modifyInfo.orderNo = this.txtAmendClOrderID.Text.Trim();
             modifyInfo.modifyNumber = this.nudAmendQty.Text;
             modifyInfo.modifyPrice = this.txtAmendPrice.Text.Trim();
@@ -220,7 +215,32 @@ namespace Client
 
             netInfo.infoT = modifyInfo.MyToString();
 
+            //var modifyOrderStr="MODIFY01@20200804000019@0007262813000041@100091@@ZD_001 @ICE@@100091@&ZD_001@@ZD_001@888888@1500000082@ICE @BRN2010@1@1@43.52@0@3@43.50@1@1@C@0.00@0.0@1@@@@@@@@@@@@0@";
+            //NetInfo ni = new NetInfo();
+            //ni.MyReadString(modifyOrderStr);
+
+
             TradeClientAppService.Instance.Order(netInfo);
         }
+
+
+        private void btnOrderCancelRequest_Click(object sender, EventArgs e)
+        {
+            CommonClassLib.NetInfo netInfo = MemoryDataManager.Orders[this.txtAmendSysCode.Text.Trim()].OrderNetInfo.CloneWithNewCode("", CommandCode.CANCEL);
+            CommonClassLib.CancelInfo cancelInfo = new CommonClassLib.CancelInfo();
+
+            cancelInfo.orderNo = this.txtCancelOrderClOrderID.Text.Trim();
+
+            netInfo.infoT = cancelInfo.MyToString();
+       
+
+            // var cancelOrderStr = "CANCEL01@20200804000019@0007262813000041@100091@@ZD_001 @ICE@@@&ZD_001@192.168.1.207@ZD_001@888888@@0007262813000041@1500000082@ICE @BRN2010@1@1@@0@@@@C@@@@@@";
+            //NetInfo ni = new NetInfo();
+            //ni.MyReadString(cancelOrderStr);
+
+            TradeClientAppService.Instance.Order(netInfo);
+        }
+
+
     }
 }
