@@ -923,14 +923,15 @@ namespace Client.Service
             info.systemNo = order.OrderNetInfo.systemCode;
             info.code = order.OrderNetInfo.code;
 
-            NetInfo obj = new NetInfo();
-            obj.infoT = info.MyToString();
-            obj.exchangeCode = info.exchangeCode;
-            obj.errorCode = ErrorCode.SUCCESS;
-            obj.code = CommandCode.FILLEDCAST;
-            obj.accountNo = info.accountNo;
+            NetInfo netInfo = new NetInfo();
+            netInfo.infoT = info.MyToString();
+            netInfo.systemCode = order.OrderNetInfo.systemCode;
+            netInfo.exchangeCode = order.OrderNetInfo.exchangeCode;
+            netInfo.errorCode = ErrorCode.SUCCESS;
+            netInfo.code = CommandCode.FILLEDCAST;
+            netInfo.accountNo = info.accountNo;
             //obj.todayCanUse = execReport.Header.GetField(Tags.SenderSubID);
-            obj.todayCanUse = order.OrderNetInfo.todayCanUse;
+            netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
 
 
             if (multiLegReportingType == 1)//FUT
@@ -948,7 +949,7 @@ namespace Client.Service
                 var securityAltID = g2.GetString(Tags.SecurityAltID);
                 var securityExchange = execReport.SecurityExchange.getValue();
 
-                obj.infoT = info.MyToString();
+                netInfo.infoT = info.MyToString();
 
             }
             else if (multiLegReportingType == 3)
@@ -958,7 +959,7 @@ namespace Client.Service
                 //    xReference.TryRemove(clOrdID, out refObj);
             }
 
-            return obj;
+            return netInfo;
         }
         #endregion
 
