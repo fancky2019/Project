@@ -34,7 +34,8 @@ namespace Client.Utility.MemoryDataManager.Persist
                 try
                 {
 
-                    var jsonStr = NewtonsoftHelper.SerializeObject(MemoryData.Orders);
+                    //var jsonStr = NewtonsoftHelper.SerializeObject(MemoryData.Orders);
+                    var jsonStr = NewtonsoftHelper.JsonSerializeObjectFormat(MemoryData.Orders);
                     //var jsonStr = MessagePackUtility.SerializeToJson<ConcurrentDictionary<string, Order>>(Orders);
                     TxtFile.SaveString(ConfigurationManager.AppSettings["PersistOrdersPath"].ToString(), jsonStr);
 
