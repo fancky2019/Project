@@ -3,6 +3,7 @@ using Client.Models;
 using Client.Service;
 using Client.Utility;
 using Client.Utility.MemoryDataManager;
+using Client.Utility.MemoryDataManager.Persist;
 using CommonClassLib;
 using System;
 using System.Collections.Concurrent;
@@ -107,6 +108,15 @@ namespace Client
         #region  Test
         private void btnTest_Click(object sender, EventArgs e)
         {
+            SQLitePersist sQLitePersist = new SQLitePersist();
+            var msgTest = "test";
+            var msgBytes = MessagePackUtility.Serialize<string>(msgTest);
+
+            //sQLitePersist.InsertClientOderID("dssdsdsdsd");
+            sQLitePersist.InsertOrder(msgBytes);
+
+            var selectBytes = sQLitePersist.SelectOrder();
+            var selectMsg = MessagePackUtility.Deserialize<string>(selectBytes);
             var strin = MemoryData.IPersist.GetType();
             /*
             20200804 16:37:30:669,259542210830[3] - 192.168.1.114:53114 { (len = 155)ORDER001@20200804000019@0007262813000041@100091@@ZD_001 @ICE@@100091@&ZD_001@@ZD_001@888888@C @ICE@BRN2010@1@1@43.52@@1@@@0.0@1@1@@0@0@BRN@2010@@@@@@@@@@@@0@}
