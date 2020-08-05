@@ -102,16 +102,31 @@ namespace Client.Utility.MemoryDataManager
             //删除过期日单
             foreach (var key in Orders.Keys)
             {
-                var order = Orders[key];
-                if (!order.IsGTCOrder && order.CreateNewOrderSingleTime.Date != DateTime.Now.Date)
+                if (Orders.TryGetValue(key, out Order order))
                 {
-                    UsingCliOrderIDSystemCode.TryRemove(long.Parse(order.CurrentCliOrderID), out _);
-                    Orders.TryRemove(key, out _);
+                    if (!order.IsGTCOrder && order.CreateNewOrderSingleTime.Date != DateTime.Now.Date)
+                    {
+                        UsingCliOrderIDSystemCode.TryRemove(long.Parse(order.CurrentCliOrderID), out _);
+                        Orders.TryRemove(key, out _);
+                    }
                 }
             }
         }
-
-
-
+        internal static void InitUsingCliOrderIDSystemCode()
+        {
+            try
+            {
+                foreach (var item in MemoryData.Orders.Values)
+                {
+                    var cliOrderID = long.Parse(item.CurrentCliOrderID);
+                    MemoryData.UsingCliOrderIDSystemCode.TryAdd(cliOrderID, item.SystemCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error("Load UsingCliOrderID Failed");
+                _nLog.Error(ex.ToString());
+            }
+        }
     }
 }
