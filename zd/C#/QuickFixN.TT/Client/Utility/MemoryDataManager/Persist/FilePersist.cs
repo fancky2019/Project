@@ -17,15 +17,13 @@ namespace Client.Utility.MemoryDataManager.Persist
         {
             lock (_lockObj)
             {
-
-
                 try
                 {
                     TxtFile.SaveString(ConfigurationManager.AppSettings["OrderIDFilePath"].ToString(), MemoryData.LastClientOrderID.ToString());
                 }
                 catch (Exception ex)
                 {
-                    _nLog.Error("Save LastOrderID Failed");
+                    _nLog.Error("Save LastClientOrderID Failed");
                     _nLog.Error(ex.ToString());
                 }
 
@@ -64,7 +62,7 @@ namespace Client.Utility.MemoryDataManager.Persist
             }
             catch (Exception ex)
             {
-                _nLog.Error("Load Orders Failed");
+                _nLog.Error("Load LastClientOrderID Failed");
                 _nLog.Error(ex.ToString());
             }
 
@@ -83,21 +81,9 @@ namespace Client.Utility.MemoryDataManager.Persist
                 _nLog.Error(ex.ToString());
             }
 
-          
 
-            try
-            {
-                foreach (var item in MemoryData.Orders.Values)
-                {
-                    var cliOrderID = long.Parse(item.CurrentCliOrderID);
-                    MemoryData.UsingCliOrderIDSystemCode.TryAdd(cliOrderID, item.SystemCode);
-                }
-            }
-            catch (Exception ex)
-            {
-                _nLog.Error("Load UsingCliOrderID Failed");
-                _nLog.Error(ex.ToString());
-            }
+
+            MemoryData.InitUsingCliOrderIDSystemCode();
 
 
 

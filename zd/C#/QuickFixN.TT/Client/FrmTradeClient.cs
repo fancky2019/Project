@@ -80,7 +80,9 @@ namespace Client
 
         internal void btnStop_Click(object sender, EventArgs e)
         {
+            MemoryData.AppStop = true;
             TradeClientAppService.Instance.Stop();
+
         }
 
         private void FrmTradeClient_FormClosing(object sender, FormClosingEventArgs e)
@@ -105,7 +107,7 @@ namespace Client
         #region  Test
         private void btnTest_Click(object sender, EventArgs e)
         {
-         var strin=   MemoryData.IPersist.GetType();
+            var strin = MemoryData.IPersist.GetType();
             /*
             20200804 16:37:30:669,259542210830[3] - 192.168.1.114:53114 { (len = 155)ORDER001@20200804000019@0007262813000041@100091@@ZD_001 @ICE@@100091@&ZD_001@@ZD_001@888888@C @ICE@BRN2010@1@1@43.52@@1@@@0.0@1@1@@0@0@BRN@2010@@@@@@@@@@@@0@}
             20200804 16:37:35:287,259552999586[3] - 192.168.1.114:53114 { (len = 164)MODIFY01@20200804000019@0007262813000041@100091@@ZD_001 @ICE@@100091@&ZD_001@@ZD_001@888888@1500000082@ICE @BRN2010@1@1@43.52@0@3@43.50@1@1@C@0.00@0.0@1@@@@@@@@@@@@0@}

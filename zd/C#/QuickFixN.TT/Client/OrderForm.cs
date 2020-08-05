@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Client.Utility.MemoryDataManager;
 using Client.Models;
+using System.Threading;
 
 namespace Client
 {
@@ -191,13 +192,13 @@ namespace Client
             orderInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(orderInfo.validDate);
             netInfo.infoT = orderInfo.MyToString();
 
-            StopwatchHelper.Instance.Stopwatch.Restart();
 
             //var netInfoStr = "ORDER001@20200804000019@0007262813000041@100091@@ZD_001@ICE@@100091@&ZD_001@@ZD_001@888888@C@ICE@BRN2010@1@1@43.52@@1@@@0.0@1@1@@0@0@BRN@2010@@@@@@@@@@@@0@";
             //NetInfo ni = new NetInfo();
             //ni.MyReadString(netInfoStr);
 
             TradeClientAppService.Instance.Order(netInfo);
+
 
         }
         #endregion
