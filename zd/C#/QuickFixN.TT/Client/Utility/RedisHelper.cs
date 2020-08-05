@@ -28,10 +28,10 @@ namespace Client.Utility
                 redis://clientid:password@localhost:6380?ssl=true&db=1
              */
             //不能将下面语句放入配置文件，读取的配置无法连接redis
-            var redisConStr = "fancky123456@127.0.0.1:6379?db=13&amp;connectTimeout=2&amp;sendtimeout=3&amp;receiveTimeout=4&amp;idletimeoutsecs=5&amp;NamespacePrefix=prefix.";
+            //var redisConStr = "fancky123456@127.0.0.1:6379?db=13&amp;connectTimeout=2&amp;sendtimeout=3&amp;receiveTimeout=4&amp;idletimeoutsecs=5&amp;NamespacePrefix=prefix.";
             //fancky123456@127.0.0.1:6379 ? db = 0
 
-            //var redisConStr = ConfigurationManager.AppSettings["ServiceStackMasterRedis"].ToString();
+            var redisConStr = ConfigurationManager.AppSettings["ServiceStackMasterRedis"].ToString();
             var slaveRedis = "";
             _pooledRedisClientManager = new PooledRedisClientManager(new string[] { redisConStr },
                                                         new string[] { slaveRedis },
@@ -51,10 +51,6 @@ namespace Client.Utility
             client.Db = 13;
             return client;
         }
-
-
-
-
 
         static internal long GetNextClOrderID()
         {
@@ -82,79 +78,27 @@ namespace Client.Utility
 
             }
 
-           
-
-         
-
         }
 
-        static internal long SetCurrentClientOrderIDAndSysytemCode(string systemCode, string newOrderSingleCliOrderID, string currentClientOrderID)
+
+        static internal void SaveData(string key, byte[] bytes)
         {
-            var result = 0L;
             using (var redisClient = GetRedisClient())
             {
-                result = redisClient.HSet(systemCode, newOrderSingleCliOrderID.ToUtf8Bytes(), currentClientOrderID.ToUtf8Bytes());
+                redisClient.Del(key);
+                redisClient.Set(key, bytes);
             }
 
-            return result;
         }
 
-        static internal long DeleteCurrentClientOrderIDAndSysytemCode(string systemCode, string newOrderSingleCliOrderID)
+        static internal byte[] GetData(string key)
         {
-            var result = 0L;
+            byte[] bytes = null;
             using (var redisClient = GetRedisClient())
             {
-                result= redisClient.HDel(systemCode, newOrderSingleCliOrderID.ToUtf8Bytes());
+                bytes = redisClient.Get(key);
             }
-            return result;
-        }
-
-        static internal string GetCurrentClientOrderID(string systemCode, string newOrderSingleCliOrderID)
-        {
-            var currentCliOrderID = "";
-            using (var redisClient = GetRedisClient())
-            {
-                var currentCliOrderIDBytes = redisClient.HGet(systemCode.ToUtf8Bytes(), newOrderSingleCliOrderID.ToUtf8Bytes());
-                currentCliOrderID = Encoding.UTF8.GetString(currentCliOrderIDBytes);
-            }
-            return currentCliOrderID;
-        }
-
-        /// <summary>
-        /// tag 11
-        /// </summary>
-        /// <param name="clOrdId"></param>
-        /// <returns></returns>
-        static internal Order GetOrdder(string clOrdId)
-        {
-            Order order = null;
-            using (var redisClient = GetRedisClient())
-            {
-                var hVals = redisClient.HVals(clOrdId);
-                order = MessagePackUtility.Deserialize<Order>(hVals[0]);
-            }
-            return order;
-        }
-
-        static internal void SaveOrder(Order order)
-        {
-       
-            //using (var redisClient = GetRedisClient())
-            //{
-            //    //redisClient.Del(order.ClientID.ToUtf8Bytes());
-            //    //redisClient.SetEntryInHash("RedisHashKey1", "HashKey1", "HashValue1");
-            //    redisClient.HSet(order.ClientID.ToString().ToUtf8Bytes(), order.SystemCode.ToUtf8Bytes(), MessagePackUtility.Serialize<Order>(order));
-            //}
-        }
-
-        static internal long DeleteOrder(string clOrdId)
-        {
-            var result = 0L;
-            using (var redisClient = GetRedisClient())
-            {
-                result = redisClient.Del(clOrdId.ToUtf8Bytes());
-            }
-            return result;
+            return bytes;
         }
 
     }

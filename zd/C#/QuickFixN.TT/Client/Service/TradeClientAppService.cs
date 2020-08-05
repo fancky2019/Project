@@ -288,9 +288,6 @@ namespace Client.Service
 
 
                 bool ret = TradeClient.Instance.SendMessage(newOrderSingle);
-                StopwatchHelper.Instance.Stop();
-                _nLog.Info($"Send - {StopwatchHelper.Instance.Stopwatch.ElapsedMilliseconds}");
-
                 if (ret)
                 {
                     order.Pending = true;
