@@ -160,13 +160,6 @@ namespace Client
         }
         #endregion
 
-        #region  目录
-        private void btnOpenDirectory_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory);
-        }
-        #endregion 
-
         #region 下单
         private void btnNewOrderSingle_Click(object sender, EventArgs e)
         {
@@ -269,5 +262,20 @@ namespace Client
         }
         #endregion
 
+        #region 工具
+        private void btnExportOrders_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        #region  目录
+        private void btnOpenDirectory_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory);
+        }
+        #endregion 
+
+        #endregion 
     }
 }
