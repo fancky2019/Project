@@ -123,7 +123,12 @@
     <Compile Include="Service\ZDUperTagValueConvert.cs" />
     <Compile Include="Utility\Extensions.cs" />
     <Compile Include="Utility\Log.cs" />
-    <Compile Include="Utility\MemoryDataManager.cs" />
+    <Compile Include="Utility\MemoryDataManager\Persist\IPersist.cs" />
+    <Compile Include="Utility\MemoryDataManager\MemoryData.cs" />
+    <Compile Include="Utility\MemoryDataManager\Persist\FilePersist.cs" />
+    <Compile Include="Utility\MemoryDataManager\Persist\MemoryData.Persist.cs" />
+    <Compile Include="Utility\MemoryDataManager\Persist\RedisPersist.cs" />
+    <Compile Include="Utility\MemoryDataManager\Persist\SQLitePersist.cs" />
     <Compile Include="Utility\MessagePackUtility.cs" />
     <Compile Include="Utility\NewtonsoftHelper.cs" />
     <Compile Include="Utility\NetInfoExtensions.cs" />

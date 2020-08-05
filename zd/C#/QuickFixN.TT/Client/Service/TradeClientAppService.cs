@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using static QuickFix.FIX42.Advertisement;
 using static QuickFix.FIX42.NewOrderSingle;
+using Client.Utility.MemoryDataManager;
 
 namespace Client.Service
 {
@@ -86,14 +87,14 @@ namespace Client.Service
 
         private void Init()
         {
-            MemoryDataManager.Load();
+            MemoryData.IPersist.Load();
         }
 
         public void Stop()
         {
             TradeClient.Instance.SocketInitiator.Stop();
             WaitForAdding();
-            MemoryDataManager.Persist();
+            MemoryData.IPersist.Persist();
         }
 
         private void WaitForAdding()
@@ -166,7 +167,7 @@ namespace Client.Service
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(netInfo.infoT);
 
-                string clOrdID = MemoryDataManager.GetNextClOrderID().ToString();
+                string clOrdID = MemoryData.GetNextClOrderID().ToString();
 
                 NewOrderSingle newOrderSingle = new NewOrderSingle();
                 // Tag11
@@ -298,11 +299,12 @@ namespace Client.Service
                     // newOrderSingle.FromString()
                     order.CreateNewOrderSingleTime = DateTime.Now;
                     //order.NewOrderSingle = newOrderSingle.ToString();
-                    MemoryDataManager.Orders.TryAdd(order.SystemCode, order);
-                    MemoryDataManager.TempCliOrderIDSystemCode.TryAdd(clOrdID, netInfo.systemCode);
+                    MemoryData.Orders.TryAdd(order.SystemCode, order);
+
 
                     var clOrdIDLong = long.Parse(clOrdID);
-                    MemoryDataManager.UsingCliOrderID.TryAdd(clOrdIDLong, clOrdIDLong);
+                    MemoryData.UsingCliOrderIDSystemCode.TryAdd(clOrdIDLong, order.SystemCode);
+
                 }
                 else
                 {
@@ -331,7 +333,7 @@ namespace Client.Service
             try
             {
                 Order order;
-                if (!MemoryDataManager.Orders.TryGetValue(netInfo.systemCode, out order))
+                if (!MemoryData.Orders.TryGetValue(netInfo.systemCode, out order))
                 {
                     throw new Exception($"Can not find SystemCode - {netInfo.systemCode}");
                 }
@@ -356,7 +358,7 @@ namespace Client.Service
                 orderCancelRequest.OrderID = new OrderID(order.OrderID);
 
                 //Tag 11
-                var clOrdID = MemoryDataManager.GetNextClOrderID().ToString();
+                var clOrdID = MemoryData.GetNextClOrderID().ToString();
                 orderCancelRequest.ClOrdID = new ClOrdID(clOrdID);
                 //Tag 41
                 orderCancelRequest.OrigClOrdID = new OrigClOrdID(order.CurrentCliOrderID.ToString());
@@ -368,10 +370,11 @@ namespace Client.Service
                 {
                     order.Pending = true;
                     order.TempCliOrderID = clOrdID;
-                    MemoryDataManager.TempCliOrderIDSystemCode.TryAdd(clOrdID, netInfo.systemCode);
+            
 
                     var clOrdIDLong = long.Parse(clOrdID);
-                    MemoryDataManager.UsingCliOrderID.TryAdd(clOrdIDLong, clOrdIDLong);
+                    MemoryData.UsingCliOrderIDSystemCode.TryAdd(clOrdIDLong, order.SystemCode);
+            
                 }
                 else
                 {
@@ -406,7 +409,7 @@ namespace Client.Service
 
 
                 Order order;
-                if (!MemoryDataManager.Orders.TryGetValue(netInfo.systemCode, out order))
+                if (!MemoryData.Orders.TryGetValue(netInfo.systemCode, out order))
                 {
                     throw new Exception($"Can not find SystemCode - {netInfo.systemCode}");
                 }
@@ -436,7 +439,7 @@ namespace Client.Service
                 //Tag 41
                 orderCancelReplaceRequest.OrigClOrdID = new OrigClOrdID(order.CurrentCliOrderID);
 
-                var clOrdID = MemoryDataManager.GetNextClOrderID().ToString();
+                var clOrdID = MemoryData.GetNextClOrderID().ToString();
                 //Tag 11
                 orderCancelReplaceRequest.ClOrdID = new ClOrdID(clOrdID);
                 // Tag1
@@ -499,11 +502,11 @@ namespace Client.Service
                 {
                     order.Pending = true;
                     order.TempCliOrderID = clOrdID;
-                    MemoryDataManager.TempCliOrderIDSystemCode.TryAdd(clOrdID, netInfo.systemCode);
-                    //order.OrderCancelReplaceRequest = orderCancelReplaceRequest.ToString();
-
+          
+   
                     var clOrdIDLong = long.Parse(clOrdID);
-                    MemoryDataManager.UsingCliOrderID.TryAdd(clOrdIDLong, clOrdIDLong);
+                    MemoryData.UsingCliOrderIDSystemCode.TryAdd(clOrdIDLong, order.SystemCode);
+     
                 }
                 else
                 {
@@ -626,7 +629,7 @@ namespace Client.Service
             {
                 var currentCliOrderID = execReport.ClOrdID.getValue();
                 //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
-                var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
+                var order = MemoryData.GetOrderByCliOrderID(currentCliOrderID);
                 order.Pending = false;
                 order.OrderID = execReport.OrderID.getValue();
                 order.NewOrderSingleClientID = currentCliOrderID;
@@ -738,14 +741,16 @@ namespace Client.Service
 
             var currentCliOrderID = execReport.ClOrdID.getValue();
             //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
-            var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
+            var order = MemoryData.GetOrderByCliOrderID(currentCliOrderID);
             order.Pending = false;
             order.OrderID = execReport.OrderID.getValue();
             order.CurrentCliOrderID = execReport.ClOrdID.getValue();
             order.TempCliOrderID = "";
 
             long origClOrdID = long.Parse(execReport.OrigClOrdID.getValue());
-            MemoryDataManager.UsingCliOrderID.TryRemove(origClOrdID, out _);
+            MemoryData.UsingCliOrderIDSystemCode.TryRemove(origClOrdID, out _);
+
+
 
             OrderInfo orderInfo = new OrderInfo();
             orderInfo.MyReadString(order.OrderNetInfo.infoT);
@@ -825,12 +830,12 @@ namespace Client.Service
 
             var currentCliOrderID = execReport.ClOrdID.getValue();
             //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
-            var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
+            var order = MemoryData.GetOrderByCliOrderID(currentCliOrderID);
             order.Pending = false;
-            MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
-
+            MemoryData.Orders.TryRemove(order.SystemCode, out _);
+ 
             long clOrdID = long.Parse(currentCliOrderID);
-            MemoryDataManager.UsingCliOrderID.TryRemove(clOrdID, out _);
+            MemoryData.UsingCliOrderIDSystemCode.TryRemove(clOrdID, out _);
 
 
             OrderInfo orderInfo = new OrderInfo();
@@ -901,7 +906,7 @@ namespace Client.Service
                 }
             }
             var currentCliOrderID = execReport.ClOrdID.getValue();
-            var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
+            var order = MemoryData.GetOrderByCliOrderID(currentCliOrderID);
             filledResponseInfo.exchangeCode = order.OrderNetInfo.exchangeCode;
 
             //if (execReport.Side.getValue() == Side.BUY)
@@ -976,9 +981,11 @@ namespace Client.Service
 
                 if (execReport.LeavesQty.getValue() == 0)
                 {
-                    MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
+                    MemoryData.Orders.TryRemove(order.SystemCode, out _);
+       
                     long clOrdID = long.Parse(currentCliOrderID);
-                    MemoryDataManager.UsingCliOrderID.TryRemove(clOrdID, out _);
+                    MemoryData.UsingCliOrderIDSystemCode.TryRemove(clOrdID, out _);
+
                 }
             }
             else if (multiLegReportingType == 2)// multi-leg 
@@ -1015,10 +1022,12 @@ namespace Client.Service
                 }
                 var currentCliOrderID = message.GetString(Tags.ClOrdID);
                 //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
-                var order = MemoryDataManager.GetOrderByCliOrderID(currentCliOrderID);
+                var order = MemoryData.GetOrderByCliOrderID(currentCliOrderID);
                 order.Pending = false;
 
-                MemoryDataManager.UsingCliOrderID.TryRemove(long.Parse(currentCliOrderID), out _);
+                MemoryData.UsingCliOrderIDSystemCode.TryRemove(long.Parse(currentCliOrderID), out _);
+
+
                 var errorMessage = "";
 
                 if (message.IsSetField(Tags.Text))
@@ -1031,7 +1040,7 @@ namespace Client.Service
                 {
                     //netInfo = order.OrderNetInfo.Clone();
                     netInfo.NewOrderSingleException(errorMessage);
-                    MemoryDataManager.Orders.TryRemove(order.SystemCode, out _);
+                    MemoryData.Orders.TryRemove(order.SystemCode, out _);
                 }
                 else if (order.CommandCode == CommandCode.MODIFY)
                 {

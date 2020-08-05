@@ -64,6 +64,8 @@ namespace Client.Models
         /// 订单生成时间，订单持久化用，不保存过期的日单，只保存GTC单
         /// </summary>
         public DateTime CreateNewOrderSingleTime { get; set; }
+
+        public bool IsGTCOrder { get; set; }
         /// <summary>
         /// 下单FIX
         /// </summary>

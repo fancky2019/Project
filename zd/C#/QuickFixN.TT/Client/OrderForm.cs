@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Client.Utility.MemoryDataManager;
+using Client.Models;
 
 namespace Client
 {
@@ -210,7 +212,16 @@ namespace Client
         #region 改单
         private void btnAmendOrder_Click(object sender, EventArgs e)
         {
-            CommonClassLib.NetInfo netInfo = MemoryDataManager.Orders[this.txtAmendSysCode.Text.Trim()].OrderNetInfo.CloneWithNewCode("", CommandCode.MODIFY);
+            CommonClassLib.NetInfo netInfo = null;
+            if (MemoryData.Orders.TryGetValue(this.txtAmendSysCode.Text.Trim(), out Order order))
+            {
+                netInfo = order.OrderNetInfo.CloneWithNewCode("", CommandCode.MODIFY);
+            }
+            else
+            {
+                MessageBox.Show($"没有找到系统号为:{this.txtAmendSysCode.Text.Trim()}的订单");
+                return;
+            }
 
             CommonClassLib.ModifyInfo modifyInfo = new CommonClassLib.ModifyInfo();
             modifyInfo.orderNo = this.txtAmendClOrderID.Text.Trim();
@@ -232,7 +243,17 @@ namespace Client
         #region 撤单
         private void btnOrderCancelRequest_Click(object sender, EventArgs e)
         {
-            CommonClassLib.NetInfo netInfo = MemoryDataManager.Orders[this.txtAmendSysCode.Text.Trim()].OrderNetInfo.CloneWithNewCode("", CommandCode.CANCEL);
+
+            CommonClassLib.NetInfo netInfo = null;
+            if (MemoryData.Orders.TryGetValue(this.txtOrderCancelSystemCode.Text.Trim(), out Order order))
+            {
+                netInfo = order.OrderNetInfo.CloneWithNewCode("", CommandCode.CANCEL);
+            }
+            else
+            {
+                MessageBox.Show($"没有找到系统号为:{this.txtOrderCancelSystemCode.Text.Trim()}的订单");
+                return;
+            }
             CommonClassLib.CancelInfo cancelInfo = new CommonClassLib.CancelInfo();
 
             cancelInfo.orderNo = this.txtCancelOrderClOrderID.Text.Trim();
