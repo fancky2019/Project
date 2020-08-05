@@ -179,32 +179,31 @@ namespace Client.Service
                 #region When specifying by alternate security ID
                 //
                 var newCode = orderInfo.code;
-                //var securityType = TTMarketAdapterCommon.GetSecurityType(orderInfo.code);
-                //if (securityType == SecurityTypeEnum.OPT)
-                //{
-                //    //newCode = CompatibleOpenInterestContract.ConvertToNewTTContract(info.code);
-                //    CompatibleOptionCodeConverter.IsCompatibleOption(orderInfo.code, ref newCode);
-                //}
 
-                //TTMarketAdapter.Model.OrderModel orderModel = TTMarketAdapterCommon.GetOrderModel(newCode);
-                //var validate = orderModel.Validate();
-                //if (!validate.Success)
-                //{
-                //    OrderException(netInfo, validate.ErrorMessage);
-                //    return;
-                //}
+                //// Tag55
+                //newOrderSingle.Symbol = new Symbol("BRN");
+                //// Tag207
+                //newOrderSingle.SecurityExchange = new SecurityExchange("ICE");
+
+                ////167
+                //newOrderSingle.SecurityType = new SecurityType("FUT");
+                ////454
+                //NoSecurityAltIDGroup noSecurityAltIDGroup = new NoSecurityAltIDGroup();
+                ////455
+                //noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("BRN Dec20");
+
+
                 // Tag55
-                //newOrderSingle.Symbol = sd.Symbol;
-                newOrderSingle.Symbol = new Symbol("BRN");
+                newOrderSingle.Symbol = new Symbol("FDAX");
                 // Tag207
-                newOrderSingle.SecurityExchange = new SecurityExchange("ICE");
+                newOrderSingle.SecurityExchange = new SecurityExchange("Eurex");
 
                 //167
                 newOrderSingle.SecurityType = new SecurityType("FUT");
                 //454
                 NoSecurityAltIDGroup noSecurityAltIDGroup = new NoSecurityAltIDGroup();
                 //455
-                noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("BRN Dec20");
+                noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("FDAX Dec20");
                 //456
                 noSecurityAltIDGroup.SecurityAltIDSource = new SecurityAltIDSource("97");
                 newOrderSingle.AddGroup(noSecurityAltIDGroup);
@@ -691,31 +690,14 @@ namespace Client.Service
 
                 orderResponseInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
 
-                //refObj.orderID = OrderID;
-                //refObj.addGlobexRes(execReport);
-
-
-
-                orderResponseInfo.code = order.OrderNetInfo.code;
+        
                 orderResponseInfo.accountNo = order.OrderNetInfo.accountNo;
                 orderResponseInfo.systemNo = order.OrderNetInfo.systemCode;
 
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(order.OrderNetInfo.infoT);
                 orderResponseInfo.acceptType = orderInfo.userType;
-
-
-
-                //netInfo.infoT = orderResponseInfo.MyToString();
-                //netInfo.exchangeCode = order.OrderNetInfo.exchangeCode;
-                //netInfo.errorCode = ErrorCode.SUCCESS;
-                //netInfo.code = CommandCode.ORDER;
-
-                //netInfo.accountNo = order.OrderNetInfo.accountNo;
-                //netInfo.systemCode = order.SystemCode;
-                //netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
-                //netInfo.clientNo = order.OrderNetInfo.clientNo;
-                //netInfo.localSystemCode = order.OrderNetInfo.localSystemCode;
+                orderResponseInfo.code = orderInfo.code;
 
 
                 netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.ORDER);
@@ -790,6 +772,8 @@ namespace Client.Service
             orderResponseInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
             orderResponseInfo.orderNo = order.NewOrderSingleClientID;
             orderResponseInfo.origOrderNo = execReport.ClOrdID.getValue();
+            orderResponseInfo.code = orderInfo.code;
+
             //盘房和TT对单用，关联字段。
             if (execReport.IsSetField(Tags.SecondaryClOrdID))
             {
