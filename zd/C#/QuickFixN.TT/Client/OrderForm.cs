@@ -13,6 +13,8 @@ using System.Windows.Forms;
 using Client.Utility.MemoryDataManager;
 using Client.Models;
 using System.Threading;
+using Client.Service.Base;
+using Client.Service.ZDCommon;
 
 namespace Client
 {
