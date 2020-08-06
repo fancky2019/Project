@@ -1,6 +1,6 @@
 ﻿using Client.FixUtility;
 using Client.Models;
-using Client.Utility;
+using Client.Service;
 using CommonClassLib;
 using QuickFix;
 using QuickFix.Fields;
@@ -15,8 +15,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using static QuickFix.FIX42.Advertisement;
 using static QuickFix.FIX42.NewOrderSingle;
-using Client.Utility.MemoryDataManager;
+using Client.Service.MemoryDataManager;
 using Client.Service.Base;
+using Client.Service.ZDCommon;
+using System.Configuration;
 using Client.Service.ZDCommon;
 
 namespace Client.Service.PSHK
@@ -45,30 +47,32 @@ namespace Client.Service.PSHK
                 //
                 var newCode = orderInfo.code;
 
-                //// Tag55
-                //newOrderSingle.Symbol = new Symbol("BRN");
-                //// Tag207
-                //newOrderSingle.SecurityExchange = new SecurityExchange("ICE");
-
-                ////167
-                //newOrderSingle.SecurityType = new SecurityType("FUT");
-                ////454
-                //NoSecurityAltIDGroup noSecurityAltIDGroup = new NoSecurityAltIDGroup();
-                ////455
-                //noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("BRN Dec20");
-
-
                 // Tag55
-                newOrderSingle.Symbol = new Symbol("FDAX");
+                newOrderSingle.Symbol = new Symbol("BRN");
                 // Tag207
-                newOrderSingle.SecurityExchange = new SecurityExchange("Eurex");
+                newOrderSingle.SecurityExchange = new SecurityExchange("ICE");
 
                 //167
                 newOrderSingle.SecurityType = new SecurityType("FUT");
                 //454
                 NoSecurityAltIDGroup noSecurityAltIDGroup = new NoSecurityAltIDGroup();
                 //455
-                noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("FDAX Dec20");
+                noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("BRN Dec20");
+
+                //PRICE:9596
+                //// Tag55
+                //newOrderSingle.Symbol = new Symbol("FDAX");
+                //// Tag207
+                //newOrderSingle.SecurityExchange = new SecurityExchange("Eurex");
+
+                ////167
+                //newOrderSingle.SecurityType = new SecurityType("FUT");
+                ////454
+                //NoSecurityAltIDGroup noSecurityAltIDGroup = new NoSecurityAltIDGroup();
+                ////455
+                //noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("FDAX Dec20");
+
+
                 //456
                 noSecurityAltIDGroup.SecurityAltIDSource = new SecurityAltIDSource("97");
                 newOrderSingle.AddGroup(noSecurityAltIDGroup);
@@ -177,7 +181,7 @@ namespace Client.Service.PSHK
             {
                 //去掉汉字
                 string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}";
-                netInfo.NewOrderSingleException(msg);
+                netInfo.NewOrderSingleException(msg, netInfo.code);
                 //ExecutionReport?.Invoke(netInfo?.MyToString());
                 throw ex;
             }
@@ -192,9 +196,9 @@ namespace Client.Service.PSHK
         {
             CancelInfo cancelInfo = new CancelInfo();
             cancelInfo.MyReadString(netInfo.infoT);
+            Order order = null;
             try
             {
-                Order order;
                 if (!MemoryData.Orders.TryGetValue(netInfo.systemCode, out order))
                 {
                     throw new Exception($"Can not find SystemCode - {netInfo.systemCode}");
@@ -248,7 +252,7 @@ namespace Client.Service.PSHK
             {
                 //去掉汉字
                 string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}.";
-                netInfo.OrderCancelRequestException(msg, cancelInfo.orderNo);
+                netInfo.OrderCancelRequestException(msg, cancelInfo.orderNo, netInfo.code);
 
                 _nLog.Error($"SystemCode -  { netInfo.systemCode}");
                 _nLog.Error(ex.ToString());
@@ -266,12 +270,10 @@ namespace Client.Service.PSHK
         {
             ModifyInfo modifyInfo = new ModifyInfo();
             modifyInfo.MyReadString(netInfo.infoT);
+            Order order = null;
             try
             {
 
-
-
-                Order order;
                 if (!MemoryData.Orders.TryGetValue(netInfo.systemCode, out order))
                 {
                     throw new Exception($"Can not find SystemCode - {netInfo.systemCode}");
@@ -382,7 +384,7 @@ namespace Client.Service.PSHK
                 string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}.";
 
 
-                netInfo.OrderCancelReplaceRequestException(msg, modifyInfo.orderNo);
+                netInfo.OrderCancelReplaceRequestException(msg, modifyInfo.orderNo, netInfo.code);
                 //ExecutionReport?.Invoke(netInfo?.MyToString());
                 _nLog.Error($"SystemCode -  { netInfo.systemCode}");
                 _nLog.Error(ex.ToString());

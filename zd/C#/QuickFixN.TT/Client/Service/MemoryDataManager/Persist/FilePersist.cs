@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Utility.MemoryDataManager.Persist
+namespace Client.Service.MemoryDataManager.Persist
 {
     class FilePersist : IPersist
     {

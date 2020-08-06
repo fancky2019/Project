@@ -1,6 +1,6 @@
 ﻿using Client.FixUtility;
 using Client.Models;
-using Client.Utility;
+using Client.Service;
 using CommonClassLib;
 using QuickFix;
 using QuickFix.Fields;
@@ -15,7 +15,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using static QuickFix.FIX42.Advertisement;
 using static QuickFix.FIX42.NewOrderSingle;
-using Client.Utility.MemoryDataManager;
+using Client.Service.MemoryDataManager;
+using Client.Service.ZDCommon;
 
 namespace Client.Service.Base
 {
@@ -1064,19 +1065,19 @@ namespace Client.Service.Base
                 if (order.CommandCode == CommandCode.ORDER)
                 {
                     //netInfo = order.OrderNetInfo.Clone();
-                    netInfo.NewOrderSingleException(errorMessage);
+                    netInfo.NewOrderSingleException(errorMessage, order.CommandCode);
                     MemoryData.Orders.TryRemove(order.SystemCode, out _);
                 }
                 else if (order.CommandCode == CommandCode.MODIFY)
                 {
                     //netInfo = order.AmendNetInfo;
                     //netInfo = order.OrderNetInfo.Clone(); 
-                    netInfo.OrderCancelReplaceRequestException(errorMessage, order.NewOrderSingleClientID);
+                    netInfo.OrderCancelReplaceRequestException(errorMessage, order.NewOrderSingleClientID, order.CommandCode);
                 }
                 else if (order.CommandCode == CommandCode.CANCEL)
                 {
                     //netInfo = order.OrderNetInfo.Clone(); 
-                    netInfo.OrderCancelRequestException(errorMessage, order.NewOrderSingleClientID);
+                    netInfo.OrderCancelRequestException(errorMessage, order.NewOrderSingleClientID, order.CommandCode);
                 }
             }
             catch (Exception ex)

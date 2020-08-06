@@ -4,9 +4,9 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Client.Utility.MemoryDataManager.Persist;
+using Client.Service.MemoryDataManager.Persist;
 
-namespace Client.Utility.MemoryDataManager
+namespace Client.Service.MemoryDataManager
 {
     partial class MemoryData
     {

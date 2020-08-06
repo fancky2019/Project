@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Utility
+namespace Client.Service.MemoryDataManager.Persist
 {
-    class Persist
+    interface IPersist
     {
-        static Persist()
-        {
-        }
+        void Persist();
+        void Load();
     }
 }

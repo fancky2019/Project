@@ -7,7 +7,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Utility
+namespace Client.Service
 {
     class NewtonsoftHelper
     {
