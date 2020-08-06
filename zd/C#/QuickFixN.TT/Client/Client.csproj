@@ -107,6 +107,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Service\ITradeService.cs" />
+    <Compile Include="Service\TradeServiceFactory.cs" />
+    <Compile Include="Service\TTTradeService.cs" />
     <Compile Include="Utility\ConfigFileRefresh.cs" />
     <Compile Include="FixUtility\TradeClient.cs" />
     <Compile Include="FrmTradeClient.cs">
