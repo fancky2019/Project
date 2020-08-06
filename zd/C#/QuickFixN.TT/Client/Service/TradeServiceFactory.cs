@@ -7,7 +7,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace Client.Service
 {
-    class TradeServiceFactory
+    public class TradeServiceFactory
     {
         public static ITradeService ITradeService { get; private set; }
 
