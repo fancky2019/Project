@@ -83,7 +83,7 @@ namespace Client
             cmbSide.SelectedIndex = 0;
 
 
-            TradeClientAppService.Instance.ExecutionReport += (p) =>
+            TradeServiceFactory.ITradeService.ExecutionReport += (p) =>
               {
 
                   this.BeginInvoke((MethodInvoker)(() =>
@@ -197,7 +197,7 @@ namespace Client
             //NetInfo ni = new NetInfo();
             //ni.MyReadString(netInfoStr);
 
-            TradeClientAppService.Instance.Order(netInfo);
+            TradeServiceFactory.ITradeService.Order(netInfo);
 
 
         }
@@ -230,7 +230,7 @@ namespace Client
             //ni.MyReadString(modifyOrderStr);
 
 
-            TradeClientAppService.Instance.Order(netInfo);
+            TradeServiceFactory.ITradeService.Order(netInfo);
         }
         #endregion
 
@@ -259,7 +259,7 @@ namespace Client
             //NetInfo ni = new NetInfo();
             //ni.MyReadString(cancelOrderStr);
 
-            TradeClientAppService.Instance.Order(netInfo);
+            TradeServiceFactory.ITradeService.Order(netInfo);
         }
         #endregion
 

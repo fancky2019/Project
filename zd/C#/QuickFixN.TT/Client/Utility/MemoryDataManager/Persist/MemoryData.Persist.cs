@@ -10,7 +10,7 @@ namespace Client.Utility.MemoryDataManager
 {
     partial class MemoryData
     {
-        //volatile 关键字可应用于字段
+
         internal static volatile bool AppStop;
         internal static IPersist IPersist { get; private set; }
 

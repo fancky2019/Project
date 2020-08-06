@@ -26,7 +26,7 @@ namespace Client.Utility.MemoryDataManager.Persist
 
                 using (SQLiteCommand mycommand = new SQLiteCommand(connection))
                 {
-                    mycommand.CommandText = $"update ClientOrderID set ClientOrderID ='{clientOrderID}';";
+                    mycommand.CommandText = $"update ClientOrderID set CliOrderID  ='{clientOrderID}';";
                     mycommand.Prepare();
                     mycommand.ExecuteNonQuery();
                 }
@@ -83,8 +83,8 @@ namespace Client.Utility.MemoryDataManager.Persist
 
                 using (SQLiteCommand cmd = new SQLiteCommand(connection))
                 {
-                    cmd.CommandText = "insert into ClientOrderID (CliOrderID) values (@clientOderID);";
-                    cmd.Parameters.AddWithValue("@clientOderID", clientOderID);
+                    cmd.CommandText = "insert into ClientOderID (CliOrderID) values (@CliOrderID);";
+                    cmd.Parameters.AddWithValue("@CliOrderID", clientOderID);
                     cmd.Prepare();
                     cmd.ExecuteNonQuery();
                 }

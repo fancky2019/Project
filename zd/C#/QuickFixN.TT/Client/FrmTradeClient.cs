@@ -32,9 +32,10 @@ namespace Client
         #region 基本
         private void btnStart_Click(object sender, EventArgs e)
         {
+            //ITradeService tradeService = TradeServiceFactory.ITradeService;
 
-            TradeClientAppService.Instance.Start();
-            TradeClientAppService.Instance.Logon += (msg =>
+            TradeServiceFactory.ITradeService.Start();
+            TradeServiceFactory.ITradeService.Logon += (msg =>
               {
                   if (this.InvokeRequired)
                   {
@@ -52,7 +53,7 @@ namespace Client
 
               });
 
-            TradeClientAppService.Instance.Logout += (msg =>
+            TradeServiceFactory.ITradeService.Logout += (msg =>
             {
                 if (this.InvokeRequired)
                 {
@@ -82,7 +83,7 @@ namespace Client
         internal void btnStop_Click(object sender, EventArgs e)
         {
             MemoryData.AppStop = true;
-            TradeClientAppService.Instance.Stop();
+            TradeServiceFactory.ITradeService.Stop();
 
         }
 
