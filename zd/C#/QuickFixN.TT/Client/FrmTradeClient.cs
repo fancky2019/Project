@@ -108,14 +108,15 @@ namespace Client
         #region  Test
         private void btnTest_Click(object sender, EventArgs e)
         {
+
             SQLitePersist sQLitePersist = new SQLitePersist();
-            var msgTest = "test";
+            var msgTest = "testUpdate";
             var msgBytes = MessagePackUtility.Serialize<string>(msgTest);
 
             //sQLitePersist.InsertClientOderID("dssdsdsdsd");
-            sQLitePersist.InsertOrder(msgBytes);
-
-            var selectBytes = sQLitePersist.SelectOrder();
+            //SQLiteHelper.InsertOrder(msgBytes);
+            SQLiteHelper.UpdateOrder(msgBytes);
+            var selectBytes = SQLiteHelper.SelectOrder();
             var selectMsg = MessagePackUtility.Deserialize<string>(selectBytes);
             var strin = MemoryData.IPersist.GetType();
             /*

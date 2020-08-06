@@ -133,6 +133,7 @@
     <Compile Include="Utility\MemoryDataManager\Persist\FilePersist.cs" />
     <Compile Include="Utility\MemoryDataManager\Persist\MemoryData.Persist.cs" />
     <Compile Include="Utility\MemoryDataManager\Persist\RedisPersist.cs" />
+    <Compile Include="Utility\MemoryDataManager\Persist\SQLiteHelper.cs" />
     <Compile Include="Utility\MemoryDataManager\Persist\SQLitePersist.cs" />
     <Compile Include="Utility\MessagePackUtility.cs" />
     <Compile Include="Utility\NewtonsoftHelper.cs" />

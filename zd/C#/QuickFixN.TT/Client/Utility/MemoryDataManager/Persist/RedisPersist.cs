@@ -14,7 +14,7 @@ namespace Client.Utility.MemoryDataManager.Persist
 
         private const string LAST_CLIENT_ORDER_ID_KEY = "LastClientOrderID";
         private const string ORDER_KEY = "Orders";
-        
+
         private object _lockObj = new object();
         public void Load()
         {
