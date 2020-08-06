@@ -71,7 +71,10 @@ namespace Client
 
             });
 
-
+            //TradeServiceFactory.ITradeService.ExecutionReport += (p) =>
+            //  {
+            //      _nLog.Info($"FrmTradeClient Receive:{p}");
+            //  };
 
         }
 

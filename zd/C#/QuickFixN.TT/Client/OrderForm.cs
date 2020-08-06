@@ -83,22 +83,42 @@ namespace Client
             cmbSide.SelectedIndex = 0;
 
 
-            TradeServiceFactory.ITradeService.ExecutionReport += (p) =>
-              {
+            //TradeServiceFactory.ITradeService.ExecutionReport += (p) =>
+            //  {
+            //      //在创建窗口句柄之前，不能在控件上调用 Invoke 或 BeginInvoke。
+            //      if (this.IsHandleCreated)
+            //      {
+            //          this.BeginInvoke((MethodInvoker)(() =>
+            //          {
+            //              if (!string.IsNullOrEmpty(p))
+            //              {
+            //                  this.lbMsgs.Items.Add(p);
+            //              }
 
-                  this.BeginInvoke((MethodInvoker)(() =>
-                  {
-                      if (!string.IsNullOrEmpty(p))
-                      {
-                          this.lbMsgs.Items.Add(p);
-                      }
+            //          }));
+            //      }
+            //  };
 
-                  }));
-              };
+            //窗体关闭要注销事件。
+            TradeServiceFactory.ITradeService.ExecutionReport += ExecutionReport;
+
+
         }
         #endregion
 
         #region  ExecutionReport
+
+        private void ExecutionReport(string netInfo)
+        {
+            this.BeginInvoke((MethodInvoker)(() =>
+            {
+                if (!string.IsNullOrEmpty(netInfo))
+                {
+                    this.lbMsgs.Items.Add(netInfo);
+                }
+
+            }));
+        }
         private void lbMsgs_KeyUp(object sender, KeyEventArgs e)
         {
             if ((e.Control) && e.KeyCode == Keys.C)
@@ -158,6 +178,12 @@ namespace Client
                     return;
             }
             this.rtbNetInfo.Text = sb.ToString();
+        }
+
+        private void OrderForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //窗体关闭要注销事件。
+            TradeServiceFactory.ITradeService.ExecutionReport -= ExecutionReport;
         }
         #endregion
 
@@ -275,8 +301,10 @@ namespace Client
         {
             System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory);
         }
-        #endregion 
+        #endregion
 
-        #endregion 
+        #endregion
+
+   
     }
 }

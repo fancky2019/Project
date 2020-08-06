@@ -114,19 +114,21 @@ namespace Client.Utility.MemoryDataManager
         }
         internal static void InitUsingCliOrderIDSystemCode()
         {
-            try
+
+            foreach (var item in Orders.Values)
             {
-                foreach (var item in MemoryData.Orders.Values)
+                try
                 {
                     var cliOrderID = long.Parse(item.CurrentCliOrderID);
-                    MemoryData.UsingCliOrderIDSystemCode.TryAdd(cliOrderID, item.SystemCode);
+                    UsingCliOrderIDSystemCode.TryAdd(cliOrderID, item.SystemCode);
+                }
+                catch (Exception ex)
+                {
+                    _nLog.Error("Load UsingCliOrderID Failed");
+                    _nLog.Error(ex.ToString());
                 }
             }
-            catch (Exception ex)
-            {
-                _nLog.Error("Load UsingCliOrderID Failed");
-                _nLog.Error(ex.ToString());
-            }
+
         }
     }
 }
