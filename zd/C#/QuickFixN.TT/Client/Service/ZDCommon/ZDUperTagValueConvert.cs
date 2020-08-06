@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Service
+namespace Client.Service.ZDCommon
 {
     public static class ZDUperTagValueConvert
     {

@@ -17,7 +17,7 @@ using static QuickFix.FIX42.Advertisement;
 using static QuickFix.FIX42.NewOrderSingle;
 using Client.Utility.MemoryDataManager;
 
-namespace Client.Service
+namespace Client.Service.Base
 {
     class TradeClientAppService : ITradeService
     {
@@ -28,16 +28,11 @@ namespace Client.Service
         #endregion
 
         #region 公有成员
-        //public static TradeClientAppService Instance { get; private set; }
         public event Action<string> ExecutionReport;
         public event Action<string> Logon;
         public event Action<string> Logout;
         #endregion
 
-        //static TradeClientAppService()
-        //{
-        //    Instance = new TradeClientAppService();
-        //}
 
         internal TradeClientAppService()
         {

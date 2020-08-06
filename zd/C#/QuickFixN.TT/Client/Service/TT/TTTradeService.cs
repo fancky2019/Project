@@ -16,8 +16,10 @@ using System.Threading.Tasks;
 using static QuickFix.FIX42.Advertisement;
 using static QuickFix.FIX42.NewOrderSingle;
 using Client.Utility.MemoryDataManager;
+using Client.Service.Base;
+using Client.Service.ZDCommon;
 
-namespace Client.Service
+namespace Client.Service.TT
 {
     class TTTradeService : TradeClientAppService
     {

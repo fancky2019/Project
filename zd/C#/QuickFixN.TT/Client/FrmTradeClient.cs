@@ -1,6 +1,7 @@
 ﻿using Client.FixUtility;
 using Client.Models;
 using Client.Service;
+using Client.Service.Base;
 using Client.Utility;
 using Client.Utility.MemoryDataManager;
 using Client.Utility.MemoryDataManager.Persist;
@@ -112,17 +113,17 @@ namespace Client
         #region  Test
         private void btnTest_Click(object sender, EventArgs e)
         {
+            TradeServiceFactory.Test();
+            //SQLitePersist sQLitePersist = new SQLitePersist();
+            //var msgTest = "testUpdate";
+            //var msgBytes = MessagePackUtility.Serialize<string>(msgTest);
 
-            SQLitePersist sQLitePersist = new SQLitePersist();
-            var msgTest = "testUpdate";
-            var msgBytes = MessagePackUtility.Serialize<string>(msgTest);
-
-            //sQLitePersist.InsertClientOderID("dssdsdsdsd");
-            //SQLiteHelper.InsertOrder(msgBytes);
-            SQLiteHelper.UpdateOrder(msgBytes);
-            var selectBytes = SQLiteHelper.SelectOrder();
-            var selectMsg = MessagePackUtility.Deserialize<string>(selectBytes);
-            var strin = MemoryData.IPersist.GetType();
+            ////sQLitePersist.InsertClientOderID("dssdsdsdsd");
+            ////SQLiteHelper.InsertOrder(msgBytes);
+            //SQLiteHelper.UpdateOrder(msgBytes);
+            //var selectBytes = SQLiteHelper.SelectOrder();
+            //var selectMsg = MessagePackUtility.Deserialize<string>(selectBytes);
+            //var strin = MemoryData.IPersist.GetType();
             /*
             20200804 16:37:30:669,259542210830[3] - 192.168.1.114:53114 { (len = 155)ORDER001@20200804000019@0007262813000041@100091@@ZD_001 @ICE@@100091@&ZD_001@@ZD_001@888888@C @ICE@BRN2010@1@1@43.52@@1@@@0.0@1@1@@0@0@BRN@2010@@@@@@@@@@@@0@}
             20200804 16:37:35:287,259552999586[3] - 192.168.1.114:53114 { (len = 164)MODIFY01@20200804000019@0007262813000041@100091@@ZD_001 @ICE@@100091@&ZD_001@@ZD_001@888888@1500000082@ICE @BRN2010@1@1@43.52@0@3@43.50@1@1@C@0.00@0.0@1@@@@@@@@@@@@0@}
