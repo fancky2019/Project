@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ServiceStack;
-namespace Client.Utility
+namespace Client.Service
 {
     /*
      * https://github.com/ServiceStack/ServiceStack.Redis

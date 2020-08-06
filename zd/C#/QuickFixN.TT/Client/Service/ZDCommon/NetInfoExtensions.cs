@@ -1,4 +1,5 @@
 ﻿using Client.Models;
+using Client.Service.ZDCommon;
 using CommonClassLib;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Utility
+namespace Client.Service.ZDCommon
 {
     /*
      * 150=0:ErrorCode.ERR_ORDER_0000;CommandCode.ORDER
@@ -20,13 +21,13 @@ namespace Client.Utility
     internal static class NetInfoExtensions
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
-        internal static NetInfo NewOrderSingleException(this NetInfo netInfo, string errorMsg)
+        internal static NetInfo NewOrderSingleException(this NetInfo netInfo, string errorMsg,string commandCode)
         {
             try
             {
                 netInfo.errorMsg = errorMsg;
                 netInfo.errorCode = ErrorCode.ERR_ORDER_0000;
-                netInfo.code = CommandCode.ORDER;
+                netInfo.code = TradeBaseDataConfig.GetResponseCommandCode(commandCode);
 
                 OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
                 netInfo.infoT = orderResponseInfo.MyToString();
@@ -38,13 +39,13 @@ namespace Client.Utility
             return netInfo;
         }
 
-        internal static NetInfo OrderCancelRequestException(this NetInfo netInfo, string errorMsg, string newOrderSingleClientID)
+        internal static NetInfo OrderCancelRequestException(this NetInfo netInfo, string errorMsg, string newOrderSingleClientID, string commandCode)
         {
             try
             {
                 netInfo.errorMsg = errorMsg;
                 netInfo.errorCode = ErrorCode.ERR_ORDER_0014;
-                netInfo.code = CommandCode.CANCELCAST;
+                netInfo.code = TradeBaseDataConfig.GetResponseCommandCode(commandCode);
 
                 CancelResponseInfo cancelResponseInfo = new CancelResponseInfo();
                 cancelResponseInfo.orderNo = newOrderSingleClientID;
@@ -58,13 +59,13 @@ namespace Client.Utility
             return netInfo;
         }
 
-        internal static NetInfo OrderCancelReplaceRequestException(this NetInfo netInfo, string errorMsg, string newOrderSingleClientID)
+        internal static NetInfo OrderCancelReplaceRequestException(this NetInfo netInfo, string errorMsg, string newOrderSingleClientID, string commandCode)
         {
             try
             {
                 netInfo.errorMsg = errorMsg;
                 netInfo.errorCode = ErrorCode.ERR_ORDER_0016;
-                netInfo.code = CommandCode.MODIFY;
+                netInfo.code = TradeBaseDataConfig.GetResponseCommandCode(commandCode);
 
                 OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
                 orderResponseInfo.orderNo = newOrderSingleClientID;

@@ -2,9 +2,9 @@
 using Client.Models;
 using Client.Service;
 using Client.Service.Base;
-using Client.Utility;
-using Client.Utility.MemoryDataManager;
-using Client.Utility.MemoryDataManager.Persist;
+using Client.Service;
+using Client.Service.MemoryDataManager;
+using Client.Service.MemoryDataManager.Persist;
 using CommonClassLib;
 using System;
 using System.Collections.Concurrent;

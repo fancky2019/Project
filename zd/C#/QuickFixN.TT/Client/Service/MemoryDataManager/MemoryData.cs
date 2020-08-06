@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Utility.MemoryDataManager
+namespace Client.Service.MemoryDataManager
 {
     partial class MemoryData
     {

@@ -1,5 +1,5 @@
 ﻿using Client.Service;
-using Client.Utility;
+using Client.Service;
 using CommonClassLib;
 using System;
 using System.Collections.Generic;
@@ -10,10 +10,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Client.Utility.MemoryDataManager;
+using Client.Service.MemoryDataManager;
 using Client.Models;
 using System.Threading;
 using Client.Service.Base;
+using Client.Service.ZDCommon;
+using System.Configuration;
 using Client.Service.ZDCommon;
 
 namespace Client
@@ -155,22 +157,26 @@ namespace Client
             switch (command)
             {
                 case "ORDER001":
+                case "OrdeStHK":
                     OrderResponseInfo orderInfo = new OrderResponseInfo();
                     orderInfo.MyReadString(netinfo.infoT);
                     //@@@@@ICE@BRN2012@1@1@42.59@@1@@@42.59@1@@@@0
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
                     break;
                 case "CANCST01":
+                case "CancStHK":
                     CancelResponseInfo cancelInfo = new CancelResponseInfo();
                     cancelInfo.MyReadString(netinfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(cancelInfo));
                     break;
                 case "MODIFY01":
+                case "ModiStHK":
                     OrderResponseInfo modifyInfo = new OrderResponseInfo();
                     modifyInfo.MyReadString(netinfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(modifyInfo));
                     break;
                 case "FILCST01":
+                case "FillStHK":
                     FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
                     filledResponseInfo.MyReadString(netinfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(filledResponseInfo));
@@ -195,7 +201,9 @@ namespace Client
             CommonClassLib.NetInfo netInfo = new CommonClassLib.NetInfo();
 
 
-            netInfo.code = CommandCode.ORDER;
+            //netInfo.code = CommandCode.ORDER;
+
+            netInfo.code =TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), Service.ZDCommon.CommandType.Order);
             //tag1:zd上手号
             netInfo.accountNo = "ZD_001";
             netInfo.clientNo = "000365";
@@ -237,7 +245,9 @@ namespace Client
             CommonClassLib.NetInfo netInfo = null;
             if (MemoryData.Orders.TryGetValue(this.txtAmendSysCode.Text.Trim(), out Order order))
             {
-                netInfo = order.OrderNetInfo.CloneWithNewCode("", CommandCode.MODIFY);
+                //netInfo = order.OrderNetInfo.CloneWithNewCode("", CommandCode.MODIFY);
+                netInfo = order.OrderNetInfo.Clone();
+                netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), Service.ZDCommon.CommandType.Modify);
             }
             else
             {
@@ -269,7 +279,10 @@ namespace Client
             CommonClassLib.NetInfo netInfo = null;
             if (MemoryData.Orders.TryGetValue(this.txtOrderCancelSystemCode.Text.Trim(), out Order order))
             {
-                netInfo = order.OrderNetInfo.CloneWithNewCode("", CommandCode.CANCEL);
+                //netInfo = order.OrderNetInfo.CloneWithNewCode("", CommandCode.CANCEL);
+                netInfo = order.OrderNetInfo.Clone();
+                netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), Service.ZDCommon.CommandType.Cancel);
+
             }
             else
             {
@@ -307,6 +320,6 @@ namespace Client
 
         #endregion
 
-   
+
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Client.Utility
+namespace Client.Service
 {
 
     public class LogManager

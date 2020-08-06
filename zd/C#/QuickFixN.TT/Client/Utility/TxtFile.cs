@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Client.Utility
+namespace Client.Service
 {
     public class TxtFile
     {
