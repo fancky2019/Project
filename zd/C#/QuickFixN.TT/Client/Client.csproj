@@ -113,11 +113,71 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UtilityOrderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UtilityOrderForm.Designer.cs">
+      <DependentUpon>UtilityOrderForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Service\Base\ITradeService.cs" />
     <Compile Include="Service\PSHK\PSHKTradeService.cs" />
     <Compile Include="Service\Base\TradeServiceFactory.cs" />
     <Compile Include="Service\TT\TTTradeService.cs" />
     <Compile Include="Service\ZDCommon\TradeBaseDataConfig.cs" />
+    <Compile Include="UserControls\BaseNetInfoControl\CancelNetInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\BaseNetInfoControl\CancelNetInfoControl.Designer.cs">
+      <DependentUpon>CancelNetInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\BaseNetInfoControl\ModifyNetInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\BaseNetInfoControl\ModifyNetInfoControl.Designer.cs">
+      <DependentUpon>ModifyNetInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\BaseNetInfoControl\OrderNetInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\BaseNetInfoControl\OrderNetInfoControl.Designer.cs">
+      <DependentUpon>OrderNetInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PSHKNetInfoUserControl\PSHKCancelNetInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\PSHKNetInfoUserControl\PSHKCancelNetInfoControl.Designer.cs">
+      <DependentUpon>PSHKCancelNetInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PSHKNetInfoUserControl\PSHKModifyNetInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\PSHKNetInfoUserControl\PSHKModifyNetInfoControl.Designer.cs">
+      <DependentUpon>PSHKModifyNetInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PSHKNetInfoUserControl\PSHKOrderNetInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\PSHKNetInfoUserControl\PSHKOrderNetInfoControl.Designer.cs">
+      <DependentUpon>PSHKOrderNetInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TTNetInfoControl\TTCancelNetInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\TTNetInfoControl\TTCancelNetInfoControl.Designer.cs">
+      <DependentUpon>TTCancelNetInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TTNetInfoControl\TTModifyNetInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\TTNetInfoControl\TTModifyNetInfoControl.Designer.cs">
+      <DependentUpon>TTModifyNetInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\TTNetInfoControl\TTOrderNetInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\TTNetInfoControl\TTOrderNetInfoControl.Designer.cs">
+      <DependentUpon>TTOrderNetInfoControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utility\ConfigFileRefresh.cs" />
     <Compile Include="FixUtility\TradeClient.cs" />
     <Compile Include="FrmTradeClient.cs">
@@ -155,6 +215,9 @@
     <EmbeddedResource Include="FrmTradeClient.resx">
       <DependentUpon>FrmTradeClient.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UtilityOrderForm.resx">
+      <DependentUpon>UtilityOrderForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OrderForm.resx">
       <DependentUpon>OrderForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -167,6 +230,33 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UserControls\BaseNetInfoControl\CancelNetInfoControl.resx">
+      <DependentUpon>CancelNetInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\BaseNetInfoControl\ModifyNetInfoControl.resx">
+      <DependentUpon>ModifyNetInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\BaseNetInfoControl\OrderNetInfoControl.resx">
+      <DependentUpon>OrderNetInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\PSHKNetInfoUserControl\PSHKCancelNetInfoControl.resx">
+      <DependentUpon>PSHKCancelNetInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\PSHKNetInfoUserControl\PSHKModifyNetInfoControl.resx">
+      <DependentUpon>PSHKModifyNetInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\PSHKNetInfoUserControl\PSHKOrderNetInfoControl.resx">
+      <DependentUpon>PSHKOrderNetInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\TTNetInfoControl\TTCancelNetInfoControl.resx">
+      <DependentUpon>TTCancelNetInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\TTNetInfoControl\TTModifyNetInfoControl.resx">
+      <DependentUpon>TTModifyNetInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\TTNetInfoControl\TTOrderNetInfoControl.resx">
+      <DependentUpon>TTOrderNetInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Config\TradeClient - Phillip.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

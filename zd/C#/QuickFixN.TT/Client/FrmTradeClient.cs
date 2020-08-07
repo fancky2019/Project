@@ -205,12 +205,14 @@ namespace Client
         #endregion
 
         #region OrderForm
-        private OrderForm _orderForm;
+        //private OrderForm _orderForm;
+
+        UtilityOrderForm _orderForm;
         private void btnShowOrderForm_Click(object sender, EventArgs e)
         {
             if (_orderForm == null || _orderForm.IsDisposed)
             {
-                _orderForm = new OrderForm();
+                _orderForm = new UtilityOrderForm();
             }
             _orderForm.Show();
         }
