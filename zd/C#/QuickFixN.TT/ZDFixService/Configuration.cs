@@ -13,7 +13,18 @@ namespace ZDFixService
      * */
     class Configurations
     {
-        internal static IConfiguration Configuration { get; private set; }
+        internal static volatile IConfiguration _configuration;
+        internal static IConfiguration Configuration
+        {
+            get
+            {
+                return _configuration;
+            }
+            private set
+            {
+                _configuration = value; ;
+            }
+        }
 
         static Configurations()
         {
@@ -27,6 +38,8 @@ namespace ZDFixService
             //设置配置文件
             builder.AddJsonFile("appsettings.json");
             Configuration = builder.Build();
+
+
             //var str = Configurations.Configuration["ZDFixService:OrderIDFilePath"];
         }
     }
