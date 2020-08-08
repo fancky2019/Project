@@ -30,11 +30,12 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
             CommonClassLib.NetInfo netInfo = new CommonClassLib.NetInfo();
 
 
-            //netInfo.code = CommandCode.ORDER;
+            netInfo.code = CommandCode.OrderStockHK;
 
-            netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Order);
-            //tag1:zd上手号
-            netInfo.accountNo = "ZD_001";
+            //netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Order);
+      
+             //tag1:zd上手号
+             netInfo.accountNo = "ZD_001";
             netInfo.clientNo = "000365";
             netInfo.systemCode = $"SystemCode{DateTime.Now.GetTimeStamp()}";
             netInfo.localSystemCode = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");

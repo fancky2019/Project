@@ -21,6 +21,7 @@ using ZDFixClient.UserControls.TTNetInfoControl;
 using ZDFixClient.UserControls.PSHKNetInfoUserControl;
 using NLog;
 using ZDFixService.Utility;
+using System.Collections.Concurrent;
 
 namespace ZDFixClient
 {
@@ -40,6 +41,8 @@ namespace ZDFixClient
         /// tag 59
         /// </summary>
         private Dictionary<string, string> _timeInForceDict = new Dictionary<string, string>();
+
+        private ConcurrentDictionary<string, Order> _newOrderSingleOrders = new ConcurrentDictionary<string, Order>();
         #endregion
 
         #region Constructor Load
@@ -75,7 +78,7 @@ namespace ZDFixClient
             TradeServiceFactory.ITradeService.ExecutionReport += ExecutionReport;
         }
 
-        private void  LoadNetInfoControls()
+        private void LoadNetInfoControls()
         {
             var trradeService = ConfigurationManager.AppSettings["ITradeService"].ToString();
             switch (trradeService)
@@ -88,7 +91,7 @@ namespace ZDFixClient
                     TTCancelNetInfoControl tTCancelNetInfoControl = new TTCancelNetInfoControl();
                     tTCancelNetInfoControl.CancelOrder += CancelOrder;
 
-               
+
                     this.orderTabPage.Controls.Add(tTOrderNetInfoControl);
                     tTOrderNetInfoControl.Dock = DockStyle.Fill;
                     this.modifyTabPage.Controls.Add(tTModifyNetInfoControl);
@@ -104,7 +107,7 @@ namespace ZDFixClient
                     PSHKCancelNetInfoControl pSHKCancelNetInfoControl = new PSHKCancelNetInfoControl();
                     pSHKCancelNetInfoControl.CancelOrder += CancelOrder;
 
-      
+
                     this.orderTabPage.Controls.Add(pSHKOrderNetInfoControl);
                     pSHKOrderNetInfoControl.Dock = DockStyle.Fill;
                     this.modifyTabPage.Controls.Add(pSHKModifyNetInfoControl);
@@ -118,13 +121,39 @@ namespace ZDFixClient
 
         #region  ExecutionReport
 
-        private void ExecutionReport(string netInfo)
+        private void ExecutionReport(string netInfoStr)
         {
             this.BeginInvoke((MethodInvoker)(() =>
             {
-                if (!string.IsNullOrEmpty(netInfo))
+                if (!string.IsNullOrEmpty(netInfoStr))
                 {
-                    this.lbMsgs.Items.Add(netInfo);
+                    NetInfo netInfo = new NetInfo();
+
+                    netInfo.MyReadString(netInfoStr);
+
+                    //StringBuilder sb = new StringBuilder();
+                    //sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
+                    //sb.Append("\r\n");
+                    //var command = netInfoStr.Substring(0, 8);
+
+                    switch (netInfo.code)
+                    {
+                        case "ORDER001":
+                        case "OrdeStHK":
+                            if (netInfo.errorCode == ErrorCode.ERR_ORDER_0000)
+                            {
+                                _newOrderSingleOrders.TryRemove(netInfo.systemCode, out _);
+                            }
+                            break;
+                        case "CANCST01":
+                        case "CancStHK":
+                        case "FILCST01":
+                        case "FillStHK":
+                            _newOrderSingleOrders.TryRemove(netInfo.systemCode, out _);
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
             }));
@@ -149,42 +178,42 @@ namespace ZDFixClient
             {
                 return;
             }
-            NetInfo netinfo = new NetInfo();
+            NetInfo netInfo = new NetInfo();
             var netInfoStr = this.lbMsgs.SelectedItem.ToString();
-            netinfo.MyReadString(netInfoStr);
+            netInfo.MyReadString(netInfoStr);
             //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(netinfo);
             //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
 
 
             StringBuilder sb = new StringBuilder();
-            sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
+            sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netInfo));
             sb.Append("\r\n");
-            var command = netInfoStr.Substring(0, 8);
-            switch (command)
+            //var command = netInfoStr.Substring(0, 8);
+            switch (netInfo.code)
             {
                 case "ORDER001":
                 case "OrdeStHK":
                     OrderResponseInfo orderInfo = new OrderResponseInfo();
-                    orderInfo.MyReadString(netinfo.infoT);
+                    orderInfo.MyReadString(netInfo.infoT);
                     //@@@@@ICE@BRN2012@1@1@42.59@@1@@@42.59@1@@@@0
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
                     break;
                 case "CANCST01":
                 case "CancStHK":
                     CancelResponseInfo cancelInfo = new CancelResponseInfo();
-                    cancelInfo.MyReadString(netinfo.infoT);
+                    cancelInfo.MyReadString(netInfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(cancelInfo));
                     break;
                 case "MODIFY01":
                 case "ModiStHK":
                     OrderResponseInfo modifyInfo = new OrderResponseInfo();
-                    modifyInfo.MyReadString(netinfo.infoT);
+                    modifyInfo.MyReadString(netInfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(modifyInfo));
                     break;
                 case "FILCST01":
                 case "FillStHK":
                     FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
-                    filledResponseInfo.MyReadString(netinfo.infoT);
+                    filledResponseInfo.MyReadString(netInfo.infoT);
                     sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(filledResponseInfo));
                     break;
                 default:
@@ -210,16 +239,44 @@ namespace ZDFixClient
         #endregion
 
         #region 改单
-        private void ModifyOrder(NetInfo netInfo)
+        private void ModifyOrder(ModifyInfo modifyInfo, string systemCode, string commandCode)
         {
+            CommonClassLib.NetInfo netInfo = null;
+            if (_newOrderSingleOrders.TryGetValue(systemCode, out Order order))
+            {
+                netInfo = order.OrderNetInfo.CloneWithNewCode("", CommandCode.ModifyStockHK);
+                //    netInfo = order.OrderNetInfo.Clone();
+                //    netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Modify);
+            }
+            else
+            {
+                MessageBox.Show($"没有找到系统号为:{systemCode}的订单");
+                return;
+            }
+
+            netInfo.infoT = modifyInfo.MyToString();
             TradeServiceFactory.ITradeService.Order(netInfo);
         }
         #endregion
 
         #region 撤单
-        private void CancelOrder(NetInfo netInfo)
+        private void CancelOrder(CancelInfo cancelInfo, string commandCode)
         {
+            CommonClassLib.NetInfo netInfo = null;
+            if (_newOrderSingleOrders.TryGetValue(cancelInfo.systemNo, out Order order))
+            {
+                //netInfo = order.OrderNetInfo.CloneWithNewCode("", CommandCode.CANCEL);
+                //netInfo = order.OrderNetInfo.Clone();
+                //netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Cancel);
 
+                netInfo = order.OrderNetInfo.CloneWithNewCode("", commandCode);
+            }
+            else
+            {
+                MessageBox.Show($"没有找到系统号为:{cancelInfo.systemNo}的订单");
+                return;
+            }
+            netInfo.infoT = cancelInfo.MyToString();
             TradeServiceFactory.ITradeService.Order(netInfo);
         }
         #endregion

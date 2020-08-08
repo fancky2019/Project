@@ -86,7 +86,7 @@ namespace ZDFixClient
 
         internal void btnStop_Click(object sender, EventArgs e)
         {
-            MemoryData.AppStop = true;
+         
             TradeServiceFactory.ITradeService.Stop();
 
         }

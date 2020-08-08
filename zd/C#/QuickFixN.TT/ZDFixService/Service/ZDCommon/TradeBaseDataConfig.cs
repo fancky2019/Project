@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ZDFixService.Service.ZDCommon
 {
-    public class TradeBaseDataConfig
+     class TradeBaseDataConfig
     {
         private static Dictionary<string, string> _tradeServiceCommandCode;
         static TradeBaseDataConfig()
@@ -17,7 +17,7 @@ namespace ZDFixService.Service.ZDCommon
             _tradeServiceCommandCode.Add(TradeServiceName.PSHKTradeService, TradeServiceType.Stock);
         }
 
-        public static string GetCommandCode(string tradeService, CommandType commandType)
+        private static string GetCommandCode(string tradeService, CommandType commandType)
         {
             var tradeServiceType = _tradeServiceCommandCode[tradeService];
             switch (tradeServiceType)
@@ -98,7 +98,7 @@ namespace ZDFixService.Service.ZDCommon
         }
     }
 
-    public enum CommandType : byte
+     enum CommandType : byte
     {
         Order,
         Modify,
@@ -109,12 +109,12 @@ namespace ZDFixService.Service.ZDCommon
         Fill
     }
 
-    public class TradeServiceName
+     class TradeServiceName
     {
         public const string TTTradeService = "TTTradeService";
         public const string PSHKTradeService = "PSHKTradeService";
     }
-    public class TradeServiceType
+     class TradeServiceType
     {
         public const string Future = "Future";
         public const string Stock = "Stock";

@@ -30,9 +30,9 @@ namespace ZDFixClient.UserControls.TTNetInfoControl
             CommonClassLib.NetInfo netInfo = new CommonClassLib.NetInfo();
 
 
-            //netInfo.code = CommandCode.ORDER;
+            netInfo.code = CommandCode.ORDER;
 
-            netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Order);
+            //netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Order);
             //tag1:zd上手号
             netInfo.accountNo = "ZD_001";
             netInfo.clientNo = "000365";

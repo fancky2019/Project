@@ -12,7 +12,7 @@ namespace ZDFixService.Models
     {
         public bool Pending { get; set; }
         /// <summary>
-        /// 客户号  
+        /// 系统号 和消息体里的systemNo 相同值  
         /// </summary>
         public string SystemCode { get; set; }
         /// <summary>

@@ -10,7 +10,7 @@ using ZDFixService;
 
 namespace ZDFixService.Service.MemoryDataManager
 {
-    public partial class MemoryData
+     partial class MemoryData
     {
 
 
