@@ -86,7 +86,7 @@ namespace ZDFixClient
 
         internal void btnStop_Click(object sender, EventArgs e)
         {
-         
+
             TradeServiceFactory.ITradeService.Stop();
 
         }
@@ -134,26 +134,37 @@ namespace ZDFixClient
             var modifyOrderStr = "MODIFY01@20200804000019@0007262813000041@100091@@ZD_001 @ICE@@100091@&ZD_001@@ZD_001@888888@1500000082@ICE @BRN2010@1@1@43.52@0@3@43.50@1@1@C@0.00@0.0@1@@@@@@@@@@@@0@";
             var cancelOrderStr = "CANCEL01@20200804000019@0007262813000041@100091@@ZD_001 @ICE@@@&ZD_001@192.168.1.207@ZD_001@888888@@0007262813000041@1500000082@ICE @BRN2010@1@1@@0@@@@C@@@@@@";
 
-            NetInfo ni = new NetInfo();
-            ni.MyReadString(newOrderStr);
-            ni.MyReadString(modifyOrderStr);
-            ni.MyReadString(cancelOrderStr);
+            NetInfo netInfo = new NetInfo();
+            netInfo.MyReadString(newOrderStr);
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.MyReadString(netInfo.infoT);
 
-            try
-            {
-                //this.btnTest.Text = ConfigurationManager.AppSettings["RefreshTest"]?.ToString();
-                Order o = new Order();
-                var orders = new ConcurrentDictionary<string, Order>();
-                orders.TryAdd("1", o);
 
-                //var str = NewtonsoftHelper.SerializeObject(orders);
-                //var o1 = NewtonsoftHelper.DeserializeObject<ConcurrentDictionary<string, Order>>(str);
-                return;
-            }
-            catch (Exception ex)
-            {
+            netInfo.MyReadString(modifyOrderStr);
+            ModifyInfo modifyInfo = new ModifyInfo();
+            modifyInfo.MyReadString(netInfo.infoT);
 
-            }
+
+            netInfo.MyReadString(cancelOrderStr);
+            CancelInfo cancelInfo = new CancelInfo();
+            cancelInfo.MyReadString(netInfo.infoT);
+
+            int m = 0;
+            //try
+            //{
+            //    //this.btnTest.Text = ConfigurationManager.AppSettings["RefreshTest"]?.ToString();
+            //    Order o = new Order();
+            //    var orders = new ConcurrentDictionary<string, Order>();
+            //    orders.TryAdd("1", o);
+
+            //    //var str = NewtonsoftHelper.SerializeObject(orders);
+            //    //var o1 = NewtonsoftHelper.DeserializeObject<ConcurrentDictionary<string, Order>>(str);
+            //    return;
+            //}
+            //catch (Exception ex)
+            //{
+
+            //}
 
 
             //Order order = new Order();
