@@ -42,7 +42,7 @@ namespace ZDFixClient
         /// </summary>
         private Dictionary<string, string> _timeInForceDict = new Dictionary<string, string>();
 
-        private ConcurrentDictionary<string, Order> _newOrderSingleOrders = new ConcurrentDictionary<string, Order>();
+        private ConcurrentDictionary<string, NetInfo> _newOrderSingleNetInfos = new ConcurrentDictionary<string, NetInfo>();
         #endregion
 
         #region Constructor Load
@@ -142,14 +142,14 @@ namespace ZDFixClient
                         case "OrdeStHK":
                             if (netInfo.errorCode == ErrorCode.ERR_ORDER_0000)
                             {
-                                _newOrderSingleOrders.TryRemove(netInfo.systemCode, out _);
+                                _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
                             }
                             break;
                         case "CANCST01":
                         case "CancStHK":
                         case "FILCST01":
                         case "FillStHK":
-                            _newOrderSingleOrders.TryRemove(netInfo.systemCode, out _);
+                            _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
                             break;
                         default:
                             break;
@@ -242,9 +242,9 @@ namespace ZDFixClient
         private void ModifyOrder(ModifyInfo modifyInfo, string systemCode, string commandCode)
         {
             CommonClassLib.NetInfo netInfo = null;
-            if (_newOrderSingleOrders.TryGetValue(systemCode, out Order order))
+            if (_newOrderSingleNetInfos.TryGetValue(systemCode, out NetInfo newOrderNetInfo))
             {
-                netInfo = order.OrderNetInfo.CloneWithNewCode("", CommandCode.ModifyStockHK);
+                netInfo = newOrderNetInfo.CloneWithNewCode("", CommandCode.ModifyStockHK);
                 //    netInfo = order.OrderNetInfo.Clone();
                 //    netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Modify);
             }
@@ -263,13 +263,13 @@ namespace ZDFixClient
         private void CancelOrder(CancelInfo cancelInfo, string commandCode)
         {
             CommonClassLib.NetInfo netInfo = null;
-            if (_newOrderSingleOrders.TryGetValue(cancelInfo.systemNo, out Order order))
+            if (_newOrderSingleNetInfos.TryGetValue(cancelInfo.systemNo, out NetInfo newOrderNetInfo))
             {
                 //netInfo = order.OrderNetInfo.CloneWithNewCode("", CommandCode.CANCEL);
                 //netInfo = order.OrderNetInfo.Clone();
                 //netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Cancel);
 
-                netInfo = order.OrderNetInfo.CloneWithNewCode("", commandCode);
+                netInfo = newOrderNetInfo.CloneWithNewCode("", commandCode);
             }
             else
             {

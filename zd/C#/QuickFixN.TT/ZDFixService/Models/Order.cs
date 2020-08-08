@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ZDFixService.Models
 {
-   public class Order
+    class Order
     {
         public bool Pending { get; set; }
         /// <summary>
@@ -35,12 +35,12 @@ namespace ZDFixService.Models
         /// 上手的ID tag 37 (TT平台类似我们的sysCode不会变的）
         /// </summary>
         public string OrderID { get; set; }
-        
+
         /// <summary>
         /// Total number of contracts that have filled over the life of this order
         /// </summary>
         public decimal CumQty { get; set; }
-        
+
         /// <summary>
         /// 下单
         /// </summary>
@@ -59,7 +59,7 @@ namespace ZDFixService.Models
         /// 下改撤
         /// </summary>
         public string CommandCode { get; set; }
-        
+
         /// <summary>
         /// 订单生成时间，订单持久化用，不保存过期的日单，只保存GTC单
         /// </summary>
@@ -74,6 +74,6 @@ namespace ZDFixService.Models
         /// 改单FIX
         /// </summary>
         public string OrderCancelReplaceRequest { get; set; }
-        
+
     }
 }

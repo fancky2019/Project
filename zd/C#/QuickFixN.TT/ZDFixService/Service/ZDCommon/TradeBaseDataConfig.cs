@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ZDFixService.Service.ZDCommon
 {
-     class TradeBaseDataConfig
+    class TradeBaseDataConfig
     {
         private static Dictionary<string, string> _tradeServiceCommandCode;
         static TradeBaseDataConfig()
@@ -42,7 +42,7 @@ namespace ZDFixService.Service.ZDCommon
                         default:
                             throw new Exception("Can not find appropriate CommandCode.");
                     }
-                    //break;
+                //break;
 
                 case TradeServiceType.Stock:
                     switch (commandType)
@@ -80,7 +80,7 @@ namespace ZDFixService.Service.ZDCommon
                 case "MODIFY01":
                     return CommandCode.MODIFY;
                 case "CANCEL01":
-                    return CommandCode.CANCELCAST;  
+                    return CommandCode.CANCELCAST;
                 case "FillFuture":
                     return CommandCode.FILLEDCAST;
                 case "OrdeStHK":
@@ -98,7 +98,7 @@ namespace ZDFixService.Service.ZDCommon
         }
     }
 
-     enum CommandType : byte
+    enum CommandType : byte
     {
         Order,
         Modify,
@@ -109,12 +109,12 @@ namespace ZDFixService.Service.ZDCommon
         Fill
     }
 
-     class TradeServiceName
+    class TradeServiceName
     {
         public const string TTTradeService = "TTTradeService";
         public const string PSHKTradeService = "PSHKTradeService";
     }
-     class TradeServiceType
+    class TradeServiceType
     {
         public const string Future = "Future";
         public const string Stock = "Stock";
