@@ -80,6 +80,7 @@ namespace ZDFixService.Service.Base
 
         public void Stop()
         {
+            MemoryData.AppStop = true;
             TradeClient.Instance.SocketInitiator.Stop();
             WaitForAdding();
             MemoryData.IPersist.Persist();

@@ -7,7 +7,7 @@ namespace ZDFixService
 {
     class Configurations
     {
-        public static IConfiguration Configuration { get; private set; }
+        internal static IConfiguration Configuration { get; private set; }
         /*
          * NuGet
          * Microsoft.Extensions.Configuration
