@@ -93,3 +93,6 @@ zd/C#/QuickFixN.TT/Messages/FIX50SP1/bin/
 zd/C#/QuickFixN.TT/Messages/FIX50/bin/
 
 zd/C#/QuickFixN.TT/Messages/FIX50SP2/bin/
+
+zd/C#/QuickFixN.TT/ZDFixClient/bin/
+zd/C#/QuickFixN.TT/ZDFixService/bin/
