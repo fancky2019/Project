@@ -31,7 +31,7 @@ namespace ZDFixService
             LoadConfiguration();
         }
 
-        private static void LoadConfiguration()
+        internal static void LoadConfiguration()
         {
             var builder = new ConfigurationBuilder();
             builder.SetBasePath(AppContext.BaseDirectory);
