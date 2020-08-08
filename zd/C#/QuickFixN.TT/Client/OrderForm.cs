@@ -153,8 +153,9 @@ namespace Client
             StringBuilder sb = new StringBuilder();
             sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
             sb.Append("\r\n");
-            var command = netInfoStr.Substring(0, 8);
-            switch (command)
+            //var command = netInfoStr.Substring(0, 8);
+            //switch (command)
+            switch (netinfo.code)
             {
                 case "ORDER001":
                 case "OrdeStHK":
@@ -203,7 +204,7 @@ namespace Client
 
             //netInfo.code = CommandCode.ORDER;
 
-            netInfo.code =TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), Service.ZDCommon.CommandType.Order);
+            netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), Service.ZDCommon.CommandType.Order);
             //tag1:zd上手号
             netInfo.accountNo = "ZD_001";
             netInfo.clientNo = "000365";
