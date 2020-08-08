@@ -142,7 +142,11 @@ namespace Client.Service.PSHK
 
                 //tag 59
                 newOrderSingle.TimeInForce = new TimeInForce(char.Parse(timeInForce));
-
+                //永久有效
+                if (timeInForce == "1")
+                {
+                    order.IsGTCOrder = true;
+                }
                 // Tag1  上手号
                 newOrderSingle.Account = new Account(netInfo.accountNo);
 
