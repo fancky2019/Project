@@ -34,7 +34,7 @@ namespace ZDFixService
         internal static void LoadConfiguration()
         {
             var builder = new ConfigurationBuilder();
-            builder.SetBasePath(AppContext.BaseDirectory);
+            builder.SetBasePath(AppDomain.CurrentDomain.BaseDirectory);
             //设置配置文件
             builder.AddJsonFile("appsettings.json");
             Configuration = builder.Build();
