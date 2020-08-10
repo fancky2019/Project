@@ -87,7 +87,7 @@ namespace ZDFixClient
         private void LoadNetInfoControls()
         {
             var type = TradeServiceFactory.ITradeService.GetType();
-            var trradeService = type.Name;// ConfigurationManager.AppSettings["ITradeService"].ToString();
+            var trradeService = type.Name;
             switch (trradeService)
             {
                 case "TTTradeService":
@@ -138,47 +138,11 @@ namespace ZDFixClient
 
                     netInfo.MyReadString(netInfoStr);
                     OrderInfo orderInfo = null;
-                    //StringBuilder sb = new StringBuilder();
-                    //sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
-                    //sb.Append("\r\n");
-                    //var command = netInfoStr.Substring(0, 8);
-
-                    //switch (netInfo.code)
-                    //{
-                    //    case "ORDER001":
-                    //    case "OrdeStHK":
-                    //        //下单失败
-                    //        if (netInfo.errorCode == ErrorCode.ERR_ORDER_0000)
-                    //        {
-                    //            _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
-                    //        }
-                    //        break;
-                    //    case "CANCST01":
-                    //    case "CancStHK":
-                    //        //撤单失败
-                    //        if (netInfo.errorCode != ErrorCode.ERR_ORDER_0014)
-                    //        {
-                    //            _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
-                    //        }
-                    //        break;
-                    //    case "FILCST01":
-                    //    case "FillStHK":
-                    //        //此处待优化
-                    //        //FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
-                    //        //filledResponseInfo.filledNumber==
-                    //        ////完全成交
-                    //        _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
-                    //        break;
-                    //    default:
-                    //        break;
-                    //}
-
+   
                     switch (netInfo.code)
                     {
                         case "ORDER001":
                         case "OrdeStHK":
-                            //OrderResponseInfo orderInfo = new OrderResponseInfo();
-                            //orderInfo.MyReadString(netInfo.infoT);
                             if (netInfo.errorCode == ErrorCode.SUCCESS)
                             {
                                 _newOrderSingleNetInfos.TryAdd(netInfo.systemCode, netInfo);
