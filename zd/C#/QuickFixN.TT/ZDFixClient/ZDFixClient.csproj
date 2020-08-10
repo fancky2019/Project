@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommonClassLib, Version=1.9.149.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="CommonClassLib, Version=2.0.123.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dll\CommonClassLib.dll</HintPath>
     </Reference>
@@ -186,7 +186,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Dll\CommonClassLib - Rainer.dll" />
     <Content Include="Dll\CommonClassLib.dll" />
+    <Content Include="Dll\CommonClassLib.pdb" />
+    <Content Include="Dll\CommonClassLib.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ZDFixService\ZDFixService.csproj">

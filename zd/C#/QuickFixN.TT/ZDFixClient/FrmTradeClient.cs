@@ -115,6 +115,7 @@ namespace ZDFixClient
         #region  Test
         private void btnTest_Click(object sender, EventArgs e)
         {
+            //var code= ErrorCode.ERR_ORDER_0014;
             //TradeServiceFactory.Test();
             //SQLitePersist sQLitePersist = new SQLitePersist();
             //var msgTest = "testUpdate";
