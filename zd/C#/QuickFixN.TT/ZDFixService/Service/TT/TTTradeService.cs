@@ -15,6 +15,8 @@ namespace ZDFixService.Service.TT
     class TTTradeService : TradeClientAppService
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+
+
         protected override void NewOrderSingle(Order order)
         {
             NetInfo netInfo = order.OrderNetInfo;

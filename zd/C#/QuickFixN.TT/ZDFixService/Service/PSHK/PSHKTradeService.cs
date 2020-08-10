@@ -15,6 +15,7 @@ namespace ZDFixService.Service.PSHK
     class PSHKTradeService : TradeClientAppService
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+
         protected override void NewOrderSingle(Order order)
         {
             NetInfo netInfo = order.OrderNetInfo;
@@ -26,46 +27,22 @@ namespace ZDFixService.Service.PSHK
                 string clOrdID = MemoryData.GetNextClOrderID().ToString();
 
                 NewOrderSingle newOrderSingle = new NewOrderSingle();
+                // Tag1  上手号
+                newOrderSingle.Account = new Account(netInfo.accountNo);
                 // Tag11
                 newOrderSingle.ClOrdID = new ClOrdID(clOrdID);
-                //// Tag60
-                //newOrderSingle.TransactTime = new TransactTime(DateTime.UtcNow);
-                var securityExchange = orderInfo.exchangeCode;
-
-                #region When specifying by alternate security ID
-                //
-                var newCode = orderInfo.code;
-
+                //tag109
+                newOrderSingle.ClientID = new ClientID("C005");
+                //tag21
+                newOrderSingle.HandlInst = new HandlInst('1');
+                //tag60
+                newOrderSingle.TransactTime = new TransactTime(DateTime.UtcNow, true);
                 // Tag55
-                newOrderSingle.Symbol = new Symbol("BRN");
+                newOrderSingle.Symbol = new Symbol(orderInfo.code);
                 // Tag207
-                newOrderSingle.SecurityExchange = new SecurityExchange("ICE");
-
+                newOrderSingle.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
                 //167
-                newOrderSingle.SecurityType = new SecurityType("FUT");
-                //454
-                NoSecurityAltIDGroup noSecurityAltIDGroup = new NoSecurityAltIDGroup();
-                //455
-                noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("BRN Dec20");
-
-                //PRICE:9596
-                //// Tag55
-                //newOrderSingle.Symbol = new Symbol("FDAX");
-                //// Tag207
-                //newOrderSingle.SecurityExchange = new SecurityExchange("Eurex");
-
-                ////167
-                //newOrderSingle.SecurityType = new SecurityType("FUT");
-                ////454
-                //NoSecurityAltIDGroup noSecurityAltIDGroup = new NoSecurityAltIDGroup();
-                ////455
-                //noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("FDAX Dec20");
-
-
-                //456
-                noSecurityAltIDGroup.SecurityAltIDSource = new SecurityAltIDSource("97");
-                newOrderSingle.AddGroup(noSecurityAltIDGroup);
-                #endregion
+                //newOrderSingle.SecurityType = new SecurityType(SecurityType.COMMON_STOCK);
 
 
                 //委托量
@@ -79,9 +56,9 @@ namespace ZDFixService.Service.PSHK
 
                 //客户端用的是FIX 7X和 新TT的FIX版本 不一样
                 //两个版本的OrderType值1和2反了
-                string orderType = ZDUperTagValueConvert.ConvertToTTOrdType(orderInfo.priceType);
+                //string orderType = ZDUperTagValueConvert.ConvertToTTOrdType(orderInfo.priceType);
 
-                char charOrdType = char.Parse(orderType);
+                char charOrdType = char.Parse(orderInfo.priceType);
                 // Tag40
                 newOrderSingle.OrdType = new OrdType(charOrdType);// QueryOrdType(info.priceType);
 
@@ -100,15 +77,11 @@ namespace ZDFixService.Service.PSHK
                     //decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.triggerPrice, newOrderSingle.Symbol.getValue());
                     newOrderSingle.StopPx = new StopPx(stopPx);
                 }
-                //tag 77
-                //newOrderSingle.OpenClose = new OpenClose('O');
-                // Tag11028
-                //newOrderSingle.ManualOrderIndicator = moi;
+
 
                 string timeInForce = orderInfo.validDate;
+                //timeInForce = ZDUperTagValueConvert.ConvertToTTTimeInForce(timeInForce);
 
-
-                timeInForce = ZDUperTagValueConvert.ConvertToTTTimeInForce(timeInForce);
                 /*
                  * CME官网：Fill and Kill (FAK) and Fill or Kill (FOK) - 
                  *          order is immediately executed against any available quantity and any remaining quantity is eliminated (FAK)
@@ -136,16 +109,6 @@ namespace ZDFixService.Service.PSHK
                 {
                     order.IsGTCOrder = true;
                 }
-                // Tag1  上手号
-                newOrderSingle.Account = new Account(netInfo.accountNo);
-
-                // SenderSubID(Tag50 ID)
-                //newOrderSingle.SetField(new SenderSubID(obj.todayCanUse));
-
-                ////Tag582
-                //newOrderSingle.CustOrderCapacity = new CustOrderCapacity(4);
-
-
 
 
                 bool ret = TradeClient.Instance.SendMessage(newOrderSingle);
@@ -205,7 +168,10 @@ namespace ZDFixService.Service.PSHK
                     throw new Exception($"Order  is pending .SystemCode- {netInfo.systemCode}");
                 }
                 order.CommandCode = netInfo.code;
-                //order.CancelNetInfo = netInfo;
+
+                OrderInfo orderInfo = new OrderInfo();
+                orderInfo.MyReadString(order.OrderNetInfo.infoT);
+
                 QuickFix.FIX42.OrderCancelRequest orderCancelRequest = new QuickFix.FIX42.OrderCancelRequest();
 
                 //NewOrderSingle newOrderSingle = new NewOrderSingle();
@@ -221,6 +187,18 @@ namespace ZDFixService.Service.PSHK
                 orderCancelRequest.ClOrdID = new ClOrdID(clOrdID);
                 //Tag 41
                 orderCancelRequest.OrigClOrdID = new OrigClOrdID(order.CurrentCliOrderID.ToString());
+
+
+                //傻x辉立还要发送这些tag。
+                //tag55
+                orderCancelRequest.Symbol = new Symbol(orderInfo.code);
+                // Tag54
+                orderCancelRequest.Side = ZDUperTagValueConvert.QuerySide(orderInfo.buySale);
+                //tag60
+                orderCancelRequest.TransactTime = new TransactTime(DateTime.UtcNow, true);
+                // Tag207
+                orderCancelRequest.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
+
 
 
                 var ret = TradeClient.Instance.SendMessage(orderCancelRequest);
@@ -254,136 +232,8 @@ namespace ZDFixService.Service.PSHK
 
         }
 
+        // PSHK的FIX没有改单
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="netInfo"></param>
-        protected override void OrderCancelReplaceRequest(NetInfo netInfo)
-        {
-            ModifyInfo modifyInfo = new ModifyInfo();
-            modifyInfo.MyReadString(netInfo.infoT);
-            Order order = null;
-            try
-            {
-
-                if (!MemoryData.Orders.TryGetValue(netInfo.systemCode, out order))
-                {
-                    throw new Exception($"Can not find SystemCode - {netInfo.systemCode}");
-                }
-                if (order.NewOrderSingleClientID != modifyInfo.orderNo)
-                {
-                    throw new Exception($"SystemCode don't match orderNo .SystemCode- {netInfo.systemCode},orderNo - {modifyInfo.orderNo}");
-                }
-                if (order.Pending)
-                {
-                    throw new Exception($"Order  is pending .SystemCode- {netInfo.systemCode}");
-                }
-                order.CommandCode = netInfo.code;
-                NetInfo orderNetInfo = order.OrderNetInfo;
-                OrderInfo orderInfo = new OrderInfo();
-                orderInfo.MyReadString(orderNetInfo.infoT);
-                QuickFix.FIX42.OrderCancelReplaceRequest orderCancelReplaceRequest = new QuickFix.FIX42.OrderCancelReplaceRequest();
-
-                //NewOrderSingle newOrderSingle = new NewOrderSingle();
-                //newOrderSingle.FromString(order.NewOrderSingle, false, null, null);
-
-
-                //Tag 37
-                orderCancelReplaceRequest.OrderID = new OrderID(order.OrderID);
-
-
-
-                //Tag 41
-                orderCancelReplaceRequest.OrigClOrdID = new OrigClOrdID(order.CurrentCliOrderID);
-
-                var clOrdID = MemoryData.GetNextClOrderID().ToString();
-                //Tag 11
-                orderCancelReplaceRequest.ClOrdID = new ClOrdID(clOrdID);
-                // Tag1
-                orderCancelReplaceRequest.Account = new Account(netInfo.accountNo);
-                // Tag38
-                orderCancelReplaceRequest.OrderQty = new OrderQty(decimal.Parse(modifyInfo.modifyNumber));
-
-                // Tag54
-                var side = !string.IsNullOrEmpty(modifyInfo.buySale) ? modifyInfo.buySale : orderInfo.buySale;
-                orderCancelReplaceRequest.Side = ZDUperTagValueConvert.QuerySide(side);
-
-
-                var priceType = "";
-                if (string.IsNullOrEmpty(modifyInfo.priceType))
-                {
-                    modifyInfo.priceType = orderInfo.priceType;
-                }
-                priceType = modifyInfo.priceType;
-
-                string orderType = ZDUperTagValueConvert.ConvertToTTOrdType(priceType);
-                char charOrdType = char.Parse(orderType);
-                // Tag40 ,不能用QueryOrdType(info.priceType);方法，有的客户端LME交易所不传值
-                orderCancelReplaceRequest.OrdType = new OrdType(charOrdType);
-
-
-
-
-                //string symbol = newOrderSingle.Symbol.getValue();
-
-
-                var price = decimal.Parse(modifyInfo.modifyPrice);
-                // Tag44
-                if (charOrdType == OrdType.LIMIT || charOrdType == OrdType.STOP_LIMIT)
-                {
-                    //decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.orderPrice, newOrderSingle.Symbol.getValue());
-                    orderCancelReplaceRequest.Price = new Price(price);
-                }
-
-                var stopPx = decimal.Parse(modifyInfo.modifyTriggerPrice);
-                //Tag99
-                if (charOrdType == OrdType.STOP || charOrdType == OrdType.STOP_LIMIT)
-                {
-                    //decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.triggerPrice, newOrderSingle.Symbol.getValue());
-                    orderCancelReplaceRequest.StopPx = new StopPx(stopPx);
-                }
-
-                ////tag 77
-                //orderCancelReplaceRequest.OpenClose = new OpenClose('O');
-
-                string timeInForce = ZDUperTagValueConvert.ConvertToTTTimeInForce(orderInfo.validDate);
-
-
-                //tag 59
-                orderCancelReplaceRequest.TimeInForce = new TimeInForce(char.Parse(timeInForce));
-
-
-                var ret = TradeClient.Instance.SendMessage(orderCancelReplaceRequest);
-
-                if (ret)
-                {
-                    order.Pending = true;
-                    order.TempCliOrderID = clOrdID;
-
-
-                    var clOrdIDLong = long.Parse(clOrdID);
-                    MemoryData.UsingCliOrderIDSystemCode.TryAdd(clOrdIDLong, order.SystemCode);
-
-                }
-                else
-                {
-                    throw new Exception("Server socket throw exception! Can not sent to uper!");
-                }
-            }
-            catch (Exception ex)
-            {
-                //去掉汉字
-                string msg = Regex.IsMatch(ex.Message, @"[\u4e00-\u9fa5]") ? "server exception" : $"server exception:{ex.Message}.";
-
-
-                netInfo.OrderCancelReplaceRequestException(msg, modifyInfo.orderNo, netInfo.code);
-                //ExecutionReport?.Invoke(netInfo?.MyToString());
-                _nLog.Error($"SystemCode -  { netInfo.systemCode}");
-                _nLog.Error(ex.ToString());
-                throw ex;
-            }
-        }
 
 
         #region ExecutionReport
@@ -471,7 +321,7 @@ namespace ZDFixService.Service.PSHK
                 orderResponseInfo.code = orderInfo.code;
 
 
-                netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.ORDER);
+                netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.OrderStockHK);
                 netInfo.infoT = orderResponseInfo.MyToString();
 
             }
@@ -569,7 +419,7 @@ namespace ZDFixService.Service.PSHK
             //netInfo.code = CommandCode.MODIFY;
 
 
-            NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.MODIFY);
+            NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.ModifyStockHK);
             netInfo.infoT = orderResponseInfo.MyToString();
             return netInfo;
         }
@@ -636,7 +486,7 @@ namespace ZDFixService.Service.PSHK
             //NetInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
             //NetInfo.clientNo = order.OrderNetInfo.clientNo;
 
-            NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.CANCELCAST);
+            NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.CancelStockHK);
             netInfo.infoT = cancelResponseInfo.MyToString();
 
             return netInfo;
@@ -725,7 +575,7 @@ namespace ZDFixService.Service.PSHK
             //netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
 
 
-            NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.FILLEDCAST);
+            NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.FilledStockHK);
             netInfo.infoT = filledResponseInfo.MyToString();
 
             if (multiLegReportingType == 1)//FUT

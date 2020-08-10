@@ -23,6 +23,14 @@ namespace ZDFixClient.UserControls.TTNetInfoControl
             InitializeComponent();
         }
 
+        private void TTOrderNetInfoControl_Load(object sender, EventArgs e)
+        {
+            this.txtSecurityExchange.Text = "ICE";
+            this.txtSecurityAltID.Text = "BRN Dec20";
+            this.nudQrdQty.Value = 1;
+            this.txtPrice.Text = "42.59";
+            this.txtStopPx.Text = "42.59";
+        }
 
         #region 下单
         private void btnNewOrderSingle_Click(object sender, EventArgs e)
@@ -67,5 +75,7 @@ namespace ZDFixClient.UserControls.TTNetInfoControl
 
         }
         #endregion
+
+
     }
 }

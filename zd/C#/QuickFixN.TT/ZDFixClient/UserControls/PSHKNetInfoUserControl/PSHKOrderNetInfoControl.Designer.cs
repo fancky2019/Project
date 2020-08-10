@@ -36,19 +36,19 @@
             // 
             // txtStopPx
             // 
-            this.txtStopPx.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtStopPx.Margin = new System.Windows.Forms.Padding(2);
             // 
             // txtPrice
             // 
-            this.txtPrice.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtPrice.Margin = new System.Windows.Forms.Padding(2);
             // 
             // txtSecurityAltID
             // 
-            this.txtSecurityAltID.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtSecurityAltID.Margin = new System.Windows.Forms.Padding(2);
             // 
             // txtSecurityExchange
             // 
-            this.txtSecurityExchange.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtSecurityExchange.Margin = new System.Windows.Forms.Padding(2);
             // 
             // btnNewOrderSingle
             // 
@@ -66,6 +66,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnNewOrderSingle);
             this.Name = "PSHKOrderNetInfoControl";
+            this.Load += new System.EventHandler(this.PSHKOrderNetInfoControl_Load);
             this.Click += new System.EventHandler(this.btnNewOrderSingle_Click);
             this.Controls.SetChildIndex(this.btnNewOrderSingle, 0);
             ((System.ComponentModel.ISupportInitialize)(this.nudDisplayQty)).EndInit();

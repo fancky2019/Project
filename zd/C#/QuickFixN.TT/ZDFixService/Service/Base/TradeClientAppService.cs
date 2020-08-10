@@ -120,25 +120,23 @@ namespace ZDFixService.Service.Base
 
         private void ConsumerOrders()
         {
-
-
             foreach (NetInfo netInfo in _orderQueue.GetConsumingEnumerable())
             {
                 try
                 {
 
-                    if (netInfo.code == CommandCode.ORDER)
+                    if (netInfo.code == CommandCode.ORDER || netInfo.code == CommandCode.OrderStockHK)
                     {
                         Order order = new Order();
                         order.OrderNetInfo = netInfo;
                         order.CommandCode = netInfo.code;
                         NewOrderSingle(order);
                     }
-                    else if (netInfo.code == CommandCode.MODIFY)
+                    else if (netInfo.code == CommandCode.MODIFY || netInfo.code == CommandCode.ModifyStockHK)
                     {
                         OrderCancelReplaceRequest(netInfo);
                     }
-                    else if (netInfo.code == CommandCode.CANCEL)
+                    else if (netInfo.code == CommandCode.CANCEL || netInfo.code == CommandCode.CancelStockHK)
                     {
 
                         OrderCancelRequest(netInfo);
@@ -150,9 +148,6 @@ namespace ZDFixService.Service.Base
                     ExecutionReport?.Invoke(netInfo?.MyToString());
                 }
             }
-
-
-
         }
 
         /// <summary>
@@ -597,11 +592,6 @@ namespace ZDFixService.Service.Base
                             case ExecType.REJECTED:
                                 netInfo = ExecType_Rejected(message);
                                 break;
-
-                            case ExecType.PENDING_CANCEL:
-                                //doPendingCancel(execReport);
-                                break;
-
                             case ExecType.REPLACED:
                                 netInfo = Replaced(executionReport);
                                 break;
@@ -610,6 +600,13 @@ namespace ZDFixService.Service.Base
                                 //netInfo = doExpired(execReport);
                                 //netInfo = replyCancelled(execReport);
                                 break;
+                            case ExecType.PENDING_NEW:
+                                break;
+                            case ExecType.PENDING_CANCELREPLACE:
+                                break;
+                            //
+                            //case ExecType.PENDING_CANCEL:
+                            //    break;
                             default:
                                 break;
                                 //case GlobexExt.ORD_STATUS_TRADE_CANCELLATION:
@@ -1068,19 +1065,19 @@ namespace ZDFixService.Service.Base
 
                 }
                 netInfo = order.OrderNetInfo.Clone();
-                if (order.CommandCode == CommandCode.ORDER)
+                if (order.CommandCode == CommandCode.ORDER || order.CommandCode == CommandCode.OrderStockHK)
                 {
                     //netInfo = order.OrderNetInfo.Clone();
                     netInfo.NewOrderSingleException(errorMessage, order.CommandCode);
                     MemoryData.Orders.TryRemove(order.SystemCode, out _);
                 }
-                else if (order.CommandCode == CommandCode.MODIFY)
+                else if (order.CommandCode == CommandCode.MODIFY || order.CommandCode == CommandCode.ModifyStockHK)
                 {
                     //netInfo = order.AmendNetInfo;
                     //netInfo = order.OrderNetInfo.Clone(); 
                     netInfo.OrderCancelReplaceRequestException(errorMessage, order.NewOrderSingleClientID, order.CommandCode);
                 }
-                else if (order.CommandCode == CommandCode.CANCEL)
+                else if (order.CommandCode == CommandCode.CANCEL || order.CommandCode == CommandCode.CancelStockHK)
                 {
                     //netInfo = order.OrderNetInfo.Clone(); 
                     netInfo.OrderCancelRequestException(errorMessage, order.NewOrderSingleClientID, order.CommandCode);
