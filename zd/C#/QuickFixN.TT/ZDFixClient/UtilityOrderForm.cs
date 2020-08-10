@@ -131,40 +131,89 @@ namespace ZDFixClient
                     NetInfo netInfo = new NetInfo();
 
                     netInfo.MyReadString(netInfoStr);
-
+                    OrderInfo orderInfo = null;
                     //StringBuilder sb = new StringBuilder();
                     //sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
                     //sb.Append("\r\n");
                     //var command = netInfoStr.Substring(0, 8);
 
+                    //switch (netInfo.code)
+                    //{
+                    //    case "ORDER001":
+                    //    case "OrdeStHK":
+                    //        //下单失败
+                    //        if (netInfo.errorCode == ErrorCode.ERR_ORDER_0000)
+                    //        {
+                    //            _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
+                    //        }
+                    //        break;
+                    //    case "CANCST01":
+                    //    case "CancStHK":
+                    //        //撤单失败
+                    //        if (netInfo.errorCode != ErrorCode.ERR_ORDER_0014)
+                    //        {
+                    //            _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
+                    //        }
+                    //        break;
+                    //    case "FILCST01":
+                    //    case "FillStHK":
+                    //        //此处待优化
+                    //        //FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
+                    //        //filledResponseInfo.filledNumber==
+                    //        ////完全成交
+                    //        _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
+                    //        break;
+                    //    default:
+                    //        break;
+                    //}
+
                     switch (netInfo.code)
                     {
                         case "ORDER001":
                         case "OrdeStHK":
-                            //下单失败
-                            if (netInfo.errorCode == ErrorCode.ERR_ORDER_0000)
+                            //OrderResponseInfo orderInfo = new OrderResponseInfo();
+                            //orderInfo.MyReadString(netInfo.infoT);
+                            if (netInfo.errorCode == ErrorCode.SUCCESS)
+                            {
+                                _newOrderSingleNetInfos.TryAdd(netInfo.systemCode, netInfo);
+                            }
+
+                            break;
+                        case "CANCST01":
+                        case "CancStHK":
+                            if (netInfo.errorCode == ErrorCode.SUCCESS)
                             {
                                 _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
                             }
                             break;
-                        case "CANCST01":
-                        case "CancStHK":
-                            //撤单失败
-                            if (netInfo.errorCode != ErrorCode.ERR_ORDER_0014)
+                        case "MODIFY01":
+                        case "ModiStHK":
+
+                            if (netInfo.errorCode == ErrorCode.SUCCESS)
                             {
-                                _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
+                                NetInfo newOrderSingleNetInfo = null;
+                                orderInfo = GetNewOrderSingleNetInfo(netInfo.systemCode, out newOrderSingleNetInfo);
+
+                                OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
+                                orderResponseInfo.MyReadString(netInfo.infoT);
+
+                                orderInfo.orderNumber = orderResponseInfo.orderNumber;
+                                newOrderSingleNetInfo.infoT = orderInfo.MyToString();
                             }
                             break;
                         case "FILCST01":
                         case "FillStHK":
-                            //此处待优化
-                            //FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
-                            //filledResponseInfo.filledNumber==
-                            ////完全成交
-                            _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
+                            orderInfo = GetNewOrderSingleNetInfo(netInfo.systemCode, out _);
+                            FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
+                            filledResponseInfo.MyReadString(netInfo.infoT);
+                            if (filledResponseInfo.filledNumber == orderInfo.orderNumber)
+                            {
+                                _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
+                            }
                             break;
                         default:
-                            break;
+                            MessageBox.Show("订单指令有误！");
+                            return;
                     }
                 }
 
@@ -175,6 +224,16 @@ namespace ZDFixClient
 
             }));
         }
+
+        private OrderInfo GetNewOrderSingleNetInfo(string systemCode, out NetInfo newOrderSingleNetInfo)
+        {
+            _newOrderSingleNetInfos.TryGetValue(systemCode, out newOrderSingleNetInfo);
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.MyReadString(newOrderSingleNetInfo.infoT);
+            return orderInfo;
+        }
+
+
         private void lbMsgs_KeyUp(object sender, KeyEventArgs e)
         {
             if ((e.Control) && e.KeyCode == Keys.C)
@@ -251,7 +310,6 @@ namespace ZDFixClient
         private void Order(NetInfo netInfo)
         {
             TradeServiceFactory.ITradeService.Order(netInfo);
-            _newOrderSingleNetInfos.TryAdd(netInfo.systemCode, netInfo);
         }
         #endregion
 
