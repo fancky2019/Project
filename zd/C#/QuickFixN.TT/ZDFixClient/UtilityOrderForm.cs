@@ -322,12 +322,24 @@ namespace ZDFixClient
         #region 改单
         private void ModifyOrder(ModifyInfo modifyInfo, string systemCode, string commandCode)
         {
+
             CommonClassLib.NetInfo netInfo = null;
+            ////重启客户端内存数据丢失，从服务端找原单信息
+            //if (MemoryData.Orders.TryGetValue(systemCode, out Order order))
+            //{
+            //    netInfo = order.OrderNetInfo.CloneWithNewCode("", commandCode);
+            //}
+            //else
+            //{
+            //    MessageBox.Show($"没有找到系统号为:{systemCode}的订单");
+            //    return;
+            //}
+
+
+            //重启客户端内存数据丢失。
             if (_newOrderSingleNetInfos.TryGetValue(systemCode, out NetInfo newOrderNetInfo))
             {
                 netInfo = newOrderNetInfo.CloneWithNewCode("", commandCode);
-                //    netInfo = order.OrderNetInfo.Clone();
-                //    netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Modify);
             }
             else
             {
@@ -344,12 +356,22 @@ namespace ZDFixClient
         private void CancelOrder(CancelInfo cancelInfo, string commandCode)
         {
             CommonClassLib.NetInfo netInfo = null;
+
+            ////重启客户端内存数据丢失，从服务端找原单信息
+            //if (MemoryData.Orders.TryGetValue(cancelInfo.systemNo, out Order order))
+            //{
+            //    netInfo = order.OrderNetInfo.CloneWithNewCode("", commandCode);
+            //}
+            //else
+            //{
+            //    MessageBox.Show($"没有找到系统号为:{cancelInfo.systemNo}的订单");
+            //    return;
+            //}
+
+
+            //重启客户端内存数据丢失。
             if (_newOrderSingleNetInfos.TryGetValue(cancelInfo.systemNo, out NetInfo newOrderNetInfo))
             {
-                //netInfo = order.OrderNetInfo.CloneWithNewCode("", CommandCode.CANCEL);
-                //netInfo = order.OrderNetInfo.Clone();
-                //netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Cancel);
-
                 netInfo = newOrderNetInfo.CloneWithNewCode("", commandCode);
             }
             else
@@ -357,6 +379,8 @@ namespace ZDFixClient
                 MessageBox.Show($"没有找到系统号为:{cancelInfo.systemNo}的订单");
                 return;
             }
+
+
             netInfo.infoT = cancelInfo.MyToString();
             TradeServiceFactory.ITradeService.Order(netInfo);
         }

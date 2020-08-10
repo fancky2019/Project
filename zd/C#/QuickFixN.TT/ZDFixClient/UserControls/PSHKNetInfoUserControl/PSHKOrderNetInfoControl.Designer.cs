@@ -67,7 +67,6 @@
             this.Controls.Add(this.btnNewOrderSingle);
             this.Name = "PSHKOrderNetInfoControl";
             this.Load += new System.EventHandler(this.PSHKOrderNetInfoControl_Load);
-            this.Click += new System.EventHandler(this.btnNewOrderSingle_Click);
             this.Controls.SetChildIndex(this.btnNewOrderSingle, 0);
             ((System.ComponentModel.ISupportInitialize)(this.nudDisplayQty)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMinQty)).EndInit();

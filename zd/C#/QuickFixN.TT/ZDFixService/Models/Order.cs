@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ZDFixService.Models
 {
-    class Order
+    public class Order
     {
         public bool Pending { get; set; }
         /// <summary>

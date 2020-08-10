@@ -33,11 +33,11 @@
             // 
             // txtCancelOrderClOrderID
             // 
-            this.txtCancelOrderClOrderID.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtCancelOrderClOrderID.Margin = new System.Windows.Forms.Padding(2);
             // 
             // txtOrderCancelSystemCode
             // 
-            this.txtOrderCancelSystemCode.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtOrderCancelSystemCode.Margin = new System.Windows.Forms.Padding(2);
             // 
             // btnOrderCancelRequest
             // 
@@ -55,7 +55,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnOrderCancelRequest);
             this.Name = "TTCancelNetInfoControl";
-            this.Click += new System.EventHandler(this.btnOrderCancelRequest_Click);
             this.Controls.SetChildIndex(this.btnOrderCancelRequest, 0);
             this.ResumeLayout(false);
 
