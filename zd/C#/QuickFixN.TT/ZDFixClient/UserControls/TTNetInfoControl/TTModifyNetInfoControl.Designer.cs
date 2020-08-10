@@ -34,19 +34,19 @@
             // 
             // txtAmendStopPrice
             // 
-            this.txtAmendStopPrice.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtAmendStopPrice.Margin = new System.Windows.Forms.Padding(2);
             // 
             // txtAmendClOrderID
             // 
-            this.txtAmendClOrderID.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtAmendClOrderID.Margin = new System.Windows.Forms.Padding(2);
             // 
             // txtAmendSysCode
             // 
-            this.txtAmendSysCode.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtAmendSysCode.Margin = new System.Windows.Forms.Padding(2);
             // 
             // txtAmendPrice
             // 
-            this.txtAmendPrice.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtAmendPrice.Margin = new System.Windows.Forms.Padding(2);
             // 
             // btnAmendOrder
             // 
@@ -64,7 +64,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnAmendOrder);
             this.Name = "TTModifyNetInfoControl";
-            this.Click += new System.EventHandler(this.btnAmendOrder_Click);
             this.Controls.SetChildIndex(this.btnAmendOrder, 0);
             ((System.ComponentModel.ISupportInitialize)(this.nudAmendQty)).EndInit();
             this.ResumeLayout(false);
