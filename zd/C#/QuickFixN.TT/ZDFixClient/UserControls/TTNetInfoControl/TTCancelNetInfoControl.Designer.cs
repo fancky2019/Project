@@ -31,12 +31,19 @@
             this.btnOrderCancelRequest = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
+            // txtCancelOrderClOrderID
+            // 
+            this.txtCancelOrderClOrderID.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            // 
+            // txtOrderCancelSystemCode
+            // 
+            this.txtOrderCancelSystemCode.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            // 
             // btnOrderCancelRequest
             // 
-            this.btnOrderCancelRequest.Location = new System.Drawing.Point(258, 132);
-            this.btnOrderCancelRequest.Margin = new System.Windows.Forms.Padding(4);
+            this.btnOrderCancelRequest.Location = new System.Drawing.Point(194, 106);
             this.btnOrderCancelRequest.Name = "btnOrderCancelRequest";
-            this.btnOrderCancelRequest.Size = new System.Drawing.Size(104, 29);
+            this.btnOrderCancelRequest.Size = new System.Drawing.Size(78, 23);
             this.btnOrderCancelRequest.TabIndex = 46;
             this.btnOrderCancelRequest.Text = "撤单";
             this.btnOrderCancelRequest.UseVisualStyleBackColor = true;
@@ -44,10 +51,11 @@
             // 
             // TTCancelNetInfoControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnOrderCancelRequest);
             this.Name = "TTCancelNetInfoControl";
+            this.Click += new System.EventHandler(this.btnOrderCancelRequest_Click);
             this.Controls.SetChildIndex(this.btnOrderCancelRequest, 0);
             this.ResumeLayout(false);
 

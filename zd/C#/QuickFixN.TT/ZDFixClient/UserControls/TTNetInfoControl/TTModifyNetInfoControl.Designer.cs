@@ -32,12 +32,27 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudAmendQty)).BeginInit();
             this.SuspendLayout();
             // 
+            // txtAmendStopPrice
+            // 
+            this.txtAmendStopPrice.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            // 
+            // txtAmendClOrderID
+            // 
+            this.txtAmendClOrderID.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            // 
+            // txtAmendSysCode
+            // 
+            this.txtAmendSysCode.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            // 
+            // txtAmendPrice
+            // 
+            this.txtAmendPrice.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            // 
             // btnAmendOrder
             // 
-            this.btnAmendOrder.Location = new System.Drawing.Point(257, 231);
-            this.btnAmendOrder.Margin = new System.Windows.Forms.Padding(4);
+            this.btnAmendOrder.Location = new System.Drawing.Point(193, 185);
             this.btnAmendOrder.Name = "btnAmendOrder";
-            this.btnAmendOrder.Size = new System.Drawing.Size(104, 29);
+            this.btnAmendOrder.Size = new System.Drawing.Size(78, 23);
             this.btnAmendOrder.TabIndex = 58;
             this.btnAmendOrder.Text = "改单";
             this.btnAmendOrder.UseVisualStyleBackColor = true;
@@ -45,10 +60,11 @@
             // 
             // TTModifyNetInfoControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnAmendOrder);
             this.Name = "TTModifyNetInfoControl";
+            this.Click += new System.EventHandler(this.btnAmendOrder_Click);
             this.Controls.SetChildIndex(this.btnAmendOrder, 0);
             ((System.ComponentModel.ISupportInitialize)(this.nudAmendQty)).EndInit();
             this.ResumeLayout(false);

@@ -43,7 +43,7 @@ namespace ZDFixClient.UserControls.TTNetInfoControl
             //    return;
             //}
             CommonClassLib.CancelInfo cancelInfo = new CommonClassLib.CancelInfo();
-
+            cancelInfo.systemNo = this.txtOrderCancelSystemCode.Text.Trim();
             cancelInfo.orderNo = this.txtCancelOrderClOrderID.Text.Trim();
 
             //netInfo.infoT = cancelInfo.MyToString();

@@ -80,7 +80,8 @@ namespace ZDFixClient
 
         private void LoadNetInfoControls()
         {
-            var trradeService = ConfigurationManager.AppSettings["ITradeService"].ToString();
+            var type = TradeServiceFactory.ITradeService.GetType();
+            var trradeService = type.Name;// ConfigurationManager.AppSettings["ITradeService"].ToString();
             switch (trradeService)
             {
                 case "TTTradeService":
@@ -140,6 +141,7 @@ namespace ZDFixClient
                     {
                         case "ORDER001":
                         case "OrdeStHK":
+                            //下单失败
                             if (netInfo.errorCode == ErrorCode.ERR_ORDER_0000)
                             {
                                 _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
@@ -147,13 +149,28 @@ namespace ZDFixClient
                             break;
                         case "CANCST01":
                         case "CancStHK":
+                            //撤单失败
+                            if (netInfo.errorCode != ErrorCode.ERR_ORDER_0014)
+                            {
+                                _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
+                            }
+                            break;
                         case "FILCST01":
                         case "FillStHK":
+                            //此处待优化
+                            //FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
+                            //filledResponseInfo.filledNumber==
+                            ////完全成交
                             _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
                             break;
                         default:
                             break;
                     }
+                }
+
+                if (!string.IsNullOrEmpty(netInfoStr))
+                {
+                    this.lbMsgs.Items.Add(netInfoStr);
                 }
 
             }));
@@ -234,7 +251,7 @@ namespace ZDFixClient
         private void Order(NetInfo netInfo)
         {
             TradeServiceFactory.ITradeService.Order(netInfo);
-
+            _newOrderSingleNetInfos.TryAdd(netInfo.systemCode, netInfo);
         }
         #endregion
 
@@ -244,7 +261,7 @@ namespace ZDFixClient
             CommonClassLib.NetInfo netInfo = null;
             if (_newOrderSingleNetInfos.TryGetValue(systemCode, out NetInfo newOrderNetInfo))
             {
-                netInfo = newOrderNetInfo.CloneWithNewCode("", CommandCode.ModifyStockHK);
+                netInfo = newOrderNetInfo.CloneWithNewCode("", commandCode);
                 //    netInfo = order.OrderNetInfo.Clone();
                 //    netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Modify);
             }
