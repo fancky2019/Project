@@ -54,28 +54,34 @@ namespace ZDFixClient
 
         private void UtilityOrderForm_Load(object sender, EventArgs e)
         {
+            try
+            {
+                LoadNetInfoControls();
 
-            LoadNetInfoControls();
+                //TradeServiceFactory.ITradeService.ExecutionReport += (p) =>
+                //  {
+                //      //在创建窗口句柄之前，不能在控件上调用 Invoke 或 BeginInvoke。
+                //      if (this.IsHandleCreated)
+                //      {
+                //          this.BeginInvoke((MethodInvoker)(() =>
+                //          {
+                //              if (!string.IsNullOrEmpty(p))
+                //              {
+                //                  this.lbMsgs.Items.Add(p);
+                //              }
 
+                //          }));
+                //      }
+                //  };
 
-            //TradeServiceFactory.ITradeService.ExecutionReport += (p) =>
-            //  {
-            //      //在创建窗口句柄之前，不能在控件上调用 Invoke 或 BeginInvoke。
-            //      if (this.IsHandleCreated)
-            //      {
-            //          this.BeginInvoke((MethodInvoker)(() =>
-            //          {
-            //              if (!string.IsNullOrEmpty(p))
-            //              {
-            //                  this.lbMsgs.Items.Add(p);
-            //              }
+                //窗体关闭要注销事件。
+                TradeServiceFactory.ITradeService.ExecutionReport += ExecutionReport;
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error(ex.ToString());
+            }
 
-            //          }));
-            //      }
-            //  };
-
-            //窗体关闭要注销事件。
-            TradeServiceFactory.ITradeService.ExecutionReport += ExecutionReport;
         }
 
         private void LoadNetInfoControls()

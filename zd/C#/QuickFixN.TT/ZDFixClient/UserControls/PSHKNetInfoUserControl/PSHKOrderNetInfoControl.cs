@@ -23,6 +23,14 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
             InitializeComponent();
         }
 
+        private void PSHKOrderNetInfoControl_Load(object sender, EventArgs e)
+        {
+            this.txtSecurityExchange.Text = "US";
+            this.txtSecurityAltID.Text = "AAPL";
+            this.nudQrdQty.Value = 1000;
+            this.txtPrice.Text = "105";
+            this.txtStopPx.Text = "105";
+        }
 
         #region 下单
         private void btnNewOrderSingle_Click(object sender, EventArgs e)
@@ -33,9 +41,9 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
             netInfo.code = CommandCode.OrderStockHK;
 
             //netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Order);
-      
-             //tag1:zd上手号
-             netInfo.accountNo = "ZD_001";
+
+            //tag1:zd上手号
+            netInfo.accountNo = "9111111";
             netInfo.clientNo = "000365";
             netInfo.systemCode = $"SystemCode{DateTime.Now.GetTimeStamp()}";
             netInfo.localSystemCode = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
@@ -54,8 +62,8 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
             orderInfo.MinQty = this.nudMinQty.Text;
             orderInfo.triggerPrice = this.txtStopPx.Text.Trim();
 
-            orderInfo.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(orderInfo.priceType);
-            orderInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(orderInfo.validDate);
+            //orderInfo.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(orderInfo.priceType);
+            //orderInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(orderInfo.validDate);
             netInfo.infoT = orderInfo.MyToString();
 
 
@@ -68,5 +76,7 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
 
         }
         #endregion
+
+
     }
 }
