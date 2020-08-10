@@ -34,12 +34,27 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudQrdQty)).BeginInit();
             this.SuspendLayout();
             // 
+            // txtStopPx
+            // 
+            this.txtStopPx.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            // 
+            // txtPrice
+            // 
+            this.txtPrice.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            // 
+            // txtSecurityAltID
+            // 
+            this.txtSecurityAltID.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            // 
+            // txtSecurityExchange
+            // 
+            this.txtSecurityExchange.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            // 
             // btnNewOrderSingle
             // 
-            this.btnNewOrderSingle.Location = new System.Drawing.Point(280, 365);
-            this.btnNewOrderSingle.Margin = new System.Windows.Forms.Padding(4);
+            this.btnNewOrderSingle.Location = new System.Drawing.Point(210, 292);
             this.btnNewOrderSingle.Name = "btnNewOrderSingle";
-            this.btnNewOrderSingle.Size = new System.Drawing.Size(104, 29);
+            this.btnNewOrderSingle.Size = new System.Drawing.Size(78, 23);
             this.btnNewOrderSingle.TabIndex = 38;
             this.btnNewOrderSingle.Text = "下单";
             this.btnNewOrderSingle.UseVisualStyleBackColor = true;
@@ -47,10 +62,11 @@
             // 
             // PSHKOrderNetInfoControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnNewOrderSingle);
             this.Name = "PSHKOrderNetInfoControl";
+            this.Click += new System.EventHandler(this.btnNewOrderSingle_Click);
             this.Controls.SetChildIndex(this.btnNewOrderSingle, 0);
             ((System.ComponentModel.ISupportInitialize)(this.nudDisplayQty)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMinQty)).EndInit();

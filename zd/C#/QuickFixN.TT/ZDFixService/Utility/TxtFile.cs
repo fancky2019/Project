@@ -11,6 +11,11 @@ namespace ZDFixService.Utility
         public static string ReadString(string filePath)
         {
             string jsonStr = "";
+            if (!File.Exists(filePath))
+            {
+                return jsonStr;
+            }
+
             using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
             {
                 fileStream.Seek(0, SeekOrigin.Begin);
@@ -18,6 +23,7 @@ namespace ZDFixService.Utility
                 fileStream.Read(bytes, 0, bytes.Length);
                 jsonStr = Encoding.UTF8.GetString(bytes);
             }
+
             return jsonStr;
         }
 
@@ -26,26 +32,29 @@ namespace ZDFixService.Utility
             List<string> content = new List<string>();
             if (File.Exists(filePath))
             {
-                using (StreamReader sr = new StreamReader(new FileStream(filePath, FileMode.Open)))
+                return content;
+            }
+
+            using (StreamReader sr = new StreamReader(new FileStream(filePath, FileMode.Open)))
+            {
+                try
                 {
-                    try
+                    while (!sr.EndOfStream)
                     {
-                        while (!sr.EndOfStream)
-                        {
-                            // string line = sr.ReadLine().Trim();
-                            content.Add(sr.ReadLine().Trim());
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
+                        // string line = sr.ReadLine().Trim();
+                        content.Add(sr.ReadLine().Trim());
                     }
                 }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
+
             return content;
         }
 
-        private static void CheckDirectory(string filePath )
+        private static void CheckDirectory(string filePath)
         {
             var directory = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directory))

@@ -104,6 +104,10 @@ namespace ZDFixService.Service.Base
 
         public void Order(NetInfo netInfo)
         {
+            if (!PreOrder(netInfo))
+            {
+                return;
+            }
             if (!_orderQueue.IsAddingCompleted)
             {
                 if (!_orderQueue.TryAdd(netInfo, 1000))
@@ -151,6 +155,15 @@ namespace ZDFixService.Service.Base
 
         }
 
+        /// <summary>
+        /// 子类可实现该方法，拦截是否允许下单。
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        protected virtual bool PreOrder(NetInfo netInfo)
+        {
+            return true;
+        }
 
         protected virtual void NewOrderSingle(Order order)
         {
