@@ -28,6 +28,8 @@ namespace ZDFixClient
         {
             InitializeComponent();
             this.btnStop.Enabled = false;
+            var type = TradeServiceFactory.ITradeService.GetType();
+            this.Text = type.Name;
         }
 
         #region 基本
