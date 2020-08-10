@@ -67,7 +67,7 @@ namespace ZDFixService.FixUtility
 
 
         }
-        public void OnLogonFailed(SessionID sessionID,Message message)
+        public void OnLogonFailed(SessionID sessionID, Message message)
         {
             //FIX.4.4:ZDDEV->EXECUTOR|
             var sendAndTargetIDs = sessionID.ToString().Split(':')[1];
@@ -76,7 +76,7 @@ namespace ZDFixService.FixUtility
 
 
         }
-        
+
         public void OnLogout(SessionID sessionID)
         {
             var sendAndTargetIDs = sessionID.ToString().Split(':')[1];
@@ -99,12 +99,15 @@ namespace ZDFixService.FixUtility
             string msgType = message.Header.GetString(Tags.MsgType);
             if (QuickFix.Fields.MsgType.LOGON == msgType)
             {
-                if(!string.IsNullOrEmpty(sessionID.SenderCompPsw))
+                if (!string.IsNullOrEmpty(sessionID.SenderCompPsw))
                 {
                     message.SetField(new RawDataLength(sessionID.SenderCompPsw.Length));
+                    //OCG使用了RSA加密
+                    //message.SetField(new EncryptedNewPassword(RSAEncrypt.getRSAEncrypt(cfgManager.RSAPublicKeyPem, newPassword)));
+                    //RawData :TT平台的Logon password ，TT不支持加密
                     message.SetField(new RawData(sessionID.SenderCompPsw));
                 }
-             
+
                 message.SetField(new HeartBtInt(int.Parse(sessionID.HeartBtInt)));
             }
 
