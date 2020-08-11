@@ -69,7 +69,8 @@ namespace ZDFixService.Service.Base
             var currentService = types.Where(p => p.Name == tradeServiceName).FirstOrDefault();
             if (currentService != null)
             {
-                tradeService = (ITradeService)currentService.CreateInstance();
+                //tradeService = (ITradeService)currentService.CreateInstance();
+                tradeService = currentService.CreateInstance<ITradeService>();
                 var serviceName = tradeService.GetType().Name;
             }
 
