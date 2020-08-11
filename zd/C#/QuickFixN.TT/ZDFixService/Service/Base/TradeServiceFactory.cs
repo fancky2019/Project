@@ -1,4 +1,7 @@
 ﻿using ServiceStack;
+using System;
+using System.Linq;
+using System.Reflection;
 using Unity;
 using ZDFixService.Service.PSHK;
 using ZDFixService.Service.TT;
@@ -19,9 +22,22 @@ namespace ZDFixService.Service.Base
         static ITradeService RegisterResolve()
         {
 
-            //var tpyes=  AppDomain.CurrentDomain.GetAssemblies()
-            //.SelectMany(a => a.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ITradeService))))
-            //.ToList();
+            ////程序集太多会有问题
+            ////var types=  AppDomain.CurrentDomain.GetAssemblies()
+            ////.SelectMany(a => a.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ITradeService))))
+            ////.ToList();
+
+            //ITradeService tradeService = null;
+            //Assembly assembly = Assembly.GetAssembly(ITradeService.GetType());
+            //var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            //var types = assembly.GetTypes();
+            //var tradeServiceName = Configurations.Configuration["ZDFixService:ITradeService"];
+            //var currentService = types.Where(p => p.Name == tradeServiceName).FirstOrDefault();
+            //if (currentService != null)
+            //{
+            //    tradeService = (ITradeService)currentService.CreateInstance();
+            //    var serviceName = tradeService.GetType().Name;
+            //}
 
 
             IUnityContainer container = new UnityContainer();
@@ -30,7 +46,7 @@ namespace ZDFixService.Service.Base
             //container.RegisterType<ITradeService, TTTradeService>("TTTradeService");
             container.RegisterSingleton<ITradeService, TTTradeService>("TTTradeService");
             container.RegisterSingleton<ITradeService, PSHKTradeService>("PSHKTradeService");
-            
+
             var tradeServiceName = Configurations.Configuration["ZDFixService:ITradeService"];
             //指定命名解析对象
             ITradeService tradeService = container.Resolve<ITradeService>(tradeServiceName);
@@ -38,8 +54,25 @@ namespace ZDFixService.Service.Base
         }
 
 
-        internal static void Test()
+        static void Test()
         {
+            //程序集太多会有问题
+            //var types=  AppDomain.CurrentDomain.GetAssemblies()
+            //.SelectMany(a => a.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ITradeService))))
+            //.ToList();
+
+            ITradeService tradeService = null;
+            Assembly assembly = Assembly.GetAssembly(ITradeService.GetType());
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var types = assembly.GetTypes();
+            var tradeServiceName = Configurations.Configuration["ZDFixService:ITradeService"];
+            var currentService = types.Where(p => p.Name == tradeServiceName).FirstOrDefault();
+            if (currentService != null)
+            {
+                tradeService = (ITradeService)currentService.CreateInstance();
+                var serviceName = tradeService.GetType().Name;
+            }
+
 
         }
 

@@ -120,7 +120,14 @@ namespace ZDFixService.FixUtility
         /// <param name="sessionID"></param>
         public void FromApp(Message message, SessionID sessionID)
         {
-            this.ReceiveMsgFromApp?.Invoke(message, sessionID);
+            try
+            {
+                this.ReceiveMsgFromApp?.Invoke(message, sessionID);
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error(ex.ToString());
+            }
         }
 
         /// <summary>
