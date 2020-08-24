@@ -111,6 +111,10 @@ namespace ZDFixService.Service.MemoryDataManager
                         {
                             UsingCliOrderIDSystemCode.TryRemove(long.Parse(order.CurrentCliOrderID), out _);
                         }
+                        else
+                        {
+                            _nLog.Info($"SysCode - {order.SystemCode},CurrentCliOrderID is null.");
+                        }
                         Orders.TryRemove(key, out _);
                     }
                 }
@@ -123,12 +127,19 @@ namespace ZDFixService.Service.MemoryDataManager
             {
                 try
                 {
-                    var cliOrderID = long.Parse(item.CurrentCliOrderID);
-                    UsingCliOrderIDSystemCode.TryAdd(cliOrderID, item.SystemCode);
+                    if (!string.IsNullOrEmpty(item.CurrentCliOrderID))
+                    {
+                        var cliOrderID = long.Parse(item.CurrentCliOrderID);
+                        UsingCliOrderIDSystemCode.TryAdd(cliOrderID, item.SystemCode);
+                    }
+                    else
+                    {
+                        _nLog.Info($"SysCode - {item.SystemCode},CurrentCliOrderID is null.");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    _nLog.Error("Load UsingCliOrderID Failed");
+                    _nLog.Error("InitUsingCliOrderIDSystemCode Failed");
                     _nLog.Error(ex.ToString());
                 }
             }

@@ -32,7 +32,7 @@ namespace ZDFixService.Service.PSHK
                 // Tag11
                 newOrderSingle.ClOrdID = new ClOrdID(clOrdID);
                 //tag109
-                newOrderSingle.ClientID = new ClientID("C005");
+                newOrderSingle.ClientID = new ClientID(netInfo.clientNo);
                 //tag21
                 newOrderSingle.HandlInst = new HandlInst('1');
                 //tag60
@@ -404,24 +404,6 @@ namespace ZDFixService.Service.PSHK
                 orderResponseInfo.origOrderNo = execReport.GetString(Tags.SecondaryClOrdID);
             }
 
-
-
-
-
-            //NetInfo netInfo = new NetInfo();
-
-            //netInfo.infoT = orderResponseInfo.MyToString();
-            //netInfo.exchangeCode = orderResponseInfo.exchangeCode;
-
-            //netInfo.accountNo = order.OrderNetInfo.accountNo;
-            //netInfo.systemCode = order.SystemCode;
-            //netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
-            //netInfo.clientNo = order.OrderNetInfo.clientNo;
-
-            //netInfo.errorCode = ErrorCode.SUCCESS;
-            //netInfo.code = CommandCode.MODIFY;
-
-
             NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.ModifyStockHK);
             netInfo.infoT = orderResponseInfo.MyToString();
             return netInfo;
@@ -477,17 +459,6 @@ namespace ZDFixService.Service.PSHK
             DateTime transTime = execReport.TransactTime.getValue();
             cancelResponseInfo.cancelTime = transTime.ToString("HH:mm:ss");
             cancelResponseInfo.cancelDate = transTime.ToString("yyyy-MM-dd");
-
-            //NetInfo NetInfo = new NetInfo();
-            //NetInfo.infoT = cancelResponseInfo.MyToString();
-            //NetInfo.exchangeCode = order.OrderNetInfo.exchangeCode;
-            //NetInfo.errorCode = ErrorCode.SUCCESS;
-            //NetInfo.code = CommandCode.CANCELCAST;
-            //NetInfo.accountNo = order.OrderNetInfo.accountNo;
-            //NetInfo.systemCode = order.OrderNetInfo.systemCode;
-            ////obj.todayCanUse = execReport.Header.GetField(Tags.TargetSubID);
-            //NetInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
-            //NetInfo.clientNo = order.OrderNetInfo.clientNo;
 
             NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.CancelStockHK);
             netInfo.infoT = cancelResponseInfo.MyToString();

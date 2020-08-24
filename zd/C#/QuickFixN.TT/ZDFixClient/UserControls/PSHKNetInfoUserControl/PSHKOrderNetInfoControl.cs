@@ -42,9 +42,12 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
 
             //netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Order);
 
-            //tag1:zd上手号
+            //tag1:上手号
             netInfo.accountNo = "9111111";
-            netInfo.clientNo = "000365";
+            //tag109
+            //netInfo.clientNo = "000365";
+            netInfo.clientNo = "C005";
+           
             netInfo.systemCode = $"SystemCode{DateTime.Now.GetTimeStamp()}";
             netInfo.localSystemCode = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
             netInfo.exchangeCode = this.txtSecurityExchange.Text.Trim();
