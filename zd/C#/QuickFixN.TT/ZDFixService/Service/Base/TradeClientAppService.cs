@@ -12,7 +12,7 @@ using ZDFixService.Service.ZDCommon;
 
 namespace ZDFixService.Service.Base
 {
-    class TradeClientAppService : ITradeService
+    abstract class TradeClientAppService : ITradeService
     {
         #region 私有成员
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
@@ -47,7 +47,7 @@ namespace ZDFixService.Service.Base
                     if (!_receiveFromAppMsgs.TryAdd(message, 1000))
                     {
                         //异常
-                        
+
                     }
                 }
 
@@ -161,20 +161,12 @@ namespace ZDFixService.Service.Base
             return true;
         }
 
-        protected virtual void NewOrderSingle(Order order)
-        {
+        protected abstract void NewOrderSingle(Order order);
 
-        }
+        protected abstract void OrderCancelReplaceRequest(NetInfo netInfo);
 
-        protected virtual void OrderCancelReplaceRequest(NetInfo netInfo)
-        {
+        protected abstract void OrderCancelRequest(NetInfo netInfo);
 
-        }
-
-        protected virtual void OrderCancelRequest(NetInfo netInfo)
-        {
-
-        }
 
         #region  下改撤注释
 

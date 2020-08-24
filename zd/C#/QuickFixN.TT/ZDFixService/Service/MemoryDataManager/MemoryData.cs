@@ -107,7 +107,10 @@ namespace ZDFixService.Service.MemoryDataManager
                 {
                     if (!order.IsGTCOrder && order.CreateNewOrderSingleTime.Date != DateTime.Now.Date)
                     {
-                        UsingCliOrderIDSystemCode.TryRemove(long.Parse(order.CurrentCliOrderID), out _);
+                        if (!string.IsNullOrEmpty(order.CurrentCliOrderID))
+                        {
+                            UsingCliOrderIDSystemCode.TryRemove(long.Parse(order.CurrentCliOrderID), out _);
+                        }
                         Orders.TryRemove(key, out _);
                     }
                 }

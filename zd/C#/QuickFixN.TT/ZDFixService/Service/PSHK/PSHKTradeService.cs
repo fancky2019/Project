@@ -233,7 +233,10 @@ namespace ZDFixService.Service.PSHK
         }
 
         // PSHK的FIX没有改单
-
+        protected override void OrderCancelReplaceRequest(NetInfo netInfo)
+        {
+            throw new NotImplementedException();
+        }
 
 
         #region ExecutionReport
@@ -609,6 +612,7 @@ namespace ZDFixService.Service.PSHK
 
             return netInfo;
         }
+
         #endregion
 
 
