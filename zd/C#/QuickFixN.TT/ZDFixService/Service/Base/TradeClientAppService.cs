@@ -105,8 +105,10 @@ namespace ZDFixService.Service.Base
 
         public void Order(NetInfo netInfo)
         {
+            _nLog.Info($"ClientIn:{netInfo.MyToString()}");
             if (!PreOrder(netInfo))
             {
+                _nLog.Info($"PreOrder return - {netInfo.MyToString()}");
                 return;
             }
             if (!_orderQueue.IsAddingCompleted)
@@ -253,7 +255,9 @@ namespace ZDFixService.Service.Base
 
             if (netInfo != null)
             {
-                ExecutionReport?.Invoke(netInfo.MyToString());
+                var str = netInfo.MyToString();
+                ExecutionReport?.Invoke(str);
+                _nLog.Info($"ToClient:{str}");
             }
             else
             {
@@ -266,9 +270,9 @@ namespace ZDFixService.Service.Base
         #region ExecutionReport
 
         protected abstract NetInfo ExecType_New(ExecutionReport execReport);
-      
+
         protected abstract NetInfo Replaced(QuickFix.FIX42.ExecutionReport execReport);
-     
+
         protected abstract NetInfo Cancelled(QuickFix.FIX42.ExecutionReport execReport);
 
         protected abstract NetInfo PartiallyFilledOrFilled(QuickFix.FIX42.ExecutionReport execReport);
