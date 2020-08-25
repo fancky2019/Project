@@ -32,8 +32,6 @@
             this.nudDisplayQty = new System.Windows.Forms.NumericUpDown();
             this.nudMinQty = new System.Windows.Forms.NumericUpDown();
             this.nudQrdQty = new System.Windows.Forms.NumericUpDown();
-            this.txtStopPx = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.txtPrice = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -60,8 +58,6 @@
             this.panel1.Controls.Add(this.nudDisplayQty);
             this.panel1.Controls.Add(this.nudMinQty);
             this.panel1.Controls.Add(this.nudQrdQty);
-            this.panel1.Controls.Add(this.txtStopPx);
-            this.panel1.Controls.Add(this.label12);
             this.panel1.Controls.Add(this.txtPrice);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.label8);
@@ -79,9 +75,9 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(322, 286);
+            this.panel1.Size = new System.Drawing.Size(322, 261);
             this.panel1.TabIndex = 0;
             // 
             // nudDisplayQty
@@ -124,23 +120,6 @@
             0,
             0,
             0});
-            // 
-            // txtStopPx
-            // 
-            this.txtStopPx.Location = new System.Drawing.Point(169, 261);
-            this.txtStopPx.Name = "txtStopPx";
-            this.txtStopPx.Size = new System.Drawing.Size(121, 21);
-            this.txtStopPx.TabIndex = 57;
-            this.txtStopPx.Text = "42.59";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(92, 264);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(71, 12);
-            this.label12.TabIndex = 56;
-            this.label12.Text = "StopPx(99):";
             // 
             // txtPrice
             // 
@@ -276,7 +255,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "OrderNetInfoControl";
             this.Size = new System.Drawing.Size(322, 440);
             this.panel1.ResumeLayout(false);
@@ -291,7 +270,6 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label5;
@@ -304,7 +282,6 @@
         protected System.Windows.Forms.NumericUpDown nudDisplayQty;
         protected System.Windows.Forms.NumericUpDown nudMinQty;
         protected System.Windows.Forms.NumericUpDown nudQrdQty;
-        protected System.Windows.Forms.TextBox txtStopPx;
         protected System.Windows.Forms.TextBox txtPrice;
         protected System.Windows.Forms.TextBox txtSecurityAltID;
         protected System.Windows.Forms.TextBox txtSecurityExchange;

@@ -58,52 +58,52 @@ namespace ZDFixService.Service.PSHK
                 //两个版本的OrderType值1和2反了
                 //string orderType = ZDUperTagValueConvert.ConvertToTTOrdType(orderInfo.priceType);
 
-                char charOrdType = char.Parse(orderInfo.priceType);
+                char charOrdType = ZDUperTagValueConvert.ConverttoHKEXOrdType(orderInfo.priceType);
                 // Tag40
                 newOrderSingle.OrdType = new OrdType(charOrdType);// QueryOrdType(info.priceType);
 
                 var price = decimal.Parse(orderInfo.orderPrice);
-                // Tag44
-                if (charOrdType == OrdType.LIMIT || charOrdType == OrdType.STOP_LIMIT)
-                {
+                //// Tag44
+                //if (charOrdType == OrdType.LIMIT || charOrdType == OrdType.STOP_LIMIT)
+                //{
                     //decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.orderPrice, newOrderSingle.Symbol.getValue());
                     newOrderSingle.Price = new Price(price);
-                }
+                //}
 
-                var stopPx = decimal.Parse(orderInfo.triggerPrice);
-                // Tag99
-                if (charOrdType == OrdType.STOP || charOrdType == OrdType.STOP_LIMIT)
-                {
-                    //decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.triggerPrice, newOrderSingle.Symbol.getValue());
-                    newOrderSingle.StopPx = new StopPx(stopPx);
-                }
+                //var stopPx = decimal.Parse(orderInfo.triggerPrice);
+                //// Tag99
+                //if (charOrdType == OrdType.STOP || charOrdType == OrdType.STOP_LIMIT)
+                //{
+                //    //decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.triggerPrice, newOrderSingle.Symbol.getValue());
+                //    newOrderSingle.StopPx = new StopPx(stopPx);
+                //}
 
 
                 string timeInForce = orderInfo.validDate;
-                //timeInForce = ZDUperTagValueConvert.ConvertToTTTimeInForce(timeInForce);
+                ////timeInForce = ZDUperTagValueConvert.ConvertToTTTimeInForce(timeInForce);
 
-                /*
-                 * CME官网：Fill and Kill (FAK) and Fill or Kill (FOK) - 
-                 *          order is immediately executed against any available quantity and any remaining quantity is eliminated (FAK)
-                 *          or order is filled completely or else eliminated (FOK).
-                 * FOK:要么都成交，要么都撤销。(TT-FOK = CME-FAK)
-                 * IOC：成交剩余的部分被撤销。(TT-IOC = CME-FOK)
-                 */
-                if (timeInForce == "3")//IOC
-                {
-                    //根据MinQty和订单数量大小判断是FOK还是IOC
-                    //FOK
-                    if (orderInfo.MinQty == orderInfo.orderNumber)
-                    {
-                        timeInForce = "4";//FOK
-                    }
-                    //IOC:info.MinQty < info.orderNumber
-                    if (!string.IsNullOrEmpty(orderInfo.MinQty) && orderInfo.MinQty != "0")
-                        newOrderSingle.SetField(new MinQty(decimal.Parse(orderInfo.MinQty)));
-                }
+                ///*
+                // * CME官网：Fill and Kill (FAK) and Fill or Kill (FOK) - 
+                // *          order is immediately executed against any available quantity and any remaining quantity is eliminated (FAK)
+                // *          or order is filled completely or else eliminated (FOK).
+                // * FOK:要么都成交，要么都撤销。(TT-FOK = CME-FAK)
+                // * IOC：成交剩余的部分被撤销。(TT-IOC = CME-FOK)
+                // */
+                //if (timeInForce == "3")//IOC
+                //{
+                //    //根据MinQty和订单数量大小判断是FOK还是IOC
+                //    //FOK
+                //    if (orderInfo.MinQty == orderInfo.orderNumber)
+                //    {
+                //        timeInForce = "4";//FOK
+                //    }
+                //    //IOC:info.MinQty < info.orderNumber
+                //    if (!string.IsNullOrEmpty(orderInfo.MinQty) && orderInfo.MinQty != "0")
+                //        newOrderSingle.SetField(new MinQty(decimal.Parse(orderInfo.MinQty)));
+                //}
 
                 //tag 59
-                newOrderSingle.TimeInForce = new TimeInForce(char.Parse(timeInForce));
+                newOrderSingle.TimeInForce = ZDUperTagValueConvert.ConverttoHKEXTimeInForce(timeInForce);
                 //永久有效
                 if (timeInForce == "1")
                 {

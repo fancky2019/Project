@@ -33,10 +33,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudMinQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudQrdQty)).BeginInit();
             this.SuspendLayout();
-            // 
-            // txtStopPx
-            // 
-            this.txtStopPx.Margin = new System.Windows.Forms.Padding(2);
+
             // 
             // txtPrice
             // 
