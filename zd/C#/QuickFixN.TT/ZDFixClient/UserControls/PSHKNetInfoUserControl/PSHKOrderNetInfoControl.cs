@@ -29,7 +29,7 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
             this.txtSecurityAltID.Text = "AAPL";
             this.nudQrdQty.Value = 1000;
             this.txtPrice.Text = "105";
-            this.txtStopPx.Text = "105";
+
         }
 
         #region 下单
@@ -47,7 +47,7 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
             //tag109
             //netInfo.clientNo = "000365";
             netInfo.clientNo = "C005";
-           
+
             netInfo.systemCode = $"SystemCode{DateTime.Now.GetTimeStamp()}";
             netInfo.localSystemCode = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
             netInfo.exchangeCode = this.txtSecurityExchange.Text.Trim();
@@ -63,8 +63,10 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
             orderInfo.priceType = this._orderTypeDict[this.cmbOrderType.Text];
             orderInfo.validDate = this._timeInForceDict[this.cmbTimeInForce.Text];
             orderInfo.MinQty = this.nudMinQty.Text;
-            orderInfo.triggerPrice = this.txtStopPx.Text.Trim();
+            //orderInfo.triggerPrice = this.txtStopPx.Text.Trim();
 
+            //客户端传的是反的
+            orderInfo.priceType = orderInfo.priceType == "2" ? "1" : "2";
             //orderInfo.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(orderInfo.priceType);
             //orderInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(orderInfo.validDate);
             netInfo.infoT = orderInfo.MyToString();
@@ -74,7 +76,11 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
             //NetInfo ni = new NetInfo();
             //ni.MyReadString(netInfoStr);
 
+            //var netInfoStr = $"OrdeStHK@00000@000203121P000019@8000253@@9111111@HKEX@@8000253@@&9111111@@9111111@-@C@HKEX@92008.HK@1@100@5@@7@@@@1@0@@@@@@@@@@@@@@@0@@0@";
+            //netInfo.MyReadString(netInfoStr);
             Order?.Invoke(netInfo);
+
+
 
 
         }

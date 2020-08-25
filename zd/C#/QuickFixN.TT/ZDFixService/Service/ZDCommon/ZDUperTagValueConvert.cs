@@ -139,5 +139,77 @@ namespace ZDFixService.Service.ZDCommon
             }
             return ttTimeInForce;
         }
+
+
+
+
+        public static char ConverttoHKEXOrdType(string s)
+        {
+            char c = ' ';
+            switch (s)
+            {
+                case "6":
+                case "2":
+                    c = OrdType.MARKET;
+                    break;
+
+                case "1":
+                case "5":
+                case "7":
+                case "8":
+                    c = OrdType.LIMIT;
+                    break;
+
+                //case "1":
+                //    c = OrdType.MARKET;
+                //    break;
+                //case "2":
+                //    c = OrdType.LIMIT;
+                //    break;
+
+                default: throw new Exception("Unsupported Order Type!");
+            }
+            return c;
+        }
+
+        //public const char FILL_AND_KILL = '3';
+        public static TimeInForce ConverttoHKEXTimeInForce(string s)
+        {
+            char c = ' ';
+            switch (s)
+            {
+                //Code for OCG simulator start
+                //case "3":
+                //    c = TimeInForce.IMMEDIATE_OR_CANCEL;
+                //    break;
+                //case "4":
+                //    c = TimeInForce.FILL_OR_KILL;
+                //    break;
+                //Code for OCG simulator end
+
+                //case "5": //竞价限价盘[AL: Auction limit order]
+                //    c = TimeInForce.AT_CROSSING;
+                //    break;
+                //case "7": //增强限价盘[EL: Enhace limit order]
+                //    c = TimeInForce.DAY;
+                //    break;
+                case "0":
+                case "1":
+                case "7":
+                    c = TimeInForce.DAY;
+                    break;
+                case "5":
+                case "6":
+                    c = TimeInForce.AT_CROSSING;
+                    break;
+
+                case "8":
+                    c = TimeInForce.IMMEDIATE_OR_CANCEL;
+                    break;
+                default: throw new Exception("Unsupported Time In Force!");
+            }
+
+            return new TimeInForce(c);
+        }
     }
 }
