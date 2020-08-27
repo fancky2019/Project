@@ -115,6 +115,9 @@ namespace ZDFixClient
         #region  Test
         private void btnTest_Click(object sender, EventArgs e)
         {
+            var monthStr1 = string.Format("{0:0000}", 123);//02
+            var monthStr2 = string.Format("{0:0000}", 1234);//02
+            var monthStr3 = string.Format("{0:0000}", 12345);//02
             //var code= ErrorCode.ERR_ORDER_0014;
             //TradeServiceFactory.Test();
             //SQLitePersist sQLitePersist = new SQLitePersist();

@@ -103,6 +103,7 @@ namespace ZDFixService.Service.MemoryDataManager
             //删除过期日单
             foreach (var key in Orders.Keys)
             {
+                //var key = Orders.Keys.ElementAt<string>(i);
                 if (Orders.TryGetValue(key, out Order order))
                 {
                     if (!order.IsGTCOrder && order.CreateNewOrderSingleTime.Date != DateTime.Now.Date)
@@ -120,26 +121,7 @@ namespace ZDFixService.Service.MemoryDataManager
                 }
             }
 
-            ////删除过期日单
-            //for (var i=0; i< Orders.Keys.Count;i++)
-            //{
-            //    var key = Orders.Keys.ElementAt<string>(i);
-            //    if (Orders.TryGetValue(key, out Order order))
-            //    {
-            //        if (!order.IsGTCOrder && order.CreateNewOrderSingleTime.Date != DateTime.Now.Date)
-            //        {
-            //            if (!string.IsNullOrEmpty(order.CurrentCliOrderID))
-            //            {
-            //                UsingCliOrderIDSystemCode.TryRemove(long.Parse(order.CurrentCliOrderID), out _);
-            //            }
-            //            else
-            //            {
-            //                _nLog.Info($"SysCode - {order.SystemCode},CurrentCliOrderID is null.");
-            //            }
-            //            Orders.TryRemove(key, out _);
-            //        }
-            //    }
-            //}
+ 
         }
 
         internal static void InitUsingCliOrderIDSystemCode()

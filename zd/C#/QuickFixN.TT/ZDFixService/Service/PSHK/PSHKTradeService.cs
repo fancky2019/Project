@@ -32,13 +32,13 @@ namespace ZDFixService.Service.PSHK
                 // Tag11
                 newOrderSingle.ClOrdID = new ClOrdID(clOrdID);
                 //tag109
-                newOrderSingle.ClientID = new ClientID(netInfo.clientNo);
+                //newOrderSingle.ClientID = new ClientID(netInfo.clientNo);
                 //tag21
                 newOrderSingle.HandlInst = new HandlInst('1');
                 //tag60
                 newOrderSingle.TransactTime = new TransactTime(DateTime.UtcNow, true);
                 // Tag55
-                newOrderSingle.Symbol = new Symbol(orderInfo.code);
+                newOrderSingle.Symbol = new Symbol(ZDUperTagValueConvert.ConvertToPSHKCode(orderInfo.code));
                 // Tag207
                 newOrderSingle.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
                 //167
@@ -52,60 +52,19 @@ namespace ZDFixService.Service.PSHK
                 // Tag54
                 newOrderSingle.Side = ZDUperTagValueConvert.QuerySide(orderInfo.buySale);
 
-
-
                 //客户端用的是FIX 7X和 新TT的FIX版本 不一样
-                //两个版本的OrderType值1和2反了
-                //string orderType = ZDUperTagValueConvert.ConvertToTTOrdType(orderInfo.priceType);
-
                 char charOrdType = ZDUperTagValueConvert.ConverttoHKEXOrdType(orderInfo.priceType);
                 // Tag40
                 newOrderSingle.OrdType = new OrdType(charOrdType);// QueryOrdType(info.priceType);
 
                 var price = decimal.Parse(orderInfo.orderPrice);
-                //// Tag44
-                //if (charOrdType == OrdType.LIMIT || charOrdType == OrdType.STOP_LIMIT)
-                //{
-                    //decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.orderPrice, newOrderSingle.Symbol.getValue());
-                    newOrderSingle.Price = new Price(price);
-                //}
-
-                //var stopPx = decimal.Parse(orderInfo.triggerPrice);
-                //// Tag99
-                //if (charOrdType == OrdType.STOP || charOrdType == OrdType.STOP_LIMIT)
-                //{
-                //    //decimal prx = CodeTransfer_TT.toGlobexPrx(orderInfo.triggerPrice, newOrderSingle.Symbol.getValue());
-                //    newOrderSingle.StopPx = new StopPx(stopPx);
-                //}
-
-
-                string timeInForce = orderInfo.validDate;
-                ////timeInForce = ZDUperTagValueConvert.ConvertToTTTimeInForce(timeInForce);
-
-                ///*
-                // * CME官网：Fill and Kill (FAK) and Fill or Kill (FOK) - 
-                // *          order is immediately executed against any available quantity and any remaining quantity is eliminated (FAK)
-                // *          or order is filled completely or else eliminated (FOK).
-                // * FOK:要么都成交，要么都撤销。(TT-FOK = CME-FAK)
-                // * IOC：成交剩余的部分被撤销。(TT-IOC = CME-FOK)
-                // */
-                //if (timeInForce == "3")//IOC
-                //{
-                //    //根据MinQty和订单数量大小判断是FOK还是IOC
-                //    //FOK
-                //    if (orderInfo.MinQty == orderInfo.orderNumber)
-                //    {
-                //        timeInForce = "4";//FOK
-                //    }
-                //    //IOC:info.MinQty < info.orderNumber
-                //    if (!string.IsNullOrEmpty(orderInfo.MinQty) && orderInfo.MinQty != "0")
-                //        newOrderSingle.SetField(new MinQty(decimal.Parse(orderInfo.MinQty)));
-                //}
+                // Tag44
+                newOrderSingle.Price = new Price(price);
 
                 //tag 59
-                newOrderSingle.TimeInForce = ZDUperTagValueConvert.ConverttoHKEXTimeInForce(timeInForce);
+                newOrderSingle.TimeInForce = ZDUperTagValueConvert.ConverttoHKEXTimeInForce(orderInfo.validDate);
                 //永久有效
-                if (timeInForce == "1")
+                if (orderInfo.validDate == "1")
                 {
                     order.IsGTCOrder = true;
                 }
@@ -121,7 +80,6 @@ namespace ZDFixService.Service.PSHK
                     order.CreateNewOrderSingleTime = DateTime.Now;
                     //order.NewOrderSingle = newOrderSingle.ToString();
                     MemoryData.Orders.TryAdd(order.SystemCode, order);
-
 
                     var clOrdIDLong = long.Parse(clOrdID);
                     MemoryData.UsingCliOrderIDSystemCode.TryAdd(clOrdIDLong, order.SystemCode);
@@ -191,7 +149,7 @@ namespace ZDFixService.Service.PSHK
 
                 //傻x辉立还要发送这些tag。
                 //tag55
-                orderCancelRequest.Symbol = new Symbol(orderInfo.code);
+                orderCancelRequest.Symbol = new Symbol(ZDUperTagValueConvert.ConvertToPSHKCode(orderInfo.code));
                 // Tag54
                 orderCancelRequest.Side = ZDUperTagValueConvert.QuerySide(orderInfo.buySale);
                 //tag60

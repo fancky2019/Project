@@ -211,5 +211,13 @@ namespace ZDFixService.Service.ZDCommon
 
             return new TimeInForce(c);
         }
+
+        public static string ConvertToPSHKCode(string zdStockCode)
+        {
+            var stockCode = zdStockCode.Replace(".HK", "");
+            int stockCodeNum = int.Parse(stockCode);
+            var newStockCode = string.Format("{0:0000}", stockCodeNum);
+            return newStockCode;
+        }
     }
 }

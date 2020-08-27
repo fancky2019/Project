@@ -138,14 +138,14 @@ namespace ZDFixClient
 
                     netInfo.MyReadString(netInfoStr);
                     OrderInfo orderInfo = null;
-   
+
                     switch (netInfo.code)
                     {
                         case "ORDER001":
                         case "OrdeStHK":
-                            if (netInfo.errorCode == ErrorCode.SUCCESS)
+                            if (netInfo.errorCode != ErrorCode.SUCCESS)
                             {
-                                _newOrderSingleNetInfos.TryAdd(netInfo.systemCode, netInfo);
+                                _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
                             }
 
                             break;
@@ -174,6 +174,10 @@ namespace ZDFixClient
                         case "FILCST01":
                         case "FillStHK":
                             orderInfo = GetNewOrderSingleNetInfo(netInfo.systemCode, out _);
+                            if(orderInfo==null)
+                            {
+                                return;
+                            }
                             FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
                             filledResponseInfo.MyReadString(netInfo.infoT);
                             if (filledResponseInfo.filledNumber == orderInfo.orderNumber)
@@ -197,7 +201,12 @@ namespace ZDFixClient
 
         private OrderInfo GetNewOrderSingleNetInfo(string systemCode, out NetInfo newOrderSingleNetInfo)
         {
+            //重启_newOrderSingleNetInfos 丢失。客户端测试程序只做简单测试，
             _newOrderSingleNetInfos.TryGetValue(systemCode, out newOrderSingleNetInfo);
+            if (newOrderSingleNetInfo == null)
+            {
+                return null;
+            }
             OrderInfo orderInfo = new OrderInfo();
             orderInfo.MyReadString(newOrderSingleNetInfo.infoT);
             return orderInfo;
@@ -279,6 +288,7 @@ namespace ZDFixClient
         #region 下单
         private void Order(NetInfo netInfo)
         {
+            _newOrderSingleNetInfos.TryAdd(netInfo.systemCode, netInfo);
             TradeServiceFactory.ITradeService.Order(netInfo);
         }
         #endregion
