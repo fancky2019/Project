@@ -38,17 +38,19 @@ namespace ZDFixService.Service.TT
                 //
                 var newCode = orderInfo.code;
 
+                //简单测试使用，没有集成TT的业务逻辑
+                var symbol = orderInfo.code.Split(' ')[0];
                 // Tag55
-                newOrderSingle.Symbol = new Symbol("BRN");
+                newOrderSingle.Symbol = new Symbol(symbol);
                 // Tag207
-                newOrderSingle.SecurityExchange = new SecurityExchange("ICE");
+                newOrderSingle.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
 
                 //167
                 newOrderSingle.SecurityType = new SecurityType("FUT");
                 //454
                 NoSecurityAltIDGroup noSecurityAltIDGroup = new NoSecurityAltIDGroup();
                 //455
-                noSecurityAltIDGroup.SecurityAltID = new SecurityAltID("BRN Dec20");
+                noSecurityAltIDGroup.SecurityAltID = new SecurityAltID(orderInfo.code);
 
                 //PRICE:9596
                 //// Tag55

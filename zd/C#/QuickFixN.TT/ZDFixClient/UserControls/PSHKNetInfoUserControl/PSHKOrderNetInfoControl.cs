@@ -25,9 +25,9 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
 
         private void PSHKOrderNetInfoControl_Load(object sender, EventArgs e)
         {
-            this.txtSecurityExchange.Text = "US";
-            this.txtSecurityAltID.Text = "AAPL";
-            this.nudQrdQty.Value = 1000;
+            this.txtSecurityExchange.Text = "PSHK";
+            this.txtSecurityAltID.Text = "0002.HK";
+            this.nudQrdQty.Value = 2000;
             this.txtPrice.Text = "105";
 
         }
@@ -42,8 +42,8 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
 
             //netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Order);
 
-            //tag1:上手号
-            netInfo.accountNo = "9111111";
+            //tag1:上手号  9111111/I5555
+            netInfo.accountNo = "I5555";
             //tag109
             //netInfo.clientNo = "000365";
             netInfo.clientNo = "C005";
@@ -76,8 +76,9 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
             //NetInfo ni = new NetInfo();
             //ni.MyReadString(netInfoStr);
 
-            //var netInfoStr = $"OrdeStHK@00000@000203121P000019@8000253@@9111111@HKEX@@8000253@@&9111111@@9111111@-@C@HKEX@92008.HK@1@100@5@@7@@@@1@0@@@@@@@@@@@@@@@0@@0@";
+            //var netInfoStr = $"OrdeStHK@SAM3@000209191P000003@1@@00020919@NASD@@C005@@0033433&C005@@00020919@@C@@000002.HK@1@1@499.50@@1@@@@A@@@@@@@@@@@@@@@@@@0@";
             //netInfo.MyReadString(netInfoStr);
+            //netInfo.accountNo = "I5555";
             Order?.Invoke(netInfo);
 
 
