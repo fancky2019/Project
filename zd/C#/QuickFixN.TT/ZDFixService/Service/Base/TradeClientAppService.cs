@@ -189,6 +189,7 @@ namespace ZDFixService.Service.Base
         private void ConsumerFromAppMsg(QuickFix.Message message)
         {
             NetInfo netInfo = null;
+            bool unHandleMessage = false;
             try
             {
                 switch (message)
@@ -221,17 +222,21 @@ namespace ZDFixService.Service.Base
                                 break;
 
                             case ExecType.EXPIRED:
+                                unHandleMessage = true;
                                 //netInfo = doExpired(execReport);
                                 //netInfo = replyCancelled(execReport);
                                 break;
                             case ExecType.PENDING_NEW:
+                                unHandleMessage = true;
                                 break;
                             case ExecType.PENDING_CANCELREPLACE:
+                                unHandleMessage = true;
                                 break;
                             //
                             //case ExecType.PENDING_CANCEL:
                             //    break;
                             default:
+                                unHandleMessage = true;
                                 break;
                                 //case GlobexExt.ORD_STATUS_TRADE_CANCELLATION:
                                 //    break;
@@ -261,7 +266,13 @@ namespace ZDFixService.Service.Base
             }
             else
             {
-                _nLog.Error($"Deal Failed:{message.ToString()}");
+                var tip = "Deal Failed";
+                if(unHandleMessage)
+                {
+                    tip = "UnHandle Message";
+                }
+          
+                _nLog.Error($"{tip}:{message.ToString()}");
             }
 
         }
