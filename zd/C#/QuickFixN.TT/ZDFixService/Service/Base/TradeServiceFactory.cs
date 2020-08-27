@@ -28,7 +28,7 @@ namespace ZDFixService.Service.Base
             ////.ToList();
 
             //ITradeService tradeService = null;
-            //Assembly assembly = Assembly.GetAssembly(ITradeService.GetType());
+            //Assembly assembly = Assembly.GetAssembly(typeof(ITradeService));
             //var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             //var types = assembly.GetTypes();
             //var tradeServiceName = Configurations.Configuration["ZDFixService:ITradeService"];
@@ -62,7 +62,7 @@ namespace ZDFixService.Service.Base
             //.ToList();
 
             ITradeService tradeService = null;
-            Assembly assembly = Assembly.GetAssembly(ITradeService.GetType());
+            Assembly assembly = Assembly.GetAssembly(typeof(ITradeService));
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var types = assembly.GetTypes();
             var tradeServiceName = Configurations.Configuration["ZDFixService:ITradeService"];
