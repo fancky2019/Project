@@ -39,6 +39,7 @@ namespace ZDFixService.Service.PSHK
                 newOrderSingle.TransactTime = new TransactTime(DateTime.UtcNow, true);
                 // Tag55
                 newOrderSingle.Symbol = new Symbol(ZDUperTagValueConvert.ConvertToPSHKCode(orderInfo.code));
+                orderInfo.exchangeCode = "PSHK";
                 // Tag207
                 newOrderSingle.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
                 //167
