@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ZDFixService.FixUtility;
 using ZDFixService.Models;
 using ZDFixService.Service.MemoryDataManager;
+using ZDFixService.Service.SocketNetty;
 using ZDFixService.Service.ZDCommon;
 
 namespace ZDFixService.Service.Base
@@ -74,9 +75,10 @@ namespace ZDFixService.Service.Base
             TradeClient.Instance.SocketInitiator.Start();
         }
 
-        private void Init()
+        private async void Init()
         {
             MemoryData.IPersist.Load();
+            await ZDFixServiceServer.Instance.RunServerAsync();
         }
 
         public void Stop()
@@ -85,6 +87,7 @@ namespace ZDFixService.Service.Base
             TradeClient.Instance.SocketInitiator.Stop();
             WaitForAdding();
             MemoryData.IPersist.Persist();
+            ZDFixServiceServer.Instance.Close();
         }
 
         private void WaitForAdding()
@@ -267,11 +270,11 @@ namespace ZDFixService.Service.Base
             else
             {
                 var tip = "Deal Failed";
-                if(unHandleMessage)
+                if (unHandleMessage)
                 {
                     tip = "UnHandle Message";
                 }
-          
+
                 _nLog.Error($"{tip}:{message.ToString()}");
             }
 

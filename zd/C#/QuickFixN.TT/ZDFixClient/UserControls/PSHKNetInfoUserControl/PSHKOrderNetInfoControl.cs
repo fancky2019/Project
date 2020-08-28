@@ -25,7 +25,7 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
 
         private void PSHKOrderNetInfoControl_Load(object sender, EventArgs e)
         {
-            this.txtSecurityExchange.Text = "PSHK";
+            this.txtSecurityExchange.Text = "HKEX";
             this.txtSecurityAltID.Text = "0002.HK";
             this.nudQrdQty.Value = 2000;
             this.txtPrice.Text = "105";

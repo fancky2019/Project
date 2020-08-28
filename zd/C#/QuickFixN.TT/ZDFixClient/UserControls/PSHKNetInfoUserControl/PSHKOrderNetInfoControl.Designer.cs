@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.btnNewOrderSingle = new System.Windows.Forms.Button();
+            this.cbConsole = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudDisplayQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMinQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudQrdQty)).BeginInit();
             this.SuspendLayout();
-
             // 
             // txtPrice
             // 
@@ -49,7 +49,7 @@
             // 
             // btnNewOrderSingle
             // 
-            this.btnNewOrderSingle.Location = new System.Drawing.Point(210, 292);
+            this.btnNewOrderSingle.Location = new System.Drawing.Point(212, 266);
             this.btnNewOrderSingle.Name = "btnNewOrderSingle";
             this.btnNewOrderSingle.Size = new System.Drawing.Size(78, 23);
             this.btnNewOrderSingle.TabIndex = 38;
@@ -57,23 +57,37 @@
             this.btnNewOrderSingle.UseVisualStyleBackColor = true;
             this.btnNewOrderSingle.Click += new System.EventHandler(this.btnNewOrderSingle_Click);
             // 
+            // cbConsole
+            // 
+            this.cbConsole.AutoSize = true;
+            this.cbConsole.Location = new System.Drawing.Point(140, 270);
+            this.cbConsole.Name = "cbConsole";
+            this.cbConsole.Size = new System.Drawing.Size(66, 16);
+            this.cbConsole.TabIndex = 51;
+            this.cbConsole.Text = "Console";
+            this.cbConsole.UseVisualStyleBackColor = true;
+            // 
             // PSHKOrderNetInfoControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cbConsole);
             this.Controls.Add(this.btnNewOrderSingle);
             this.Name = "PSHKOrderNetInfoControl";
             this.Load += new System.EventHandler(this.PSHKOrderNetInfoControl_Load);
             this.Controls.SetChildIndex(this.btnNewOrderSingle, 0);
+            this.Controls.SetChildIndex(this.cbConsole, 0);
             ((System.ComponentModel.ISupportInitialize)(this.nudDisplayQty)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMinQty)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudQrdQty)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Button btnNewOrderSingle;
+        private System.Windows.Forms.CheckBox cbConsole;
     }
 }
