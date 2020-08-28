@@ -44,54 +44,52 @@
             this.panel1.Controls.Add(this.label30);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(430, 112);
+            this.panel1.Size = new System.Drawing.Size(322, 83);
             this.panel1.TabIndex = 0;
             // 
             // txtCancelOrderClOrderID
             // 
-            this.txtCancelOrderClOrderID.Location = new System.Drawing.Point(203, 69);
-            this.txtCancelOrderClOrderID.Margin = new System.Windows.Forms.Padding(4);
+            this.txtCancelOrderClOrderID.Location = new System.Drawing.Point(152, 55);
             this.txtCancelOrderClOrderID.Name = "txtCancelOrderClOrderID";
-            this.txtCancelOrderClOrderID.Size = new System.Drawing.Size(160, 25);
+            this.txtCancelOrderClOrderID.Size = new System.Drawing.Size(121, 21);
             this.txtCancelOrderClOrderID.TabIndex = 49;
             this.txtCancelOrderClOrderID.Text = "1000001";
             // 
             // txtOrderCancelSystemCode
             // 
-            this.txtOrderCancelSystemCode.Location = new System.Drawing.Point(203, 31);
-            this.txtOrderCancelSystemCode.Margin = new System.Windows.Forms.Padding(4);
+            this.txtOrderCancelSystemCode.Location = new System.Drawing.Point(152, 25);
             this.txtOrderCancelSystemCode.Name = "txtOrderCancelSystemCode";
-            this.txtOrderCancelSystemCode.Size = new System.Drawing.Size(160, 25);
+            this.txtOrderCancelSystemCode.Size = new System.Drawing.Size(121, 21);
             this.txtOrderCancelSystemCode.TabIndex = 48;
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(68, 73);
-            this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label21.Location = new System.Drawing.Point(51, 58);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(119, 15);
+            this.label21.Size = new System.Drawing.Size(89, 12);
             this.label21.TabIndex = 47;
             this.label21.Text = "ClOrderID(11):";
             // 
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(100, 36);
-            this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label30.Location = new System.Drawing.Point(75, 29);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(95, 15);
+            this.label30.Size = new System.Drawing.Size(71, 12);
             this.label30.TabIndex = 46;
             this.label30.Text = "SystemCode:";
             // 
             // CancelNetInfoControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "CancelNetInfoControl";
-            this.Size = new System.Drawing.Size(430, 550);
+            this.Size = new System.Drawing.Size(322, 440);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

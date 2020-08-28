@@ -16,7 +16,6 @@ using System.Threading;
 using ZDFixService.Service.Base;
 using ZDFixService.Service.ZDCommon;
 using System.Configuration;
-using ZDFixService.Service.ZDCommon;
 using ZDFixClient.UserControls.TTNetInfoControl;
 using ZDFixClient.UserControls.PSHKNetInfoUserControl;
 using NLog;

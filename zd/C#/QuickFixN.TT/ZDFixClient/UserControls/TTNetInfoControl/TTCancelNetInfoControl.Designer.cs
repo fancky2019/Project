@@ -41,7 +41,7 @@
             // 
             // btnOrderCancelRequest
             // 
-            this.btnOrderCancelRequest.Location = new System.Drawing.Point(194, 106);
+            this.btnOrderCancelRequest.Location = new System.Drawing.Point(195, 109);
             this.btnOrderCancelRequest.Name = "btnOrderCancelRequest";
             this.btnOrderCancelRequest.Size = new System.Drawing.Size(78, 23);
             this.btnOrderCancelRequest.TabIndex = 46;

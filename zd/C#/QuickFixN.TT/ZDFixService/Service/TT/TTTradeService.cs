@@ -406,7 +406,8 @@ namespace ZDFixService.Service.TT
                 order.NewOrderSingleClientID = currentCliOrderID;
                 order.CurrentCliOrderID = currentCliOrderID;
                 order.TempCliOrderID = "";
-
+                OrderInfo orderInfo = new OrderInfo();
+                orderInfo.MyReadString(order.OrderNetInfo.infoT);
                 OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
 
                 orderResponseInfo.orderNo = execReport.ClOrdID.getValue();
@@ -428,7 +429,7 @@ namespace ZDFixService.Service.TT
 
                 //info.exchangeCode = codeBean.zdExchg;
 
-                orderResponseInfo.exchangeCode = execReport.GetString(Tags.SecurityExchange);
+                orderResponseInfo.exchangeCode = orderInfo.exchangeCode;
 
                 //if (execReport.Side.getValue() == Side.BUY)
                 //    info.buySale = "1";
@@ -468,9 +469,6 @@ namespace ZDFixService.Service.TT
 
                 orderResponseInfo.accountNo = order.OrderNetInfo.accountNo;
                 orderResponseInfo.systemNo = order.OrderNetInfo.systemCode;
-
-                OrderInfo orderInfo = new OrderInfo();
-                orderInfo.MyReadString(order.OrderNetInfo.infoT);
                 orderResponseInfo.acceptType = orderInfo.userType;
                 orderResponseInfo.code = orderInfo.code;
 
