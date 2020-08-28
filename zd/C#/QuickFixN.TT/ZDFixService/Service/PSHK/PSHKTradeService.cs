@@ -39,9 +39,10 @@ namespace ZDFixService.Service.PSHK
                 newOrderSingle.TransactTime = new TransactTime(DateTime.UtcNow, true);
                 // Tag55
                 newOrderSingle.Symbol = new Symbol(ZDUperTagValueConvert.ConvertToPSHKCode(orderInfo.code));
-                orderInfo.exchangeCode = "PSHK";
+                //var exchangeCode = orderInfo.exchangeCode;
+                var exchangeCode = "PSHK";
                 // Tag207
-                newOrderSingle.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
+                newOrderSingle.SecurityExchange = new SecurityExchange(exchangeCode);
                 //167
                 //newOrderSingle.SecurityType = new SecurityType(SecurityType.COMMON_STOCK);
 
@@ -156,8 +157,8 @@ namespace ZDFixService.Service.PSHK
                 //tag60
                 orderCancelRequest.TransactTime = new TransactTime(DateTime.UtcNow, true);
                 // Tag207
-                orderCancelRequest.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
-
+                //orderCancelRequest.SecurityExchange = new SecurityExchange(orderInfo.exchangeCode);
+                orderCancelRequest.SecurityExchange = new SecurityExchange("PSHK");
 
 
                 var ret = TradeClient.Instance.SendMessage(orderCancelRequest);
