@@ -12,11 +12,11 @@ using ZDFixService.Service.SocketNetty.NettyCodec;
 
 namespace ZDFixService.Service.SocketNetty
 {
-    class ZDFixServiceServer
+    public class ZDFixServiceServer
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
 
-        internal static ZDFixServiceServer Instance;
+        public static ZDFixServiceServer Instance;
 
         IChannel _channel;
         IEventLoopGroup _bossGroup;
@@ -32,7 +32,7 @@ namespace ZDFixService.Service.SocketNetty
 
             //libuv是一个高性能的，事件驱动的I/O库，并且提供了跨平台（如windows, linux）的API。
             //将Dll-->Netty下的libuv.dll复制到运行目录
-            var useLibuv = false;
+            var useLibuv = true;
             if (useLibuv)
             {
                 var dispatcher = new DispatcherEventLoopGroup();

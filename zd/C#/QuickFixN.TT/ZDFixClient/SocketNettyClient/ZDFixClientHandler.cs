@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NLog;
 
-namespace Demos.OpenResource.DotNettyDemo.Echo
+namespace ZDFixClient.SocketNettyClient
 {
 
     /*

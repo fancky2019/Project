@@ -77,8 +77,8 @@ namespace ZDFixService.Service.SocketNetty
             else
             {
                 var netInfo = (NetInfo)message;
-                TradeServiceFactory.ITradeService.Order(netInfo);
                 _nLog.Info($"Received from client:{netInfo.MyToString()}" );
+                TradeServiceFactory.ITradeService.Order(netInfo);
             }
             //context.WriteAsync(message);
         }
