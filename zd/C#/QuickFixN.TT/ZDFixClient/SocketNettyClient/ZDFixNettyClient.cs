@@ -16,7 +16,7 @@ using CommonClassLib;
 using NLog;
 using System.Configuration;
 
-namespace Demos.OpenResource.DotNettyDemo.Echo
+namespace ZDFixClient.SocketNettyClient
 {
 
     public class ZDFixNettyClient
@@ -28,6 +28,11 @@ namespace Demos.OpenResource.DotNettyDemo.Echo
         IPEndPoint _iPEndPoint = null;
         MultithreadEventLoopGroup group;
 
+        internal static ZDFixNettyClient Instance;
+        static ZDFixNettyClient()
+        {
+            Instance = new ZDFixNettyClient();
+        }
         public async Task RunClientAsync()
         {
             var ipPort = ConfigurationManager.AppSettings["FixServer"].ToString().Split(':');
@@ -105,12 +110,10 @@ namespace Demos.OpenResource.DotNettyDemo.Echo
 
         public void SendMsg()
         {
-
-       
-
-            //_clientChannel.WriteAndFlushAsync(personProto);
-
-
+            NetInfo netInfo = new NetInfo();
+            var netInfoStr = $"OrdeStHK@SAM3@000209191P000003@1@@00020919@NASD@@C005@@0033433&C005@@00020919@@C@@000002.HK@1@1@499.50@@1@@@@A@@@@@@@@@@@@@@@@@@0@";
+            netInfo.MyReadString(netInfoStr);
+            _clientChannel.WriteAndFlushAsync(netInfo);
 
         }
 

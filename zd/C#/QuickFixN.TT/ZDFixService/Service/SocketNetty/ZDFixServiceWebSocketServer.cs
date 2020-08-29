@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZDFixService;
 
-namespace Demos.OpenResource.DotNettyDemo.WebSocket
+namespace ZDFixService.Service.SocketNetty
 {
     public class ZDFixServiceWebSocketServer
     {
@@ -85,48 +85,35 @@ namespace Demos.OpenResource.DotNettyDemo.WebSocket
          */
         #endregion
 
-        public static async Task RunServerAsync()
+        IEventLoopGroup _bossGroup;
+        IEventLoopGroup _workerGroup;
+        IChannel _channel;
+
+        public static ZDFixServiceWebSocketServer Instance;
+        static ZDFixServiceWebSocketServer()
         {
-            Console.WriteLine(
-                $"\n{RuntimeInformation.OSArchitecture} {RuntimeInformation.OSDescription}"
-                + $"\n{RuntimeInformation.ProcessArchitecture} {RuntimeInformation.FrameworkDescription}"
-                + $"\nProcessor Count : {Environment.ProcessorCount}\n");
+            Instance = new ZDFixServiceWebSocketServer();
+        }
 
-            bool useLibuv = true;// ServerSettings.UseLibuv;
-            Console.WriteLine("Transport type : " + (useLibuv ? "Libuv" : "Socket"));
+        public async Task RunServerAsync()
+        {
+            bool useLibuv = true;
 
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
-            }
-
-            Console.WriteLine($"Server garbage collection : {(GCSettings.IsServerGC ? "Enabled" : "Disabled")}");
-            Console.WriteLine($"Current latency mode for garbage collection: {GCSettings.LatencyMode}");
-            Console.WriteLine("\n");
-
-            IEventLoopGroup bossGroup;
-            IEventLoopGroup workGroup;
             if (useLibuv)
             {
                 var dispatcher = new DispatcherEventLoopGroup();
-                bossGroup = dispatcher;
-                workGroup = new WorkerEventLoopGroup(dispatcher);
+                _bossGroup = dispatcher;
+                _workerGroup = new WorkerEventLoopGroup(dispatcher);
             }
             else
             {
-                bossGroup = new MultithreadEventLoopGroup(1);
-                workGroup = new MultithreadEventLoopGroup();
+                _bossGroup = new MultithreadEventLoopGroup(1);
+                _workerGroup = new MultithreadEventLoopGroup();
             }
-
-            //X509Certificate2 tlsCertificate = null;
-            //if (ServerSettings.IsSsl)
-            //{
-            //    tlsCertificate = new X509Certificate2(Path.Combine(ExampleHelper.ProcessDirectory, "dotnetty.com.pfx"), "password");
-            //}
             try
             {
                 var bootstrap = new ServerBootstrap();
-                bootstrap.Group(bossGroup, workGroup);
+                bootstrap.Group(_bossGroup, _workerGroup);
 
                 if (useLibuv)
                 {
@@ -149,33 +136,26 @@ namespace Demos.OpenResource.DotNettyDemo.WebSocket
                     .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
                     {
                         IChannelPipeline pipeline = channel.Pipeline;
-                        //if (tlsCertificate != null)
-                        //{
-                        //    pipeline.AddLast(TlsHandler.Server(tlsCertificate));
-                        //}
                         pipeline.AddLast(new HttpServerCodec());
                         pipeline.AddLast(new HttpObjectAggregator(65536));
                         pipeline.AddLast(new ZDFixServiceWebSocketServerHandler());
                     }));
-                
+
                 var port = int.Parse(Configurations.Configuration["ZDFixService:WebSocketPort"]);
-                IChannel bootstrapChannel = await bootstrap.BindAsync(IPAddress.Loopback, port);
-
-                Console.WriteLine("Open your web browser and navigate to "
-                    + "http"
-                    + $"://127.0.0.1:{port}/");
-                Console.WriteLine("Listening on "
-                    + "ws"
-                    + $"://127.0.0.1:{port}/websocket");
-                Console.ReadLine();
-
-                await bootstrapChannel.CloseAsync();
+                _channel = await bootstrap.BindAsync(IPAddress.Loopback, port);
+                _nLog.Info($"Listening on  ws://127.0.0.1:{port}/websocket");
             }
-            finally
+            catch (Exception ex)
             {
-                workGroup.ShutdownGracefullyAsync().Wait();
-                bossGroup.ShutdownGracefullyAsync().Wait();
+                _nLog.Error(ex.ToString());
             }
+        }
+
+        public async void Close()
+        {
+            await _channel.CloseAsync();
+            _workerGroup.ShutdownGracefullyAsync().Wait();
+            _bossGroup.ShutdownGracefullyAsync().Wait();
         }
     }
 }

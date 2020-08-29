@@ -75,10 +75,17 @@ namespace ZDFixService.Service.Base
             TradeClient.Instance.SocketInitiator.Start();
         }
 
-        private async void Init()
+        private void Init()
         {
             MemoryData.IPersist.Load();
-            await ZDFixServiceServer.Instance.RunServerAsync();
+            Task.Run(() =>
+            {
+                ZDFixServiceServer.Instance.RunServerAsync().Wait();
+            });
+            Task.Run(() =>
+            {
+                ZDFixServiceWebSocketServer.Instance.RunServerAsync().Wait();
+            });
         }
 
         public void Stop()
@@ -88,6 +95,7 @@ namespace ZDFixService.Service.Base
             WaitForAdding();
             MemoryData.IPersist.Persist();
             ZDFixServiceServer.Instance.Close();
+            ZDFixServiceWebSocketServer.Instance.Close();
         }
 
         private void WaitForAdding()

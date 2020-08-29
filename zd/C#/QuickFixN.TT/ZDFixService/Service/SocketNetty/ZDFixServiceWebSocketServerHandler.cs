@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using static DotNetty.Codecs.Http.HttpVersion;
 using static DotNetty.Codecs.Http.HttpResponseStatus;
 
-namespace Demos.OpenResource.DotNettyDemo.WebSocket
+namespace ZDFixService.Service.SocketNetty
 {
     public class ZDFixServiceWebSocketServerHandler : SimpleChannelInboundHandler<object>
     {
@@ -21,7 +21,20 @@ namespace Demos.OpenResource.DotNettyDemo.WebSocket
 
         const string WebsocketPath = "/websocket";
 
-        WebSocketServerHandshaker handshaker;
+        WebSocketServerHandshaker _handshaker;
+
+        public override void ChannelActive(IChannelHandlerContext context)
+        {
+            _nLog.Info($"Client - {context.Channel.RemoteAddress.ToString()} connected。");
+            base.ChannelActive(context);
+        }
+
+        public override void ChannelInactive(IChannelHandlerContext context)
+        {
+            _nLog.Info($"Client - {context.Channel.RemoteAddress.ToString()} disconnected。");
+            base.ChannelInactive(context);
+        }
+
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, object msg)
         {
@@ -78,14 +91,14 @@ namespace Demos.OpenResource.DotNettyDemo.WebSocket
             // Handshake
             var wsFactory = new WebSocketServerHandshakerFactory(
                 GetWebSocketLocation(req), null, true, 5 * 1024 * 1024);
-            this.handshaker = wsFactory.NewHandshaker(req);
-            if (this.handshaker == null)
+            this._handshaker = wsFactory.NewHandshaker(req);
+            if (this._handshaker == null)
             {
                 WebSocketServerHandshakerFactory.SendUnsupportedVersionResponse(ctx.Channel);
             }
             else
             {
-                this.handshaker.HandshakeAsync(ctx.Channel, req);
+                this._handshaker.HandshakeAsync(ctx.Channel, req);
             }
         }
 
@@ -94,7 +107,7 @@ namespace Demos.OpenResource.DotNettyDemo.WebSocket
             // Check for closing frame
             if (frame is CloseWebSocketFrame)
             {
-                this.handshaker.CloseAsync(ctx.Channel, (CloseWebSocketFrame)frame.Retain());
+                this._handshaker.CloseAsync(ctx.Channel, (CloseWebSocketFrame)frame.Retain());
                 return;
             }
 
@@ -150,24 +163,15 @@ namespace Demos.OpenResource.DotNettyDemo.WebSocket
         /// <param name="e"></param>
         public override void ExceptionCaught(IChannelHandlerContext ctx, Exception e)
         {
-            Console.WriteLine($"{nameof(ZDFixServiceWebSocketServerHandler)} {0}", e);
+            _nLog.Info($"{nameof(ZDFixServiceWebSocketServerHandler)} {e.ToString()}");
             ctx.CloseAsync();
         }
 
-        static string GetWebSocketLocation(IFullHttpRequest req)
+        string GetWebSocketLocation(IFullHttpRequest req)
         {
             bool result = req.Headers.TryGet(HttpHeaderNames.Host, out ICharSequence value);
-            //Debug.Assert(result, "Host header does not exist.");
             string location = value.ToString() + WebsocketPath;
-
-            //if (ServerSettings.IsSsl)
-            //{
-            //    return "wss://" + location;
-            //}
-            //else
-            //{
             return "ws://" + location;
-            //}
         }
     }
 }
