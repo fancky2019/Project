@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using ZDFixService.FixUtility;
 using ZDFixService.Models;
 using ZDFixService.Service.MemoryDataManager;
-using ZDFixService.Service.SocketNetty;
+using ZDFixService.SocketNetty;
 using ZDFixService.Service.ZDCommon;
 
 namespace ZDFixService.Service.Base

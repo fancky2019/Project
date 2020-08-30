@@ -5,17 +5,19 @@ using DotNetty.Transport.Channels;
 using MessagePack;
 using MessagePack.Resolvers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZDFixService.Service.Base;
 
-namespace ZDFixService.Service.SocketNetty
+namespace ZDFixService.SocketNetty
 {
-     class ZDFixServiceServerHandler : ChannelHandlerAdapter
+    class ZDFixServiceServerHandler : ChannelHandlerAdapter
     {
-        private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+        private static  readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+        private ConcurrentDictionary<string,IChannel> _connectedChannel = new ConcurrentDictionary<string,IChannel>();
         public override void HandlerAdded(IChannelHandlerContext context)
         {
             base.HandlerAdded(context);
@@ -27,8 +29,7 @@ namespace ZDFixService.Service.SocketNetty
         /// <param name="context"></param>
         public override void HandlerRemoved(IChannelHandlerContext context)
         {
-            _nLog.Info($"Client - {context.Channel.RemoteAddress.ToString()} disconnected。");
-
+      
             base.HandlerRemoved(context);
         }
 
@@ -43,10 +44,17 @@ namespace ZDFixService.Service.SocketNetty
         public override void ChannelActive(IChannelHandlerContext context)
         {
             _nLog.Info($"Client - {context.Channel.RemoteAddress.ToString()} connected。");
+            _connectedChannel.TryAdd(context.Channel.RemoteAddress.ToString(),context.Channel);
             base.ChannelActive(context);
         }
 
-        public override void ChannelInactive(IChannelHandlerContext context) => base.ChannelInactive(context);
+        public override void ChannelInactive(IChannelHandlerContext context)
+        {
+            _nLog.Info($"Client - {context.Channel.RemoteAddress.ToString()} disconnected。");
+
+            _connectedChannel.TryRemove(context.Channel.RemoteAddress.ToString(),out _);
+            base.ChannelInactive(context);
+        }
 
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
@@ -77,7 +85,7 @@ namespace ZDFixService.Service.SocketNetty
             else
             {
                 var netInfo = (NetInfo)message;
-                _nLog.Info($"Received from client:{netInfo.MyToString()}" );
+                _nLog.Info($"Received from client:{netInfo.MyToString()}");
                 TradeServiceFactory.ITradeService.Order(netInfo);
             }
             //context.WriteAsync(message);
@@ -119,5 +127,7 @@ namespace ZDFixService.Service.SocketNetty
             Console.WriteLine("Exception: " + exception);
             context.CloseAsync();
         }
+
+    
     }
 }

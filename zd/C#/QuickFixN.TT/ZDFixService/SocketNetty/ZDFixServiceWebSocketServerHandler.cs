@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using static DotNetty.Codecs.Http.HttpVersion;
 using static DotNetty.Codecs.Http.HttpResponseStatus;
 
-namespace ZDFixService.Service.SocketNetty
+namespace ZDFixService.SocketNetty
 {
     public class ZDFixServiceWebSocketServerHandler : SimpleChannelInboundHandler<object>
     {

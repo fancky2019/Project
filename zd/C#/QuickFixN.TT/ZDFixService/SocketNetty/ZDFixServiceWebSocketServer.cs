@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZDFixService;
 
-namespace ZDFixService.Service.SocketNetty
+namespace ZDFixService.SocketNetty
 {
     public class ZDFixServiceWebSocketServer
     {

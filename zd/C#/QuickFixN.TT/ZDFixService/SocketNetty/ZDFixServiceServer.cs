@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using ZDFixService.Service.SocketNetty.NettyCodec;
+using ZDFixService.SocketNetty.NettyCodec;
 
-namespace ZDFixService.Service.SocketNetty
+namespace ZDFixService.SocketNetty
 {
     public class ZDFixServiceServer
     {

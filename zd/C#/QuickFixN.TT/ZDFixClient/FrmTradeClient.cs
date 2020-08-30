@@ -18,7 +18,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ZDFixService.Service.SocketNetty;
+using ZDFixService.SocketNetty;
 using ZDFixClient.SocketNettyClient;
 
 namespace ZDFixClient
@@ -115,19 +115,18 @@ namespace ZDFixClient
         #endregion
 
         #region  Test
-        private  void btnTest_Click(object sender, EventArgs e)
+        private async void btnTest_Click(object sender, EventArgs e)
         {
-
-            //await ZDFixServiceServer.Instance.RunServerAsync();
-            //await ZDFixNettyClient.Instance.RunClientAsync();
-            //ZDFixNettyClient.Instance.SendMsg();
-            //ZDFixNettyClient.Instance.Stop();
-            Task.Run(() =>
-            {
-                //单开一个线程，不然绑定端口不成功
-                ZDFixServiceWebSocketServer.Instance.RunServerAsync().Wait();
-                //ZDFixServiceWebSocketServer.Instance.Close();
-            });
+            await ZDFixServiceServer.Instance.RunServerAsync();
+            await ZDFixNettyClient.Instance.RunClientAsync();
+            ZDFixNettyClient.Instance.SendMsg();
+            ZDFixNettyClient.Instance.Stop();
+            //Task.Run(() =>
+            //{
+            //    //单开一个线程，不然绑定端口不成功
+            //    ZDFixServiceWebSocketServer.Instance.RunServerAsync().Wait();
+            //    //ZDFixServiceWebSocketServer.Instance.Close();
+            //});
 
             return;
             var monthStr1 = string.Format("{0:0000}", 123);//02
@@ -239,6 +238,8 @@ namespace ZDFixClient
 
             //StopwatchHelper.Instance.Stopwatch.Restart();
         }
+
+
         #endregion
 
         #region OrderForm
