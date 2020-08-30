@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZDFixService.Service.SocketNetty.NettyCodec
+namespace ZDFixService.SocketNetty.NettyCodec
 {
     public class ObjectDecoder<T> : ByteToMessageDecoder
     {

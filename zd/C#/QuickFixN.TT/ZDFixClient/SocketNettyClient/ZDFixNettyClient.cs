@@ -11,7 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using ZDFixService.Service.SocketNetty.NettyCodec;
+using ZDFixService.SocketNetty.NettyCodec;
 using CommonClassLib;
 using NLog;
 using System.Configuration;
