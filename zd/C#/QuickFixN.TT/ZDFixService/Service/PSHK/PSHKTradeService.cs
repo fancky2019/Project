@@ -496,7 +496,7 @@ namespace ZDFixService.Service.PSHK
             filledResponseInfo.orderNo = order.NewOrderSingleClientID;
             filledResponseInfo.accountNo = order.OrderNetInfo.accountNo;
             filledResponseInfo.systemNo = order.OrderNetInfo.systemCode;
-            filledResponseInfo.code = order.OrderNetInfo.code;
+            filledResponseInfo.code = orderInfo.code;
 
             //NetInfo netInfo = new NetInfo();
             //netInfo.infoT = filledResponseInfo.MyToString();
