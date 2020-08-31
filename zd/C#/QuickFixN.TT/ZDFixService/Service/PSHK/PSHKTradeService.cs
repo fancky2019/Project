@@ -243,7 +243,7 @@ namespace ZDFixService.Service.PSHK
 
                 char ordType = execReport.OrdType.getValue();
                 orderResponseInfo.priceType = ZDUperTagValueConvert.ConvertToZDOrdType(ordType.ToString());
-
+                orderResponseInfo.orderPrice = orderInfo.orderPrice;
 
                 //if (ordType == OrdType.LIMIT || ordType == OrdType.STOP_LIMIT)
                 //{
