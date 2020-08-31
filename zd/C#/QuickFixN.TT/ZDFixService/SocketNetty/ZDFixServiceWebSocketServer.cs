@@ -1,4 +1,5 @@
 ﻿using DotNetty.Codecs.Http;
+using DotNetty.Codecs.Http.WebSockets;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
@@ -49,7 +50,7 @@ namespace ZDFixService.SocketNetty
             }
             try
             {
-        
+
                 var bootstrap = new ServerBootstrap();
                 bootstrap.Group(_bossGroup, _workerGroup);
 
@@ -91,21 +92,18 @@ namespace ZDFixService.SocketNetty
         }
 
         /// <summary>
-        /// 如果用Protobuf其实T已经被指定了，编解码器。NetInfo
-        /// 当前使用MessagePack
+        /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="t"></param>
-        /// <returns></returns>
+        /// <param name="msg"></param>
         public async void SendMsgAsync(string msg)
         {
             await Task.Run(() =>
             {
-                //var bytes = Encoding.UTF8.GetBytes(msg);
                 var clientChannel = _serverHandler?.ConnectedChannel.Values.ToList();
+                TextWebSocketFrame textWebSocketFrame = new TextWebSocketFrame(msg);
                 clientChannel?.ForEach(p =>
                 {
-                    p.WriteAndFlushAsync(msg);
+                    p.WriteAndFlushAsync(textWebSocketFrame);
                 });
             });
         }
