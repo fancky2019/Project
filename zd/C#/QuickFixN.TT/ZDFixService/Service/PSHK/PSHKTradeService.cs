@@ -407,7 +407,7 @@ namespace ZDFixService.Service.PSHK
             cancelResponseInfo.cancelNumber = execReport.LeavesQty.ToString();
             cancelResponseInfo.orderNumber = execReport.OrderQty.ToString();
             //待兼容
-            cancelResponseInfo.filledNumber = order.CumQty.ToString();
+            cancelResponseInfo.filledNumber = ((int)order.CumQty).ToString();
             cancelResponseInfo.cancelNo = cancelResponseInfo.orderNo;
 
             DateTime transTime = execReport.TransactTime.getValue();
