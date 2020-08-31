@@ -110,9 +110,9 @@ namespace ZDFixService.SocketNetty
 
         public async void Close()
         {
-            await _channel.CloseAsync();
-            _workerGroup.ShutdownGracefullyAsync().Wait();
-            _bossGroup.ShutdownGracefullyAsync().Wait();
+            await _channel?.CloseAsync();
+            await _workerGroup?.ShutdownGracefullyAsync();
+            await _bossGroup?.ShutdownGracefullyAsync();
         }
     }
 }

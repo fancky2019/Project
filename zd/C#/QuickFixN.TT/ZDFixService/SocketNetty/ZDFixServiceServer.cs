@@ -84,10 +84,10 @@ namespace ZDFixService.SocketNetty
 
         public async void Close()
         {
-            await _channel.CloseAsync();
+            await _channel?.CloseAsync();
             await Task.WhenAll(
-                                _bossGroup.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)),
-                                _workerGroup.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)));
+                                _bossGroup?.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)),
+                                _workerGroup?.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)));
         }
 
         /// <summary>
