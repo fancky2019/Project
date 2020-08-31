@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using ZDFixService.SocketNetty.NettyCodec;
+using ZDFixService.Utility;
+using System.Linq;
+using MessagePack;
 
 namespace ZDFixService.SocketNetty
 {
@@ -21,7 +24,7 @@ namespace ZDFixService.SocketNetty
         IChannel _channel;
         IEventLoopGroup _bossGroup;
         IEventLoopGroup _workerGroup;
-
+        ZDFixServiceServerHandler _serverHandler;
         static ZDFixServiceServer()
         {
             Instance = new ZDFixServiceServer();
@@ -29,9 +32,6 @@ namespace ZDFixService.SocketNetty
 
         public async Task RunServerAsync()
         {
-
-            //libuv是一个高性能的，事件驱动的I/O库，并且提供了跨平台（如windows, linux）的API。
-            //将Dll-->Netty下的libuv.dll复制到运行目录
             var useLibuv = true;
             if (useLibuv)
             {
@@ -63,30 +63,18 @@ namespace ZDFixService.SocketNetty
                     .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
                     {
                         IChannelPipeline pipeline = channel.Pipeline;
-                        //if (tlsCertificate != null)
-                        //{
-                        //    pipeline.AddLast("tls", TlsHandler.Server(tlsCertificate));
-                        //}
-                        //pipeline.AddLast(new LoggingHandler("SRV-CONN"));
 
                         pipeline.AddLast("framing-enc", new LengthFieldPrepender(2));
                         pipeline.AddLast("framing-dec", new LengthFieldBasedFrameDecoder(ushort.MaxValue, 0, 2, 0, 2));
-
-                        //pipeline.AddLast("StringDecoder", new StringDecoder());
-                        //pipeline.AddLast("StringEncoder", new StringEncoder());
-
-                        //pipeline.AddLast("ProtobufDecoder", new ProtobufDecoder(PersonProto.Parser));
-                        //pipeline.AddLast("ProtobufEncoder", new ProtobufEncoder());
-
-
                         pipeline.AddLast("ObjectDecoder", new ObjectDecoder<NetInfo>());
                         pipeline.AddLast("ObjectEncoder", new ObjectEncoder());
-
-                        pipeline.AddLast("ZDFixServiceServerHandler", new ZDFixServiceServerHandler());
+                        _serverHandler = new ZDFixServiceServerHandler();
+                        pipeline.AddLast("ZDFixServiceServerHandler", _serverHandler);
                     }));
 
                 var port = int.Parse(Configurations.Configuration["ZDFixService:ServerPort"]);
                 _channel = await bootstrap.BindAsync(port);
+                _nLog.Info($"Listening on  port:{port}");
             }
             catch (Exception ex)
             {
@@ -100,6 +88,25 @@ namespace ZDFixService.SocketNetty
             await Task.WhenAll(
                                 _bossGroup.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)),
                                 _workerGroup.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)));
+        }
+
+        /// <summary>
+        /// 如果用Protobuf其实T已经被指定了，编解码器。NetInfo
+        /// 当前使用MessagePack
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public async void SendMsgAsync<T>(T t)
+        {
+            await Task.Run(() =>
+                {
+                    var clientChannel = _serverHandler?.ConnectedChannel.Values.ToList();
+                    clientChannel?.ForEach(p =>
+                    {
+                        p.WriteAndFlushAsync(t);
+                    });
+                });
         }
     }
 }

@@ -28,7 +28,7 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
             this.txtSecurityExchange.Text = "HKEX";
             this.txtSecurityAltID.Text = "0002.HK";
             this.nudQrdQty.Value = 2000;
-            this.txtPrice.Text = "105";
+            this.txtPrice.Text = "67.5";
 
         }
 
@@ -79,6 +79,11 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
             //var netInfoStr = $"OrdeStHK@SAM3@000209191P000003@1@@00020919@NASD@@C005@@0033433&C005@@00020919@@C@@000002.HK@1@1@499.50@@1@@@@A@@@@@@@@@@@@@@@@@@0@";
             //netInfo.MyReadString(netInfoStr);
             //netInfo.accountNo = "I5555";
+
+            //OrdeStHK@2020-08-31 11:13:05.227@SystemCode1598872385226@0047@@I5555@HKEX@@C005@@&@@@@@HKEX@0002.HK@1@2000@105@@1@@@@0@@@@0@@@@@@@@@@@@@@@
+            //var msg = netInfo.MyToString();
+
+
             Order?.Invoke(netInfo);
 
 

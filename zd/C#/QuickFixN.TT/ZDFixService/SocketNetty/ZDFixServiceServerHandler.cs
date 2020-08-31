@@ -16,8 +16,14 @@ namespace ZDFixService.SocketNetty
 {
     class ZDFixServiceServerHandler : ChannelHandlerAdapter
     {
-        private static  readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
-        private ConcurrentDictionary<string,IChannel> _connectedChannel = new ConcurrentDictionary<string,IChannel>();
+        private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+        internal ConcurrentDictionary<string, IChannel> ConnectedChannel { get; set; }
+
+        internal ZDFixServiceServerHandler()
+        {
+            ConnectedChannel = new ConcurrentDictionary<string, IChannel>();
+        }
+
         public override void HandlerAdded(IChannelHandlerContext context)
         {
             base.HandlerAdded(context);
@@ -29,7 +35,7 @@ namespace ZDFixService.SocketNetty
         /// <param name="context"></param>
         public override void HandlerRemoved(IChannelHandlerContext context)
         {
-      
+
             base.HandlerRemoved(context);
         }
 
@@ -44,15 +50,14 @@ namespace ZDFixService.SocketNetty
         public override void ChannelActive(IChannelHandlerContext context)
         {
             _nLog.Info($"Client - {context.Channel.RemoteAddress.ToString()} connected。");
-            _connectedChannel.TryAdd(context.Channel.RemoteAddress.ToString(),context.Channel);
+            ConnectedChannel.TryAdd(context.Channel.RemoteAddress.ToString(), context.Channel);
             base.ChannelActive(context);
         }
 
         public override void ChannelInactive(IChannelHandlerContext context)
         {
             _nLog.Info($"Client - {context.Channel.RemoteAddress.ToString()} disconnected。");
-
-            _connectedChannel.TryRemove(context.Channel.RemoteAddress.ToString(),out _);
+            ConnectedChannel.TryRemove(context.Channel.RemoteAddress.ToString(), out _);
             base.ChannelInactive(context);
         }
 
@@ -63,22 +68,6 @@ namespace ZDFixService.SocketNetty
             {
 
                 _nLog.Info("Received from client: " + buffer.ToString(Encoding.UTF8));
-
-
-                //处理接收二进制数据
-                //ArraySegment<byte> ioBuf = buffer.GetIoBuffer(0, buffer.Capacity);
-                //var array = ioBuf.ToArray();
-
-                // return encoding.GetString(ioBuf.Array, ioBuf.Offset, ioBuf.Count);
-                //这样会造成从堆外的直接内存将数据拷贝到内存堆内，
-                //但是可以用Netty的其他特性，比传统Socket仍有优势。
-                ////MessagePackSerializer.DefaultOptions = ContractlessStandardResolver.Options;
-                //var bytes = new byte[buffer.Capacity];
-                //buffer.GetBytes(0, bytes);//将数据复制到堆内
-                //var contractlessSample = MessagePackSerializer.Deserialize<Person>(bytes);
-                //var jsonStr = MessagePackSerializer.ConvertToJson(bytes);
-                //Console.WriteLine("Received from client: " + jsonStr);
-
 
 
             }
@@ -128,6 +117,6 @@ namespace ZDFixService.SocketNetty
             context.CloseAsync();
         }
 
-    
+
     }
 }

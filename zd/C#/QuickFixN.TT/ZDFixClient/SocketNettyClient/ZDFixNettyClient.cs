@@ -108,12 +108,10 @@ namespace ZDFixClient.SocketNettyClient
             }
         }
 
-        public void SendMsg()
+        public void SendMsg<T>(T t)
         {
-            NetInfo netInfo = new NetInfo();
-            var netInfoStr = $"OrdeStHK@SAM3@000209191P000003@1@@00020919@NASD@@C005@@0033433&C005@@00020919@@C@@000002.HK@1@1@499.50@@1@@@@A@@@@@@@@@@@@@@@@@@0@";
-            netInfo.MyReadString(netInfoStr);
-            _clientChannel.WriteAndFlushAsync(netInfo);
+         
+            _clientChannel.WriteAndFlushAsync(t);
 
         }
 

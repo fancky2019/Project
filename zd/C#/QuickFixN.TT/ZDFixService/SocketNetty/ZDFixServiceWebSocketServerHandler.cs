@@ -12,6 +12,10 @@ using System.Threading.Tasks;
 //官方Demo使用了静态类
 using static DotNetty.Codecs.Http.HttpVersion;
 using static DotNetty.Codecs.Http.HttpResponseStatus;
+using System.Collections.Concurrent;
+using CommonClassLib;
+using ZDFixService.Service.ZDCommon;
+using ZDFixService.Service.Base;
 
 namespace ZDFixService.SocketNetty
 {
@@ -23,15 +27,24 @@ namespace ZDFixService.SocketNetty
 
         WebSocketServerHandshaker _handshaker;
 
+        internal ConcurrentDictionary<string, IChannel> ConnectedChannel { get; set; }
+
+        internal ZDFixServiceWebSocketServerHandler()
+        {
+            ConnectedChannel = new ConcurrentDictionary<string, IChannel>();
+        }
+
         public override void ChannelActive(IChannelHandlerContext context)
         {
             _nLog.Info($"Client - {context.Channel.RemoteAddress.ToString()} connected。");
+            ConnectedChannel.TryAdd(context.Channel.RemoteAddress.ToString(), context.Channel);
             base.ChannelActive(context);
         }
 
         public override void ChannelInactive(IChannelHandlerContext context)
         {
             _nLog.Info($"Client - {context.Channel.RemoteAddress.ToString()} disconnected。");
+            ConnectedChannel.TryRemove(context.Channel.RemoteAddress.ToString(), out _);
             base.ChannelInactive(context);
         }
 
@@ -67,19 +80,7 @@ namespace ZDFixService.SocketNetty
                 return;
             }
 
-            // Send the demo page and favicon.ico
-            //if ("/".Equals(req.Uri))
-            //{
-            //    IByteBuffer content = Unpooled.WrappedBuffer(
-            //    Encoding.ASCII.GetBytes("已连接!")); ;// WebSocketServerBenchmarkPage.GetContent(GetWebSocketLocation(req));
-            //    var res = new DefaultFullHttpResponse(Http11, OK, content);
 
-            //    res.Headers.Set(HttpHeaderNames.ContentType, "text/html; charset=UTF-8");
-            //    HttpUtil.SetContentLength(res, content.ReadableBytes);
-
-            //    SendHttpResponse(ctx, req, res);
-            //    return;
-            //}
             if ("/favicon.ico".Equals(req.Uri))
             {
                 var res = new DefaultFullHttpResponse(Http11, NotFound);
@@ -121,11 +122,20 @@ namespace ZDFixService.SocketNetty
             {
                 //接收到来自客户端的字符串消息
                 var reveivedMsg = textWebSocketFrame.Text();
+                _nLog.Info($"Received from client:{reveivedMsg}");
+                NetInfo netInfo1 = new NetInfo();
+                netInfo1.code = TradeBaseDataConfig.GetCancelComandCode();
 
-                // Echo the frame
-                //ctx.WriteAsync(frame.Retain());
-                //返回客户端信息，参考java 的netty 的websocket sample
-                ctx.WriteAsync(new TextWebSocketFrame($"服务端已收到客户端消息:{reveivedMsg}"));
+                CommonClassLib.CancelInfo cancelInfo = new CommonClassLib.CancelInfo();
+                var sysCodeCliOrderID = reveivedMsg.Split(';');
+                cancelInfo.systemNo = sysCodeCliOrderID[0];
+                cancelInfo.orderNo = sysCodeCliOrderID[1];
+
+                netInfo1.systemCode = cancelInfo.systemNo;
+                netInfo1.infoT = cancelInfo.MyToString();
+
+                TradeServiceFactory.ITradeService.Order(netInfo1);
+
                 return;
             }
 

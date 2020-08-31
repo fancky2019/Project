@@ -96,6 +96,34 @@ namespace ZDFixService.Service.ZDCommon
             }
 
         }
+
+        public static string GetCancelComandCode()
+        {
+
+            var tradeServiceName = Configurations.Configuration["ZDFixService:ITradeService"];
+
+
+            //tradeServiceName switch
+            //{
+            //    "TTTradeService" => CommandCode.CANCEL,
+            //    "PSHKTradeService" => CommandCode.CANCELCAST,
+            //    _ => throw new Exception("GetCancelComand Exception");
+            //};
+
+            var commandCode = "";
+            switch (tradeServiceName)
+            {
+                case "TTTradeService":
+                    commandCode = CommandCode.CANCEL;
+                    break;
+                case "PSHKTradeService":
+                    commandCode = CommandCode.CancelStockHK;
+                    break;
+                default:
+                    throw new Exception("GetCancelComand Exception");
+            }
+            return commandCode;
+        }
     }
 
     enum CommandType : byte

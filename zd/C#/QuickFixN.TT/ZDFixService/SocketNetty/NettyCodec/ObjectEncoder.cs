@@ -15,17 +15,9 @@ namespace ZDFixService.SocketNetty.NettyCodec
     {
         protected override void Encode(IChannelHandlerContext context, object message, IByteBuffer output)
         {
-            //发送二进制数据
             MessagePackSerializer.DefaultOptions = ContractlessStandardResolver.Options;
-
             // Now serializable...
-            //15byte
             var messageBytes = MessagePackSerializer.Serialize(message);
-            //175 byte
-            //var daBytes = Serialization.Serialize<Person>(data);
-            //var obj= Serialization.Deserialize<Person>(daBytes);
-
-
             IByteBuffer byteBuffer = Unpooled.DirectBuffer(messageBytes.Length);
             byteBuffer.WriteBytes(messageBytes);
             context.WriteAndFlushAsync(byteBuffer);

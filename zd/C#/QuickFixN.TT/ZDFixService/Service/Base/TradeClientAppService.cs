@@ -155,6 +155,10 @@ namespace ZDFixService.Service.Base
 
                         OrderCancelRequest(netInfo);
                     }
+                    else
+                    {
+                        throw new Exception("Can not find appropriate CommandCode");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -274,6 +278,9 @@ namespace ZDFixService.Service.Base
                 var str = netInfo.MyToString();
                 ExecutionReport?.Invoke(str);
                 _nLog.Info($"ToClient:{str}");
+                ZDFixServiceServer.Instance.SendMsgAsync(netInfo);
+                ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
+
             }
             else
             {
