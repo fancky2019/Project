@@ -20,6 +20,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZDFixService.SocketNetty;
 using ZDFixClient.SocketNettyClient;
+using MessagePack;
+using MessagePack.Resolvers;
 
 namespace ZDFixClient
 {
@@ -115,12 +117,21 @@ namespace ZDFixClient
         #endregion
 
         #region  Test
+        private bool _run = false;
         private async void btnTest_Click(object sender, EventArgs e)
         {
-            await ZDFixServiceServer.Instance.RunServerAsync();
-            await ZDFixNettyClient.Instance.RunClientAsync();
-            ZDFixNettyClient.Instance.SendMsg();
-            ZDFixNettyClient.Instance.Stop();
+        
+            if (!_run)
+            {
+                //await ZDFixServiceServer.Instance.RunServerAsync();
+                await ZDFixNettyClient.Instance.RunClientAsync();
+                _run = true;
+            }
+            NetInfo netInfo11 = new NetInfo();
+            var netInfoStr = $"OrdeStHK@2020-08-31 11:13:05.227@SystemCode1598872385226@0047@@I5555@HKEX@@C005@@&@@@@@HKEX@0002.HK@1@2000@67.5@@1@@@@0@@@@0@@@@@@@@@@@@@@@";
+            netInfo11.MyReadString(netInfoStr);
+            ZDFixNettyClient.Instance.SendMsg<NetInfo>(netInfo11);
+            //ZDFixNettyClient.Instance.Stop();
             //Task.Run(() =>
             //{
             //    //单开一个线程，不然绑定端口不成功
@@ -128,6 +139,14 @@ namespace ZDFixClient
             //    //ZDFixServiceWebSocketServer.Instance.Close();
             //});
 
+            return;
+            //发送二进制数据
+            MessagePackSerializer.DefaultOptions = ContractlessStandardResolver.Options;
+            NetInfo netInfo1 = new NetInfo();
+            var str = @"OrdeStHK@2020-08-31 11:13:05.227@SystemCode1598872385226@0047@@I5555@HKEX@@C005@@&@@@@@HKEX@0002.HK@1@2000@105@@1@@@@0@@@@0@@@@@@@@@@@@@@@";
+            netInfo1.MyReadString(str);
+            var bytes = MessagePackSerializer.Serialize<NetInfo>(netInfo1);
+            var t = MessagePackSerializer.Deserialize<NetInfo>(bytes);
             return;
             var monthStr1 = string.Format("{0:0000}", 123);//02
             var monthStr2 = string.Format("{0:0000}", 1234);//02

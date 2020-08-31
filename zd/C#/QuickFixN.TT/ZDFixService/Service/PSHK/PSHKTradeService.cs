@@ -134,14 +134,8 @@ namespace ZDFixService.Service.PSHK
 
                 QuickFix.FIX42.OrderCancelRequest orderCancelRequest = new QuickFix.FIX42.OrderCancelRequest();
 
-                //NewOrderSingle newOrderSingle = new NewOrderSingle();
-                //newOrderSingle.FromString(order.NewOrderSingle, false, null, null);
-
-
-
                 //Tag 37
                 orderCancelRequest.OrderID = new OrderID(order.OrderID);
-
                 //Tag 11
                 var clOrdID = MemoryData.GetNextClOrderID().ToString();
                 orderCancelRequest.ClOrdID = new ClOrdID(clOrdID);

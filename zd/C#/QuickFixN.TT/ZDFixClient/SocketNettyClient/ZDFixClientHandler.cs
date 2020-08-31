@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NLog;
+using CommonClassLib;
 
 namespace ZDFixClient.SocketNettyClient
 {
@@ -105,7 +106,8 @@ namespace ZDFixClient.SocketNettyClient
             }
             else
             {
-               _nLog.Info($"Received from server:{message.ToString()}");
+                var netInfo = (NetInfo)message;
+               _nLog.Info($"Received from server:{netInfo.MyToString()}");
 
             }
             //避免死循环，客户服务端不停互相发消息
