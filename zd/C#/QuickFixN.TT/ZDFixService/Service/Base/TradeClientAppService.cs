@@ -33,8 +33,8 @@ namespace ZDFixService.Service.Base
         {
             TradeClient.Instance.Logon += (msg =>
             {
-                Logon?.Invoke(msg);
                 Init();
+                Logon?.Invoke(msg);
             });
 
             TradeClient.Instance.LogOut += (msg =>
@@ -76,23 +76,26 @@ namespace ZDFixService.Service.Base
             TradeClient.Instance.SocketInitiator.Start();
         }
 
-        private void Init()
+        private async void Init()
         {
             MemoryData.IPersist.Load();
-            Task.Run(() =>
-            {
-                ZDFixServiceServer.Instance.RunServerAsync().Wait();
-            });
-            Task.Run(() =>
-            {
-                ZDFixServiceWebSocketServer.Instance.RunServerAsync().Wait();
-            });
+
+            //Task.Run(() =>
+            //{
+            //    ZDFixServiceServer.Instance.RunServerAsync().Wait();
+            //});
+            //Task.Run(() =>
+            //{
+            //    ZDFixServiceWebSocketServer.Instance.RunServerAsync().Wait();
+            //});
 
             Task.Run(() =>
             {
                 Scheduler.Init();
             });
-          
+
+            await ZDFixServiceServer.Instance.RunServerAsync();
+            await ZDFixServiceWebSocketServer.Instance.RunServerAsync();
         }
 
         public void Stop()

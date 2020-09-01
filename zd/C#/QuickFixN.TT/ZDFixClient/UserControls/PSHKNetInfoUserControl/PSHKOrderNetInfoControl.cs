@@ -13,6 +13,8 @@ using ZDFixService.Service.ZDCommon;
 using System.Configuration;
 using ZDFixService.Service;
 using ZDFixService.Utility;
+using ZDFixClient.SocketNettyClient;
+
 namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
 {
     public partial class PSHKOrderNetInfoControl : OrderNetInfoControl
@@ -85,8 +87,7 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
 
 
             Order?.Invoke(netInfo);
-
-
+         
 
 
         }

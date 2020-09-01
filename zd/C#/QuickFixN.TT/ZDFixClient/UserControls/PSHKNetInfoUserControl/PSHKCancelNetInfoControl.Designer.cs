@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.btnOrderCancelRequest = new System.Windows.Forms.Button();
-            this.cbConsole = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // txtCancelOrderClOrderID
@@ -50,33 +49,19 @@
             this.btnOrderCancelRequest.UseVisualStyleBackColor = true;
             this.btnOrderCancelRequest.Click += new System.EventHandler(this.btnOrderCancelRequest_Click);
             // 
-            // cbConsole
-            // 
-            this.cbConsole.AutoSize = true;
-            this.cbConsole.Location = new System.Drawing.Point(114, 94);
-            this.cbConsole.Name = "cbConsole";
-            this.cbConsole.Size = new System.Drawing.Size(66, 16);
-            this.cbConsole.TabIndex = 51;
-            this.cbConsole.Text = "Console";
-            this.cbConsole.UseVisualStyleBackColor = true;
-            // 
             // PSHKCancelNetInfoControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.cbConsole);
             this.Controls.Add(this.btnOrderCancelRequest);
             this.Name = "PSHKCancelNetInfoControl";
             this.Controls.SetChildIndex(this.btnOrderCancelRequest, 0);
-            this.Controls.SetChildIndex(this.cbConsole, 0);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Button btnOrderCancelRequest;
-        private System.Windows.Forms.CheckBox cbConsole;
     }
 }

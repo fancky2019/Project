@@ -33,6 +33,7 @@
             this.btnStop = new System.Windows.Forms.Button();
             this.btnTest = new System.Windows.Forms.Button();
             this.btnShowOrderForm = new System.Windows.Forms.Button();
+            this.cbConsole = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnStart
@@ -77,7 +78,7 @@
             // 
             // btnShowOrderForm
             // 
-            this.btnShowOrderForm.Location = new System.Drawing.Point(12, 109);
+            this.btnShowOrderForm.Location = new System.Drawing.Point(12, 130);
             this.btnShowOrderForm.Name = "btnShowOrderForm";
             this.btnShowOrderForm.Size = new System.Drawing.Size(75, 23);
             this.btnShowOrderForm.TabIndex = 22;
@@ -85,11 +86,22 @@
             this.btnShowOrderForm.UseVisualStyleBackColor = true;
             this.btnShowOrderForm.Click += new System.EventHandler(this.btnShowOrderForm_Click);
             // 
+            // cbConsole
+            // 
+            this.cbConsole.AutoSize = true;
+            this.cbConsole.Location = new System.Drawing.Point(12, 108);
+            this.cbConsole.Name = "cbConsole";
+            this.cbConsole.Size = new System.Drawing.Size(66, 16);
+            this.cbConsole.TabIndex = 23;
+            this.cbConsole.Text = "Console";
+            this.cbConsole.UseVisualStyleBackColor = true;
+            // 
             // FrmTradeClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(294, 195);
+            this.Controls.Add(this.cbConsole);
             this.Controls.Add(this.btnShowOrderForm);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnStop);
@@ -101,6 +113,7 @@
             this.Text = "FrmTradeClient.TT";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTradeClient_FormClosing);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -111,6 +124,7 @@
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.Button btnShowOrderForm;
+        private System.Windows.Forms.CheckBox cbConsole;
     }
 }
 
