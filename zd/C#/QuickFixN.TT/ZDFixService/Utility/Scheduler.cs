@@ -37,19 +37,19 @@ namespace ZDFixService.Utility
 
             sched.ScheduleJob(pSHKTradeServiceJob, triggerPSHKTradeServiceJob);
 
-            var testJobCron = Configurations.Configuration["ZDFixService:Jobs:TestJob"].ToString();
+            //var testJobCron = Configurations.Configuration["ZDFixService:Jobs:TestJob"].ToString();
 
-            // job 2 will run every other minute (at 15 seconds past the minute)
-            var testJob = JobBuilder.Create<TestJob>()
-                  .WithIdentity("TestJob", "group1")
-                  .Build();
+            //// job 2 will run every other minute (at 15 seconds past the minute)
+            //var testJob = JobBuilder.Create<TestJob>()
+            //      .WithIdentity("TestJob", "group1")
+            //      .Build();
 
-            var triggerTestJob = (ICronTrigger)TriggerBuilder.Create()
-                 .WithIdentity("trigger2", "group1")
-                 .WithCronSchedule(testJobCron)
-                 .Build();
+            //var triggerTestJob = (ICronTrigger)TriggerBuilder.Create()
+            //     .WithIdentity("trigger2", "group1")
+            //     .WithCronSchedule(testJobCron)
+            //     .Build();
 
-            sched.ScheduleJob(testJob, triggerTestJob);
+            //sched.ScheduleJob(testJob, triggerTestJob);
             sched.Start();
         }
     }
