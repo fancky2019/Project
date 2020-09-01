@@ -50,7 +50,6 @@
             // 
             // btnAmendOrder
             // 
-            this.btnAmendOrder.Enabled = false;
             this.btnAmendOrder.Location = new System.Drawing.Point(194, 182);
             this.btnAmendOrder.Name = "btnAmendOrder";
             this.btnAmendOrder.Size = new System.Drawing.Size(78, 23);

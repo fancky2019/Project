@@ -324,7 +324,7 @@ namespace ZDFixService.Service.Base
                     _nLog.Error("Message is not set tag 11 ");
                     return netInfo;
                 }
-                var currentCliOrderID = message.GetString(Tags.ClOrdID);
+                var currentCliOrderID = message.GetString(Tags.ClOrdID).Replace("DA", ""); ;
                 //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
                 var order = MemoryData.GetOrderByCliOrderID(currentCliOrderID);
                 order.Pending = false;

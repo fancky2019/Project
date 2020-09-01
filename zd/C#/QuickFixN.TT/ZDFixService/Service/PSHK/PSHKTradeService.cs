@@ -33,7 +33,7 @@ namespace ZDFixService.Service.PSHK
                 // Tag1  上手号
                 newOrderSingle.Account = new Account(netInfo.accountNo);
                 // Tag11
-                newOrderSingle.ClOrdID = new ClOrdID(clOrdID);
+                newOrderSingle.ClOrdID = new ClOrdID($"DA{clOrdID}");
                 //tag109
                 //newOrderSingle.ClientID = new ClientID(netInfo.clientNo);
                 //tag21
@@ -140,7 +140,7 @@ namespace ZDFixService.Service.PSHK
                 orderCancelRequest.OrderID = new OrderID(order.OrderID);
                 //Tag 11
                 var clOrdID = MemoryData.GetNextClOrderID().ToString();
-                orderCancelRequest.ClOrdID = new ClOrdID(clOrdID);
+                orderCancelRequest.ClOrdID = new ClOrdID($"DA{clOrdID}");
                 //Tag 41
                 orderCancelRequest.OrigClOrdID = new OrigClOrdID(order.CurrentCliOrderID.ToString());
 
@@ -210,7 +210,7 @@ namespace ZDFixService.Service.PSHK
             NetInfo netInfo = new NetInfo();
             try
             {
-                var currentCliOrderID = execReport.ClOrdID.getValue();
+                var currentCliOrderID = execReport.ClOrdID.getValue().Replace("DA", "");
                 //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
                 var order = MemoryData.GetOrderByCliOrderID(currentCliOrderID);
                 order.Pending = false;
@@ -222,7 +222,7 @@ namespace ZDFixService.Service.PSHK
                 orderInfo.MyReadString(order.OrderNetInfo.infoT);
                 OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
 
-                orderResponseInfo.orderNo = execReport.ClOrdID.getValue();
+                orderResponseInfo.orderNo = currentCliOrderID;
 
                 string OrderID = execReport.OrderID.getValue();
                 //info.origOrderNo = info.orderNo;
@@ -305,7 +305,7 @@ namespace ZDFixService.Service.PSHK
             OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
 
 
-            var currentCliOrderID = execReport.ClOrdID.getValue();
+            var currentCliOrderID = execReport.ClOrdID.getValue().Replace("DA", "");
             //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
             var order = MemoryData.GetOrderByCliOrderID(currentCliOrderID);
             order.Pending = false;
@@ -378,7 +378,7 @@ namespace ZDFixService.Service.PSHK
         {
             CancelResponseInfo cancelResponseInfo = new CancelResponseInfo();
 
-            var currentCliOrderID = execReport.ClOrdID.getValue();
+            var currentCliOrderID = execReport.ClOrdID.getValue().Replace("DA", ""); ;
             //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
             var order = MemoryData.GetOrderByCliOrderID(currentCliOrderID);
             order.Pending = false;
@@ -444,7 +444,7 @@ namespace ZDFixService.Service.PSHK
                     return null;
                 }
             }
-            var currentCliOrderID = execReport.ClOrdID.getValue();
+            var currentCliOrderID = execReport.ClOrdID.getValue().Replace("DA", ""); ;
             var order = MemoryData.GetOrderByCliOrderID(currentCliOrderID);
             filledResponseInfo.exchangeCode = order.OrderNetInfo.exchangeCode;
 
