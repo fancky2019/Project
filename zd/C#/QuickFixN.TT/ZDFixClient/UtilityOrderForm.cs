@@ -130,7 +130,7 @@ namespace ZDFixClient
 
         #region  ExecutionReport
 
-        private void ExecutionReport(string netInfoStr)
+        public void ExecutionReport(string netInfoStr)
         {
             this.BeginInvoke((MethodInvoker)(() =>
             {
@@ -300,7 +300,7 @@ namespace ZDFixClient
             {
                 ZDFixNettyClient.Instance.SendMsg<NetInfo>(netInfo);
             }
-  
+
         }
         #endregion
 

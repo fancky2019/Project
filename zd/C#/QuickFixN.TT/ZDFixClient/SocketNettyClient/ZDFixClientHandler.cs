@@ -32,8 +32,10 @@ namespace ZDFixClient.SocketNettyClient
         readonly IByteBuffer initialMessage;
         public event Action DisConnected;
 
-        public ZDFixClientHandler()
+        public event Action<string> _receiveMsg;
+        public ZDFixClientHandler(Action<string> receiveMsg)
         {
+            this._receiveMsg = receiveMsg;
             /*
              * 如果使用传统的堆内存分配，当我们需要将数据通过socket发送的时候，就需要从堆内存拷贝到直接内存，
              * 然后再由直接内存拷贝到网卡接口层。Netty提供的直接Buffer，直接将数据分配到内存空间，
@@ -43,7 +45,7 @@ namespace ZDFixClient.SocketNettyClient
             //从堆上分配
             //this.initialMessage = Unpooled.Buffer(256);
             //直接从内存分配
-            this.initialMessage = Unpooled.DirectBuffer(1024); 
+            this.initialMessage = Unpooled.DirectBuffer(1024);
         }
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace ZDFixClient.SocketNettyClient
 
         }
 
-   
+
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
             var byteBuffer = message as IByteBuffer;
@@ -111,7 +113,9 @@ namespace ZDFixClient.SocketNettyClient
             else
             {
                 var netInfo = (NetInfo)message;
-               _nLog.Info($"Received from server:{netInfo.MyToString()}");
+                var receiveMsg = netInfo.MyToString();
+                _nLog.Info($"Received from server:{receiveMsg}");
+                _receiveMsg?.Invoke(receiveMsg);
 
             }
             //避免死循环，客户服务端不停互相发消息
@@ -129,7 +133,7 @@ namespace ZDFixClient.SocketNettyClient
         {
             if (evt is IdleStateEvent eventState)
             {
-         
+
                 if (eventState != null)
                 {
                     switch (eventState.State)
@@ -140,7 +144,7 @@ namespace ZDFixClient.SocketNettyClient
                             // 长时间未写入数据
                             // 则发送心跳数据
                             // context.WriteAndFlushAsync();
-                           // mp.SendData(ExliveCmd.HEART);
+                            // mp.SendData(ExliveCmd.HEART);
 
                             break;
                         case IdleState.AllIdle:
@@ -161,7 +165,7 @@ namespace ZDFixClient.SocketNettyClient
             context.CloseAsync();
         }
 
-   
+
 
     }
 }

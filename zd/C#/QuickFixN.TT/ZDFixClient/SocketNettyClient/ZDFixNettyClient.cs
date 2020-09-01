@@ -29,6 +29,7 @@ namespace ZDFixClient.SocketNettyClient
         MultithreadEventLoopGroup group;
 
         internal static ZDFixNettyClient Instance;
+        public event Action<string> ReceiveMsg;
         static ZDFixNettyClient()
         {
             Instance = new ZDFixNettyClient();
@@ -82,7 +83,7 @@ namespace ZDFixClient.SocketNettyClient
                         pipeline.AddLast("ObjectDecoder", new ObjectDecoder<NetInfo>());
                         pipeline.AddLast("ObjectEncoder", new ObjectEncoder());
 
-                        ZDFixClientHandler echoClientHandler = new ZDFixClientHandler();
+                        ZDFixClientHandler echoClientHandler = new ZDFixClientHandler(ReceiveMsg);
                         echoClientHandler.DisConnected += () =>
                           {
                               _nLog.Info("Reconnect......");

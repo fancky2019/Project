@@ -173,7 +173,10 @@ namespace ZDFixService.Service.Base
                 catch (Exception ex)
                 {
                     _nLog.Info(ex.ToString());
-                    ExecutionReport?.Invoke(netInfo?.MyToString());
+                    var str = netInfo?.MyToString();
+                    ExecutionReport?.Invoke(str);
+                    ZDFixServiceServer.Instance.SendMsgAsync(netInfo);
+                    ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
                 }
             }
         }
