@@ -21,6 +21,7 @@ using ZDFixClient.UserControls.PSHKNetInfoUserControl;
 using NLog;
 using ZDFixService.Utility;
 using System.Collections.Concurrent;
+using ZDFixClient.SocketNettyClient;
 
 namespace ZDFixClient
 {
@@ -42,12 +43,14 @@ namespace ZDFixClient
         private Dictionary<string, string> _timeInForceDict = new Dictionary<string, string>();
 
         private ConcurrentDictionary<string, NetInfo> _newOrderSingleNetInfos = new ConcurrentDictionary<string, NetInfo>();
+        bool _console;
         #endregion
 
         #region Constructor Load
-        public UtilityOrderForm()
+        public UtilityOrderForm(bool console)
         {
             InitializeComponent();
+            this._console = console;
         }
 
 
@@ -173,7 +176,7 @@ namespace ZDFixClient
                         case "FILCST01":
                         case "FillStHK":
                             orderInfo = GetNewOrderSingleNetInfo(netInfo.systemCode, out _);
-                            if(orderInfo==null)
+                            if (orderInfo == null)
                             {
                                 return;
                             }
@@ -288,7 +291,16 @@ namespace ZDFixClient
         private void Order(NetInfo netInfo)
         {
             _newOrderSingleNetInfos.TryAdd(netInfo.systemCode, netInfo);
-            TradeServiceFactory.ITradeService.Order(netInfo);
+
+            if (!this._console)
+            {
+                TradeServiceFactory.ITradeService.Order(netInfo);
+            }
+            else
+            {
+                ZDFixNettyClient.Instance.SendMsg<NetInfo>(netInfo);
+            }
+  
         }
         #endregion
 
@@ -321,7 +333,15 @@ namespace ZDFixClient
             }
 
             netInfo.infoT = modifyInfo.MyToString();
-            TradeServiceFactory.ITradeService.Order(netInfo);
+
+            if (!this._console)
+            {
+                TradeServiceFactory.ITradeService.Order(netInfo);
+            }
+            else
+            {
+                ZDFixNettyClient.Instance.SendMsg<NetInfo>(netInfo);
+            }
         }
         #endregion
 
@@ -355,7 +375,14 @@ namespace ZDFixClient
 
 
             netInfo.infoT = cancelInfo.MyToString();
-            TradeServiceFactory.ITradeService.Order(netInfo);
+            if (!this._console)
+            {
+                TradeServiceFactory.ITradeService.Order(netInfo);
+            }
+            else
+            {
+                ZDFixNettyClient.Instance.SendMsg<NetInfo>(netInfo);
+            }
         }
         #endregion
 

@@ -120,7 +120,7 @@ namespace ZDFixClient.SocketNettyClient
             return await _bootstrap.ConnectAsync(iPEndPoint);
         }
 
-        public async void Stop()
+        public async void Close()
         {
             _clientChannel.CloseAsync().Wait();
             await group.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1));

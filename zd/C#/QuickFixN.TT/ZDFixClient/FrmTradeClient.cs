@@ -43,25 +43,27 @@ namespace ZDFixClient
             //ITradeService tradeService = TradeServiceFactory.ITradeService;
 
             TradeServiceFactory.ITradeService.Start();
-            TradeServiceFactory.ITradeService.Logon += (msg =>
-              {
-                  if (this.InvokeRequired)
-                  {
-                      this.BeginInvoke((MethodInvoker)(() =>
-                      {
-                          this.btnStart.Enabled = false;
-                          this.btnStop.Enabled = true;
-                      }));
-                  }
-                  else
-                  {
-                      this.btnStart.Enabled = false;
-                      this.btnStop.Enabled = true;
-                  }
+            TradeServiceFactory.ITradeService.Logon += async msg =>
+               {
+                   if (this.InvokeRequired)
+                   {
+                       this.BeginInvoke((MethodInvoker)(() =>
+                       {
+                           this.btnStart.Enabled = false;
+                           this.btnStop.Enabled = true;
+                       }));
+                   }
+                   else
+                   {
+                       this.btnStart.Enabled = false;
+                       this.btnStop.Enabled = true;
+                   }
 
-              });
+                   await ZDFixNettyClient.Instance.RunClientAsync();
 
-            TradeServiceFactory.ITradeService.Logout += (msg =>
+               };
+
+            TradeServiceFactory.ITradeService.Logout += msg =>
             {
                 if (this.InvokeRequired)
                 {
@@ -77,7 +79,7 @@ namespace ZDFixClient
                     this.btnStop.Enabled = false;
                 }
 
-            });
+            };
 
             //TradeServiceFactory.ITradeService.ExecutionReport += (p) =>
             //  {
@@ -95,7 +97,7 @@ namespace ZDFixClient
         {
 
             TradeServiceFactory.ITradeService.Stop();
-
+            ZDFixNettyClient.Instance.Close();
         }
 
         private void FrmTradeClient_FormClosing(object sender, FormClosingEventArgs e)
@@ -274,11 +276,16 @@ namespace ZDFixClient
         //private OrderForm _orderForm;
 
         UtilityOrderForm _orderForm;
-        private void btnShowOrderForm_Click(object sender, EventArgs e)
+        private async void btnShowOrderForm_Click(object sender, EventArgs e)
         {
+            if (this.cbConsole.Checked)
+            {
+                await ZDFixNettyClient.Instance.RunClientAsync();
+            }
+
             if (_orderForm == null || _orderForm.IsDisposed)
             {
-                _orderForm = new UtilityOrderForm();
+                _orderForm = new UtilityOrderForm(this.cbConsole.Checked);
             }
             _orderForm.Show();
         }

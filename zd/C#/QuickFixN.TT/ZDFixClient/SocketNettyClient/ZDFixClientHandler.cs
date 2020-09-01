@@ -46,18 +46,6 @@ namespace ZDFixClient.SocketNettyClient
             this.initialMessage = Unpooled.DirectBuffer(1024); 
         }
 
-        //channelInactive： 处于非活跃状态，没有连接到远程主机。
-        public override void ChannelInactive(IChannelHandlerContext context)
-        {
-            Console.WriteLine("Disconnected from: " + context.Channel.RemoteAddress);
-        }
-
-        //channelUnregistered： 已创建但未注册到一个 EventLoop。
-        public override void ChannelUnregistered(IChannelHandlerContext context)
-        {
-
-        }
-
         /// <summary>
         /// 连接建立想服务器发送消息
         /// </summary>
@@ -87,8 +75,24 @@ namespace ZDFixClient.SocketNettyClient
             ////var obj= Serialization.Deserialize<Person>(daBytes);
             //this.initialMessage.WriteBytes(messageBytes);
             //context.WriteAndFlushAsync(this.initialMessage);
+            _nLog.Info($"Connect to server - {context.Channel.RemoteAddress.ToString()}");
+
 
         }
+
+        //channelInactive： 处于非活跃状态，没有连接到远程主机。
+        public override void ChannelInactive(IChannelHandlerContext context)
+        {
+            Console.WriteLine("Disconnected from: " + context.Channel.RemoteAddress);
+        }
+
+        //channelUnregistered： 已创建但未注册到一个 EventLoop。
+        public override void ChannelUnregistered(IChannelHandlerContext context)
+        {
+
+        }
+
+   
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
             var byteBuffer = message as IByteBuffer;
