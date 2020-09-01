@@ -59,8 +59,6 @@ namespace ZDFixClient
                        this.btnStop.Enabled = true;
                    }
 
-                   await ZDFixNettyClient.Instance.RunClientAsync();
-
                };
 
             TradeServiceFactory.ITradeService.Logout += msg =>
