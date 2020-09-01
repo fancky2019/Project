@@ -45,10 +45,11 @@ namespace ZDFixService.Models
         /// 下单
         /// </summary>
         public NetInfo OrderNetInfo { get; set; }
+
         /// <summary>
         /// 改单
         /// </summary>
-        //public NetInfo AmendNetInfo { get; set; }
+        public NetInfo AmendNetInfo { get; set; }
 
         /// <summary>
         /// 撤单

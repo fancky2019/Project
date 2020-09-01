@@ -10,6 +10,7 @@ using ZDFixService.Models;
 using ZDFixService.Service.MemoryDataManager;
 using ZDFixService.SocketNetty;
 using ZDFixService.Service.ZDCommon;
+using ZDFixService.Utility;
 
 namespace ZDFixService.Service.Base
 {
@@ -66,9 +67,9 @@ namespace ZDFixService.Service.Base
             {
                 ConsumerFromAppMsgs();
             });
+
+
         }
-
-
 
         public void Start()
         {
@@ -86,6 +87,12 @@ namespace ZDFixService.Service.Base
             {
                 ZDFixServiceWebSocketServer.Instance.RunServerAsync().Wait();
             });
+
+            Task.Run(() =>
+            {
+                Scheduler.Init();
+            });
+          
         }
 
         public void Stop()
@@ -362,5 +369,18 @@ namespace ZDFixService.Service.Base
         #endregion
 
         #endregion
+
+        internal virtual void ServerAutoCancelOrder(NetInfo netInfo)
+        {
+            if (netInfo != null)
+            {
+                var str = netInfo.MyToString();
+                ExecutionReport?.Invoke(str);
+                _nLog.Info($"ToClient:{str}");
+                ZDFixServiceServer.Instance.SendMsgAsync(netInfo);
+                ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
+
+            }
+        }
     }
 }
