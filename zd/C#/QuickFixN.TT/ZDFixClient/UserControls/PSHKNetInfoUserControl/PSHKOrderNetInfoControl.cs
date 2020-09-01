@@ -42,8 +42,8 @@ namespace ZDFixClient.UserControls.PSHKNetInfoUserControl
 
             //netInfo.code = TradeBaseDataConfig.GetCommandCode(ConfigurationManager.AppSettings["ITradeService"].ToString(), ZDFixService.Service.ZDCommon.CommandType.Order);
 
-            //tag1:上手号  9111111/I5555
-            netInfo.accountNo = "I5555";
+            //tag1:上手号  9111111/I5555/P860280
+            netInfo.accountNo = "P860280";
             //tag109
             //netInfo.clientNo = "000365";
             netInfo.clientNo = "C005";

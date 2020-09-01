@@ -265,6 +265,14 @@ namespace ZDFixService.Service.TT
         /// <param name="netInfo"></param>
         protected override void OrderCancelReplaceRequest(NetInfo netInfo)
         {
+            var errMsg = "Amending order is not allowed!";
+
+            ModifyInfo modifyInfo1 = new ModifyInfo();
+            modifyInfo1.MyReadString(netInfo.infoT);
+
+            netInfo.OrderCancelReplaceRequestException(errMsg, modifyInfo1.orderNo, CommandCode.ModifyStockHK);
+            throw new Exception(errMsg);
+
             ModifyInfo modifyInfo = new ModifyInfo();
             modifyInfo.MyReadString(netInfo.infoT);
             Order order = null;
@@ -554,23 +562,6 @@ namespace ZDFixService.Service.TT
             }
 
 
-
-
-
-            //NetInfo netInfo = new NetInfo();
-
-            //netInfo.infoT = orderResponseInfo.MyToString();
-            //netInfo.exchangeCode = orderResponseInfo.exchangeCode;
-
-            //netInfo.accountNo = order.OrderNetInfo.accountNo;
-            //netInfo.systemCode = order.SystemCode;
-            //netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
-            //netInfo.clientNo = order.OrderNetInfo.clientNo;
-
-            //netInfo.errorCode = ErrorCode.SUCCESS;
-            //netInfo.code = CommandCode.MODIFY;
-
-
             NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.MODIFY);
             netInfo.infoT = orderResponseInfo.MyToString();
             return netInfo;
@@ -626,17 +617,6 @@ namespace ZDFixService.Service.TT
             DateTime transTime = execReport.TransactTime.getValue();
             cancelResponseInfo.cancelTime = transTime.ToString("HH:mm:ss");
             cancelResponseInfo.cancelDate = transTime.ToString("yyyy-MM-dd");
-
-            //NetInfo NetInfo = new NetInfo();
-            //NetInfo.infoT = cancelResponseInfo.MyToString();
-            //NetInfo.exchangeCode = order.OrderNetInfo.exchangeCode;
-            //NetInfo.errorCode = ErrorCode.SUCCESS;
-            //NetInfo.code = CommandCode.CANCELCAST;
-            //NetInfo.accountNo = order.OrderNetInfo.accountNo;
-            //NetInfo.systemCode = order.OrderNetInfo.systemCode;
-            ////obj.todayCanUse = execReport.Header.GetField(Tags.TargetSubID);
-            //NetInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
-            //NetInfo.clientNo = order.OrderNetInfo.clientNo;
 
             NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.CANCELCAST);
             netInfo.infoT = cancelResponseInfo.MyToString();
@@ -715,17 +695,6 @@ namespace ZDFixService.Service.TT
             filledResponseInfo.accountNo = order.OrderNetInfo.accountNo;
             filledResponseInfo.systemNo = order.OrderNetInfo.systemCode;
             filledResponseInfo.code = orderInfo.code;
-
-            //NetInfo netInfo = new NetInfo();
-            //netInfo.infoT = filledResponseInfo.MyToString();
-            //netInfo.systemCode = order.OrderNetInfo.systemCode;
-            //netInfo.exchangeCode = order.OrderNetInfo.exchangeCode;
-            //netInfo.errorCode = ErrorCode.SUCCESS;
-            //netInfo.code = CommandCode.FILLEDCAST;
-            //netInfo.accountNo = filledResponseInfo.accountNo;
-            ////obj.todayCanUse = execReport.Header.GetField(Tags.SenderSubID);
-            //netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
-
 
             NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.FILLEDCAST);
             netInfo.infoT = filledResponseInfo.MyToString();

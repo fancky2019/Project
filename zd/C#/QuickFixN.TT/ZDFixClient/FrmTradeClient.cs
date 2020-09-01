@@ -22,6 +22,7 @@ using ZDFixService.SocketNetty;
 using ZDFixClient.SocketNettyClient;
 using MessagePack;
 using MessagePack.Resolvers;
+using ZDFixService.Utility;
 
 namespace ZDFixClient
 {
@@ -120,6 +121,9 @@ namespace ZDFixClient
         private bool _run = false;
         private async void btnTest_Click(object sender, EventArgs e)
         {
+
+            Scheduler.Init();
+            return;
             var str111 = @"CancStHK@00000@000008391V000128@8003288@00000@I5555@HKEX@@8003288@@&@I5555@000008391V000128@1010091@1010091@HKEX@00002.HK@1@500@@0.0@0@@7@@2020-08-31@10:50:17@@@@@@@@@";
             NetInfo netInfo1111 = new NetInfo();
             netInfo1111.MyReadString(str111);

@@ -2,6 +2,7 @@
 using QuickFix.Fields;
 using QuickFix.FIX42;
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using ZDFixService.FixUtility;
 using ZDFixService.Models;
@@ -15,6 +16,8 @@ namespace ZDFixService.Service.PSHK
     class PSHKTradeService : TradeClientAppService
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+
+
 
         protected override void NewOrderSingle(Order order)
         {
@@ -103,7 +106,6 @@ namespace ZDFixService.Service.PSHK
             }
         }
 
-
         /// <summary>
         /// 撤单
         /// </summary>
@@ -189,9 +191,16 @@ namespace ZDFixService.Service.PSHK
         // PSHK的FIX没有改单
         protected override void OrderCancelReplaceRequest(NetInfo netInfo)
         {
-            throw new NotImplementedException();
-        }
+            var errMsg = "Amending order is not allowed!";
 
+            ModifyInfo modifyInfo = new ModifyInfo();
+            modifyInfo.MyReadString(netInfo.infoT);
+
+            netInfo.OrderCancelReplaceRequestException(errMsg, modifyInfo.orderNo, CommandCode.ModifyStockHK);
+            throw new Exception(errMsg);
+
+
+        }
 
         #region ExecutionReport
 
@@ -398,7 +407,6 @@ namespace ZDFixService.Service.PSHK
             cancelResponseInfo.systemNo = order.OrderNetInfo.systemCode;
             cancelResponseInfo.code = orderInfo.code;
 
-            char ordType = execReport.OrdType.getValue();
             cancelResponseInfo.priceType = orderInfo.priceType;
 
 
@@ -419,6 +427,7 @@ namespace ZDFixService.Service.PSHK
 
             return netInfo;
         }
+
         #endregion
 
         #region PartiallyFilledOrFilled
@@ -491,17 +500,6 @@ namespace ZDFixService.Service.PSHK
             filledResponseInfo.accountNo = order.OrderNetInfo.accountNo;
             filledResponseInfo.systemNo = order.OrderNetInfo.systemCode;
             filledResponseInfo.code = orderInfo.code;
-
-            //NetInfo netInfo = new NetInfo();
-            //netInfo.infoT = filledResponseInfo.MyToString();
-            //netInfo.systemCode = order.OrderNetInfo.systemCode;
-            //netInfo.exchangeCode = order.OrderNetInfo.exchangeCode;
-            //netInfo.errorCode = ErrorCode.SUCCESS;
-            //netInfo.code = CommandCode.FILLEDCAST;
-            //netInfo.accountNo = filledResponseInfo.accountNo;
-            ////obj.todayCanUse = execReport.Header.GetField(Tags.SenderSubID);
-            //netInfo.todayCanUse = order.OrderNetInfo.todayCanUse;
-
 
             NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.FilledStockHK);
             netInfo.infoT = filledResponseInfo.MyToString();
