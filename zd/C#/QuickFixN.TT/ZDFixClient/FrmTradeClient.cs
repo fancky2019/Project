@@ -276,14 +276,17 @@ namespace ZDFixClient
         UtilityOrderForm _orderForm;
         private async void btnShowOrderForm_Click(object sender, EventArgs e)
         {
-            if (this.cbConsole.Checked)
-            {
-                await ZDFixNettyClient.Instance.RunClientAsync();
-            }
 
+   
             if (_orderForm == null || _orderForm.IsDisposed)
             {
                 _orderForm = new UtilityOrderForm(this.cbConsole.Checked);
+            }
+            if (this.cbConsole.Checked)
+            {
+                ZDFixNettyClient.Instance.ReceiveMsg += _orderForm.ExecutionReport;
+                await ZDFixNettyClient.Instance.RunClientAsync();
+
             }
             _orderForm.Show();
         }
