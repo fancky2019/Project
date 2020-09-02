@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NLog;
 using CommonClassLib;
+using ZDFixService.Models;
 
 namespace ZDFixClient.SocketNettyClient
 {
@@ -29,12 +30,15 @@ namespace ZDFixClient.SocketNettyClient
     public class ZDFixClientHandler : ChannelHandlerAdapter
     {
         private static readonly Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+        private readonly SocketMessage<NetInfo> _heartBeart = null;
         readonly IByteBuffer initialMessage;
         public event Action DisConnected;
 
         public event Action<string> _receiveMsg;
         public ZDFixClientHandler(Action<string> receiveMsg)
         {
+            _heartBeart = new SocketMessage<NetInfo>() { MessageType = MessageType.HeartBeat };
+
             this._receiveMsg = receiveMsg;
             /*
              * 如果使用传统的堆内存分配，当我们需要将数据通过socket发送的时候，就需要从堆内存拷贝到直接内存，
@@ -85,7 +89,8 @@ namespace ZDFixClient.SocketNettyClient
         //channelInactive： 处于非活跃状态，没有连接到远程主机。
         public override void ChannelInactive(IChannelHandlerContext context)
         {
-            Console.WriteLine("Disconnected from: " + context.Channel.RemoteAddress);
+            _nLog.Info($"Disconnected  from server - {context.Channel.RemoteAddress.ToString()}");
+            DisConnected();
         }
 
         //channelUnregistered： 已创建但未注册到一个 EventLoop。
@@ -112,10 +117,14 @@ namespace ZDFixClient.SocketNettyClient
             }
             else
             {
-                var netInfo = (NetInfo)message;
-                var receiveMsg = netInfo.MyToString();
+                var socketMessage = (SocketMessage<NetInfo>)message;
+                var receiveMsg = socketMessage.ToString();
                 _nLog.Info($"Received from server:{receiveMsg}");
-                _receiveMsg?.Invoke(receiveMsg);
+                if (socketMessage.MessageType == MessageType.BusinessData)
+                {
+                    _nLog.Info($"Received from server:{receiveMsg}");
+                    _receiveMsg?.Invoke(receiveMsg);
+                }
 
             }
             //避免死循环，客户服务端不停互相发消息
@@ -141,16 +150,14 @@ namespace ZDFixClient.SocketNettyClient
                         case IdleState.ReaderIdle:
                             break;
                         case IdleState.WriterIdle:
-                            // 长时间未写入数据
-                            // 则发送心跳数据
-                            // context.WriteAndFlushAsync();
-                            // mp.SendData(ExliveCmd.HEART);
-
+                            // 长时间未写入数据, 则发送心跳数据
+                            //context.WriteAndFlushAsync(_heartBeart);
                             break;
                         case IdleState.AllIdle:
+                            //服务端会主动断开此链接，进入ChannelInactive
                             ////6秒既没有读，也没有写，即发生了3次没有读写，可认为网络断开。
-                            //context.DisconnectAsync().Wait();
-                            //DisConnected();
+                            context.DisconnectAsync();
+                            DisConnected();
                             break;
                     }
                 }

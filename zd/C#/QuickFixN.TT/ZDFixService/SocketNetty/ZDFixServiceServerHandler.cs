@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZDFixService.Models;
 using ZDFixService.Service.Base;
 
 namespace ZDFixService.SocketNetty
@@ -73,9 +74,14 @@ namespace ZDFixService.SocketNetty
             }
             else
             {
-                var netInfo = (NetInfo)message;
-                _nLog.Info($"Received from client:{netInfo.MyToString()}");
-                TradeServiceFactory.ITradeService.Order(netInfo);
+                var socketMessage = (SocketMessage<NetInfo>)message;
+
+                _nLog.Info($"Received from client:{socketMessage.ToString()}");
+                if (socketMessage.MessageType == MessageType.BusinessData)
+                {
+                    TradeServiceFactory.ITradeService.Order(socketMessage.Data);
+                }
+
             }
             //context.WriteAsync(message);
         }
@@ -94,15 +100,16 @@ namespace ZDFixService.SocketNetty
                         case IdleState.ReaderIdle:
                             break;
                         case IdleState.WriterIdle:
-                            // 长时间未写入数据
-                            // 则发送心跳数据
-                            // context.WriteAndFlushAsync();
-                            // mp.SendData(ExliveCmd.HEART);
 
+                            //服务端不回心跳。
+                            // 长时间未写入数据, 则发送心跳数据
+                            // context.WriteAndFlushAsync();
                             break;
                         case IdleState.AllIdle:
+                            _nLog.Info($"Server disconnect  client:{context.Channel.RemoteAddress.ToString()}");
+                            //客户端超时就主动断开，客户端会收到ChannelInactive
                             //6秒既没有读，也没有写，即发生了3次没有读写，可认为网络断开。
-                            //context.DisconnectAsync().Wait();
+                            context.DisconnectAsync();
                             break;
                     }
                 }

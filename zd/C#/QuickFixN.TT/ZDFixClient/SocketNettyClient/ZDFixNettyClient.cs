@@ -15,6 +15,8 @@ using ZDFixService.SocketNetty.NettyCodec;
 using CommonClassLib;
 using NLog;
 using System.Configuration;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace ZDFixClient.SocketNettyClient
 {
@@ -28,12 +30,17 @@ namespace ZDFixClient.SocketNettyClient
         IPEndPoint _iPEndPoint = null;
         MultithreadEventLoopGroup group;
 
-        internal static ZDFixNettyClient Instance;
+        //internal static ZDFixNettyClient Instance;
         public event Action<string> ReceiveMsg;
-        static ZDFixNettyClient()
+        //static ZDFixNettyClient()
+        //{
+        //    Instance = new ZDFixNettyClient();
+        //}
+        public ZDFixNettyClient()
         {
-            Instance = new ZDFixNettyClient();
+            RunClientAsync();
         }
+
         public async Task RunClientAsync()
         {
             var ipPort = ConfigurationManager.AppSettings["FixServer"].ToString().Split(':');
@@ -88,8 +95,8 @@ namespace ZDFixClient.SocketNettyClient
                           {
                               _nLog.Info("Reconnect......");
                               //最长等待三次读写时间6秒，若仍没有建立连接进行读写，继续回调此事件
-                              Connect(_iPEndPoint).Wait(6);
-
+                              //ConnectAsync(_iPEndPoint).Wait(6000);
+                              RetryConnect(_iPEndPoint);
 
                               //while (!Connect(_iPEndPoint).Wait(2))
                               //{
@@ -100,7 +107,7 @@ namespace ZDFixClient.SocketNettyClient
                         pipeline.AddLast("echo", echoClientHandler);
                     }));
 
-                _clientChannel = await Connect(_iPEndPoint);
+                //_clientChannel = await Connect(_iPEndPoint);
 
             }
             catch (Exception ex)
@@ -111,19 +118,52 @@ namespace ZDFixClient.SocketNettyClient
 
         public void SendMsg<T>(T t)
         {
-         
+
             _clientChannel.WriteAndFlushAsync(t);
 
         }
+        System.Threading.Timer _timer;
+        public void RetryConnect(IPEndPoint iPEndPoint)
+        {
+            if (_clientChannel != null && _clientChannel.Active)
+            {
+                return;
+            }
+            Task.Run(() =>
+            {
+                try
+                {
 
-        private async Task<IChannel> Connect(IPEndPoint iPEndPoint)
+                    var task = ConnectAsync(iPEndPoint);
+                    task.Wait(6000);
+                    _clientChannel = task.Result;
+                }
+                catch (Exception ex)
+                {
+                    _nLog.Error(ex.ToString());
+                    if (_clientChannel != null)
+                    {
+                        _nLog.Info("Retry Connect......");
+                        Thread.Sleep(2000);
+                        RetryConnect(iPEndPoint);
+                    }
+
+                }
+            });
+
+
+        }
+
+
+
+        public async Task<IChannel> ConnectAsync(IPEndPoint iPEndPoint)
         {
             return await _bootstrap.ConnectAsync(iPEndPoint);
         }
 
         public async void Close()
         {
-            _clientChannel.CloseAsync().Wait();
+            await _clientChannel?.CloseAsync();
             await group.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1));
 
         }

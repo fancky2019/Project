@@ -142,7 +142,7 @@ namespace ZDFixService.Service.PSHK
                 var clOrdID = MemoryData.GetNextClOrderID().ToString();
                 orderCancelRequest.ClOrdID = new ClOrdID($"DA{clOrdID}");
                 //Tag 41
-                orderCancelRequest.OrigClOrdID = new OrigClOrdID(order.CurrentCliOrderID.ToString());
+                orderCancelRequest.OrigClOrdID = new OrigClOrdID($"DA{order.CurrentCliOrderID.ToString()}");
 
 
                 //傻x辉立还要发送这些tag。
