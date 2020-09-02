@@ -175,7 +175,7 @@ namespace ZDFixService.Service.Base
                     _nLog.Info(ex.ToString());
                     var str = netInfo?.MyToString();
                     ExecutionReport?.Invoke(str);
-                    ZDFixServiceServer.Instance.SendMsgAsync(netInfo);
+                    ZDFixServiceServer.Instance.SendMsgAsync<SocketMessage<NetInfo>>(netInfo);
                     ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
                 }
             }
@@ -291,7 +291,7 @@ namespace ZDFixService.Service.Base
                 var str = netInfo.MyToString();
                 ExecutionReport?.Invoke(str);
                 _nLog.Info($"ToClient:{str}");
-                ZDFixServiceServer.Instance.SendMsgAsync(netInfo);
+                ZDFixServiceServer.Instance.SendMsgAsync<SocketMessage<NetInfo>>(netInfo);
                 ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
 
             }
@@ -383,7 +383,7 @@ namespace ZDFixService.Service.Base
                 var str = netInfo.MyToString();
                 ExecutionReport?.Invoke(str);
                 _nLog.Info($"ToClient:{str}");
-                ZDFixServiceServer.Instance.SendMsgAsync(netInfo);
+                ZDFixServiceServer.Instance.SendMsgAsync<SocketMessage<NetInfo>>(netInfo);
                 ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
 
             }

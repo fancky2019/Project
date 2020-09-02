@@ -12,6 +12,8 @@ using ZDFixService.SocketNetty.NettyCodec;
 using ZDFixService.Utility;
 using System.Linq;
 using MessagePack;
+using ZDFixService.Models;
+using DotNetty.Handlers.Timeout;
 
 namespace ZDFixService.SocketNetty
 {
@@ -63,10 +65,11 @@ namespace ZDFixService.SocketNetty
                     .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
                     {
                         IChannelPipeline pipeline = channel.Pipeline;
-
+                        IdleStateHandler idleStateHandler = new IdleStateHandler(2, 2, 6);
+                        pipeline.AddLast("timeout", idleStateHandler);
                         pipeline.AddLast("framing-enc", new LengthFieldPrepender(2));
                         pipeline.AddLast("framing-dec", new LengthFieldBasedFrameDecoder(ushort.MaxValue, 0, 2, 0, 2));
-                        pipeline.AddLast("ObjectDecoder", new ObjectDecoder<NetInfo>());
+                        pipeline.AddLast("ObjectDecoder", new ObjectDecoder<SocketMessage<NetInfo>>());
                         pipeline.AddLast("ObjectEncoder", new ObjectEncoder());
                         _serverHandler = new ZDFixServiceServerHandler();
                         pipeline.AddLast("ZDFixServiceServerHandler", _serverHandler);

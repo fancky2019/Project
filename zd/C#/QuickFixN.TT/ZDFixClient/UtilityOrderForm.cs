@@ -22,6 +22,7 @@ using NLog;
 using ZDFixService.Utility;
 using System.Collections.Concurrent;
 using ZDFixClient.SocketNettyClient;
+using System.Net;
 
 namespace ZDFixClient
 {
@@ -44,6 +45,7 @@ namespace ZDFixClient
 
         private ConcurrentDictionary<string, NetInfo> _newOrderSingleNetInfos = new ConcurrentDictionary<string, NetInfo>();
         bool _console;
+        ZDFixNettyClient _zDFixNettyClient = null;
         #endregion
 
         #region Constructor Load
@@ -51,6 +53,23 @@ namespace ZDFixClient
         {
             InitializeComponent();
             this._console = console;
+
+            _zDFixNettyClient = new ZDFixNettyClient();
+
+
+            this.FormClosing += (s, e) => _zDFixNettyClient.Close();
+
+            if (console)
+            {
+                _zDFixNettyClient.ReceiveMsg += ExecutionReport;
+
+                var ipPort = ConfigurationManager.AppSettings["FixServer"].ToString().Split(':');
+                string ip = ipPort[0];
+                string port = ipPort[1];
+                var iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), int.Parse(port));
+                _zDFixNettyClient.RetryConnect(iPEndPoint);
+
+            }
         }
 
 
@@ -298,7 +317,7 @@ namespace ZDFixClient
             }
             else
             {
-                ZDFixNettyClient.Instance.SendMsg<NetInfo>(netInfo);
+                _zDFixNettyClient.SendMsg<SocketMessage<NetInfo>>(netInfo);
             }
 
         }
@@ -340,7 +359,7 @@ namespace ZDFixClient
             }
             else
             {
-                ZDFixNettyClient.Instance.SendMsg<NetInfo>(netInfo);
+                _zDFixNettyClient.SendMsg<SocketMessage<NetInfo>>(netInfo);
             }
         }
         #endregion
@@ -381,7 +400,7 @@ namespace ZDFixClient
             }
             else
             {
-                ZDFixNettyClient.Instance.SendMsg<NetInfo>(netInfo);
+                _zDFixNettyClient.SendMsg<SocketMessage<NetInfo>>(netInfo);
             }
         }
         #endregion

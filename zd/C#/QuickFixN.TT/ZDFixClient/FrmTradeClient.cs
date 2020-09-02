@@ -23,6 +23,7 @@ using ZDFixClient.SocketNettyClient;
 using MessagePack;
 using MessagePack.Resolvers;
 using ZDFixService.Utility;
+using System.Net;
 
 namespace ZDFixClient
 {
@@ -95,7 +96,6 @@ namespace ZDFixClient
         {
 
             TradeServiceFactory.ITradeService.Stop();
-            ZDFixNettyClient.Instance.Close();
         }
 
         private void FrmTradeClient_FormClosing(object sender, FormClosingEventArgs e)
@@ -121,7 +121,8 @@ namespace ZDFixClient
         private bool _run = false;
         private async void btnTest_Click(object sender, EventArgs e)
         {
-
+            await ZDFixServiceServer.Instance.RunServerAsync();
+            return;
             Scheduler.Init();
             return;
             var str111 = @"CancStHK@00000@000008391V000128@8003288@00000@I5555@HKEX@@8003288@@&@I5555@000008391V000128@1010091@1010091@HKEX@00002.HK@1@500@@0.0@0@@7@@2020-08-31@10:50:17@@@@@@@@@";
@@ -130,25 +131,9 @@ namespace ZDFixClient
             CancelResponseInfo cr = new CancelResponseInfo();
             cr.MyReadString(netInfo1111.infoT);
             return;
-            if (!_run)
-            {
-                //await ZDFixServiceServer.Instance.RunServerAsync();
-                await ZDFixNettyClient.Instance.RunClientAsync();
-                _run = true;
-            }
-            NetInfo netInfo11 = new NetInfo();
-            var netInfoStr = $"OrdeStHK@2020-08-31 11:13:05.227@SystemCode1598872385226@0047@@I5555@HKEX@@C005@@&@@@@@HKEX@0002.HK@1@2000@67.5@@1@@@@0@@@@0@@@@@@@@@@@@@@@";
-            netInfo11.MyReadString(netInfoStr);
-            ZDFixNettyClient.Instance.SendMsg<NetInfo>(netInfo11);
-            //ZDFixNettyClient.Instance.Stop();
-            //Task.Run(() =>
-            //{
-            //    //单开一个线程，不然绑定端口不成功
-            //    ZDFixServiceWebSocketServer.Instance.RunServerAsync().Wait();
-            //    //ZDFixServiceWebSocketServer.Instance.Close();
-            //});
 
-            return;
+
+
             //发送二进制数据
             MessagePackSerializer.DefaultOptions = ContractlessStandardResolver.Options;
             NetInfo netInfo1 = new NetInfo();
@@ -274,22 +259,20 @@ namespace ZDFixClient
         //private OrderForm _orderForm;
 
         UtilityOrderForm _orderForm;
+
         private async void btnShowOrderForm_Click(object sender, EventArgs e)
         {
-
-   
             if (_orderForm == null || _orderForm.IsDisposed)
             {
                 _orderForm = new UtilityOrderForm(this.cbConsole.Checked);
             }
-            if (this.cbConsole.Checked)
-            {
-                ZDFixNettyClient.Instance.ReceiveMsg += _orderForm.ExecutionReport;
-                await ZDFixNettyClient.Instance.RunClientAsync();
-
-            }
             _orderForm.Show();
         }
         #endregion
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ZDFixServiceServer.Instance.Close();
+        }
     }
 }
