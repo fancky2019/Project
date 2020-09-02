@@ -151,7 +151,7 @@ namespace ZDFixClient.SocketNettyClient
                             break;
                         case IdleState.WriterIdle:
                             // 长时间未写入数据, 则发送心跳数据
-                            //context.WriteAndFlushAsync(_heartBeart);
+                            context.WriteAndFlushAsync(_heartBeart);
                             break;
                         case IdleState.AllIdle:
                             //服务端会主动断开此链接，进入ChannelInactive
