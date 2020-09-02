@@ -67,10 +67,7 @@ namespace ZDFixService.SocketNetty
             var buffer = message as IByteBuffer;
             if (buffer != null)
             {
-
                 _nLog.Info("Received from client: " + buffer.ToString(Encoding.UTF8));
-
-
             }
             else
             {

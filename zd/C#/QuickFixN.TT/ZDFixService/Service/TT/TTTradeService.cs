@@ -265,14 +265,6 @@ namespace ZDFixService.Service.TT
         /// <param name="netInfo"></param>
         protected override void OrderCancelReplaceRequest(NetInfo netInfo)
         {
-            var errMsg = "Amending order is not allowed!";
-
-            ModifyInfo modifyInfo1 = new ModifyInfo();
-            modifyInfo1.MyReadString(netInfo.infoT);
-
-            netInfo.OrderCancelReplaceRequestException(errMsg, modifyInfo1.orderNo, CommandCode.ModifyStockHK);
-            throw new Exception(errMsg);
-
             ModifyInfo modifyInfo = new ModifyInfo();
             modifyInfo.MyReadString(netInfo.infoT);
             Order order = null;
@@ -372,7 +364,7 @@ namespace ZDFixService.Service.TT
                 {
                     order.Pending = true;
                     order.TempCliOrderID = clOrdID;
-
+                    order.AmendNetInfo = netInfo;
 
                     var clOrdIDLong = long.Parse(clOrdID);
                     MemoryData.UsingCliOrderIDSystemCode.TryAdd(clOrdIDLong, order.SystemCode);
@@ -515,8 +507,17 @@ namespace ZDFixService.Service.TT
             OrderInfo orderInfo = new OrderInfo();
             orderInfo.MyReadString(order.OrderNetInfo.infoT);
 
-            orderResponseInfo.exchangeCode = orderInfo.exchangeCode;
 
+            //改单信息给原单
+            ModifyInfo modifyInfo = new ModifyInfo();
+            modifyInfo.MyReadString(order.AmendNetInfo.infoT);
+            orderInfo.orderNumber = modifyInfo.modifyNumber;
+            orderInfo.orderPrice = modifyInfo.modifyPrice;
+            orderInfo.triggerPrice = modifyInfo.modifyTriggerPrice;
+            order.OrderNetInfo.infoT = orderInfo.MyToString();
+            order.AmendNetInfo = null;
+
+            orderResponseInfo.exchangeCode = orderInfo.exchangeCode;
             orderResponseInfo.buySale = execReport.Side.getValue().ToString();
             orderResponseInfo.tradeType = "1";
 
@@ -564,6 +565,7 @@ namespace ZDFixService.Service.TT
 
             NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.MODIFY);
             netInfo.infoT = orderResponseInfo.MyToString();
+
             return netInfo;
         }
         #endregion

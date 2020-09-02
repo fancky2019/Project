@@ -17,6 +17,7 @@ using NLog;
 using System.Configuration;
 using System.Runtime.InteropServices;
 using System.Threading;
+using ZDFixService.Models;
 
 namespace ZDFixClient.SocketNettyClient
 {
@@ -87,7 +88,7 @@ namespace ZDFixClient.SocketNettyClient
                         //pipeline.AddLast("ProtobufEncoder", new ProtobufEncoder());
 
 
-                        pipeline.AddLast("ObjectDecoder", new ObjectDecoder<NetInfo>());
+                        pipeline.AddLast("ObjectDecoder", new ObjectDecoder<SocketMessage<NetInfo>>());
                         pipeline.AddLast("ObjectEncoder", new ObjectEncoder());
 
                         ZDFixClientHandler echoClientHandler = new ZDFixClientHandler(ReceiveMsg);
