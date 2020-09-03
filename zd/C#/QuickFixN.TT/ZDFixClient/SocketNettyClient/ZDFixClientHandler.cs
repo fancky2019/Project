@@ -157,7 +157,6 @@ namespace ZDFixClient.SocketNettyClient
                             //服务端会主动断开此链接，进入ChannelInactive
                             ////6秒既没有读，也没有写，即发生了3次没有读写，可认为网络断开。
                             context.DisconnectAsync();
-                            DisConnected();
                             break;
                     }
                 }

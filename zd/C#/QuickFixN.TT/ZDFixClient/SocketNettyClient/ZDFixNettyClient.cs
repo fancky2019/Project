@@ -123,7 +123,7 @@ namespace ZDFixClient.SocketNettyClient
             _clientChannel.WriteAndFlushAsync(t);
 
         }
-        System.Threading.Timer _timer;
+
         public void RetryConnect(IPEndPoint iPEndPoint)
         {
             if (_clientChannel != null && _clientChannel.Active)
@@ -135,20 +135,20 @@ namespace ZDFixClient.SocketNettyClient
                 try
                 {
 
-                    var task = ConnectAsync(iPEndPoint);
-                    task.Wait(6000);
+                    var task =  _bootstrap.ConnectAsync(iPEndPoint);// ConnectAsync(iPEndPoint);
+                    task.Wait(2000);
                     _clientChannel = task.Result;
                 }
                 catch (Exception ex)
                 {
-                    _nLog.Error(ex.ToString());
+                    _nLog.Error($"{ex.Message} - {ex.InnerException.Message}");
                     if (_clientChannel != null)
                     {
-                        _nLog.Info("Retry Connect......");
                         Thread.Sleep(2000);
+                        _nLog.Info("Retry Connect......");
                         RetryConnect(iPEndPoint);
                     }
-
+                
                 }
             });
 
