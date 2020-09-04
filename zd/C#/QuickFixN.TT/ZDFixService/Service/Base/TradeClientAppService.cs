@@ -78,7 +78,7 @@ namespace ZDFixService.Service.Base
 
         private async void Init()
         {
-            MemoryData.IPersist.Load();
+            MemoryData.Init();
 
             //Task.Run(() =>
             //{

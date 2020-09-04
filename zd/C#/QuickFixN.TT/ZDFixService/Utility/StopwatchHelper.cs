@@ -9,7 +9,7 @@ namespace ZDFixService.Utility
 {
     public class StopwatchHelper
     {
-        public static StopwatchHelper Instance;
+        public static StopwatchHelper Instance { get; }
         public Stopwatch Stopwatch { get; set; }
         static StopwatchHelper()
         {
@@ -23,19 +23,19 @@ namespace ZDFixService.Utility
         }
 
 
-        public  void Start()
+        public void Start()
         {
             Stopwatch.Restart();
         }
 
-        public  void Stop()
+        public void Stop()
         {
             Stopwatch.Stop();
         }
 
-        public  long ElapsedNanosecond()
+        public long ElapsedNanosecond()
         {
-          return Stopwatch.ElapsedTicks* GetNanosecPerTick();
+            return Stopwatch.ElapsedTicks * GetNanosecPerTick();
         }
 
         /// <summary>

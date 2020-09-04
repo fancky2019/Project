@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZDFixService;
+using ZDFixService.Utility;
 
 namespace ZDFixService.Service.MemoryDataManager
 {
@@ -33,43 +34,59 @@ namespace ZDFixService.Service.MemoryDataManager
         /// </summary>
         internal static long LastClientOrderID { get; set; }
 
+        static ClOrderIDGenerator _clOrderIDGenerator;
 
-        static long _beginOrderId = 0;
-        static long _endOrderId = 0;
-
-
-        static MemoryData()
+        internal static void Init()
         {
             Orders = new ConcurrentDictionary<string, Order>();
-
             UsingCliOrderIDSystemCode = new ConcurrentDictionary<long, string>();
 
-            var cliOrderIDScope = Configurations.Configuration["ZDFixService:CliOrderIDScope"].ToString();
-            if (string.IsNullOrEmpty(cliOrderIDScope))
-            {
-                _nLog.Error("Order_ID_Scope is null!");
-            }
-            _beginOrderId = long.Parse(cliOrderIDScope.Split(',')[0]);
-            _endOrderId = long.Parse(cliOrderIDScope.Split(',')[1]);
-
             InitPersist();
+
+            if (_clOrderIDGenerator == null)
+            {
+                _clOrderIDGenerator = new ClOrderIDGenerator(LastClientOrderID);
+            }
         }
+
+
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns></returns>
+        //static long GetNextClOrderID()
+        //{
+        //    if (_snowFlake == null)
+        //    {
+        //        LastClientOrderID++;
+        //        LastClientOrderID = LastClientOrderID <= _beginOrderId ? _beginOrderId + 1 : LastClientOrderID;
+        //        LastClientOrderID = LastClientOrderID >= _endOrderId ? _beginOrderId + 1 : LastClientOrderID;
+        //    }
+        //    else
+        //    {
+        //        LastClientOrderID = _snowFlake.NextId();
+        //    }
+
+        //    if (UsingCliOrderIDSystemCode.ContainsKey(LastClientOrderID))
+        //    {
+        //        GetNextClOrderID();
+        //    }
+        //    return LastClientOrderID;
+        //}
+
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public static long GetNextClOrderID()
+        internal static long GetNextClOrderID()
         {
-
-            LastClientOrderID++;
-            LastClientOrderID = LastClientOrderID <= _beginOrderId ? _beginOrderId + 1 : LastClientOrderID;
-            LastClientOrderID = LastClientOrderID >= _endOrderId ? _beginOrderId + 1 : LastClientOrderID;
+            LastClientOrderID = _clOrderIDGenerator.GetNextClOrderID();
             if (UsingCliOrderIDSystemCode.ContainsKey(LastClientOrderID))
             {
                 GetNextClOrderID();
             }
-
             return LastClientOrderID;
         }
 
@@ -121,7 +138,7 @@ namespace ZDFixService.Service.MemoryDataManager
                 }
             }
 
- 
+
         }
 
         internal static void InitUsingCliOrderIDSystemCode()
