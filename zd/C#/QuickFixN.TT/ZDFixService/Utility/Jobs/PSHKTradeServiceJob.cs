@@ -73,7 +73,15 @@ namespace ZDFixService.Utility.Jobs
                     NetInfo netInfo = order.OrderNetInfo.CloneWithNewCode(ErrorCode.SUCCESS, CommandCode.CancelStockHK);
                     netInfo.infoT = cancelResponseInfo.MyToString();
 
-                    ((TTTradeService)TradeServiceFactory.ITradeService).ServerAutoCancelOrder(netInfo);
+                    var tradeServiceName = Configurations.Configuration["ZDFixService:ITradeService"];
+                    if(tradeServiceName!= "PSHKTradeService")
+                    {
+                        _nLog.Info("ServerAutoCancelOrder failed!");
+                        _nLog.Info("ITradeService is not PSHKTradeService!Please amend ITradeService configuration!");
+                        return;
+                    }
+
+                    ((PSHKTradeService)TradeServiceFactory.ITradeService).ServerAutoCancelOrder(netInfo);
 
                     MemoryData.Orders.TryRemove(key, out _);
                     long cliOrderID = long.Parse(order.CurrentCliOrderID);
