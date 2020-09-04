@@ -30,6 +30,7 @@ namespace ZDFixClient
     partial class FrmTradeClient : Form
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+        private bool _runStart = false;
         public FrmTradeClient()
         {
             InitializeComponent();
@@ -44,23 +45,24 @@ namespace ZDFixClient
             //ITradeService tradeService = TradeServiceFactory.ITradeService;
 
             TradeServiceFactory.ITradeService.Start();
-            TradeServiceFactory.ITradeService.Logon += async msg =>
-               {
-                   if (this.InvokeRequired)
-                   {
-                       this.BeginInvoke((MethodInvoker)(() =>
-                       {
-                           this.btnStart.Enabled = false;
-                           this.btnStop.Enabled = true;
-                       }));
-                   }
-                   else
-                   {
-                       this.btnStart.Enabled = false;
-                       this.btnStop.Enabled = true;
-                   }
+            _runStart = true;
+            TradeServiceFactory.ITradeService.Logon += msg =>
+              {
+                  if (this.InvokeRequired)
+                  {
+                      this.BeginInvoke((MethodInvoker)(() =>
+                      {
+                          this.btnStart.Enabled = false;
+                          this.btnStop.Enabled = true;
+                      }));
+                  }
+                  else
+                  {
+                      this.btnStart.Enabled = false;
+                      this.btnStop.Enabled = true;
+                  }
 
-               };
+              };
 
             TradeServiceFactory.ITradeService.Logout += msg =>
             {
@@ -94,8 +96,8 @@ namespace ZDFixClient
 
         internal void btnStop_Click(object sender, EventArgs e)
         {
-
             TradeServiceFactory.ITradeService.Stop();
+            _runStart = false;
         }
 
         private void FrmTradeClient_FormClosing(object sender, FormClosingEventArgs e)
@@ -114,11 +116,17 @@ namespace ZDFixClient
                 e.Cancel = true;
                 return;
             }
+            else
+            {
+                if (_runStart)
+                {
+                    btnStop_Click(null, null);
+                }
+            }
         }
         #endregion
 
         #region  Test
-        private bool _run = false;
         private async void btnTest_Click(object sender, EventArgs e)
         {
             await ZDFixServiceServer.Instance.RunServerAsync();

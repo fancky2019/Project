@@ -67,7 +67,7 @@ namespace ZDFixClient
                 string ip = ipPort[0];
                 string port = ipPort[1];
                 var iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), int.Parse(port));
-                _zDFixNettyClient.RetryConnect(iPEndPoint);
+                _zDFixNettyClient.Connect(iPEndPoint);
 
             }
         }
