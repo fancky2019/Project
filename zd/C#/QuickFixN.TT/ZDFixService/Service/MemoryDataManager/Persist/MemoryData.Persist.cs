@@ -36,6 +36,7 @@ namespace ZDFixService.Service.MemoryDataManager
                     break;
             }
 
+            IPersist.Load();
             PersistTimer();
         }
 

@@ -21,7 +21,7 @@ namespace ZDFixService.SocketNetty
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
 
-        public static ZDFixServiceServer Instance;
+        public static ZDFixServiceServer Instance { get; private set; }
 
         IChannel _channel;
         IEventLoopGroup _bossGroup;

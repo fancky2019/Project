@@ -52,6 +52,8 @@ namespace ZDFixClient
         public UtilityOrderForm(bool console)
         {
             InitializeComponent();
+
+
             this._console = console;
 
             _zDFixNettyClient = new ZDFixNettyClient();
@@ -417,9 +419,49 @@ namespace ZDFixClient
         {
             System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory);
         }
+
+        #endregion
+
+
+        #region SnowFlake
+        private void btnResolve_Click(object sender, EventArgs e)
+        {
+            long id = long.Parse(this.txtID.Text.Trim());
+            int workerIdBits = 10;
+            var twepoch = dtpStartDate.Value.Ticks / 10000;
+            var sequenceBits = (int)nudSequenceBits.Value;
+            this.rtbID.Text = ResolveID(id, workerIdBits, twepoch, sequenceBits);
+        }
+
+        public string ResolveID(long id, int workerIdBits, long twepoch, int sequenceBits)
+        {
+            var bitStr = System.Convert.ToString(id, 2);
+            int len = bitStr.Length;
+
+            int timestampLength = len - workerIdBits - sequenceBits;
+            int timestampStart = 0;
+            int workerIdStart = timestampLength;
+            int sequenceStart = workerIdStart + workerIdBits;
+
+            string timestampBit = bitStr.Substring(timestampStart, timestampLength);
+            string workerIdBit = bitStr.Substring(workerIdStart, workerIdBits);
+            string sequenceBit = bitStr.Substring(sequenceStart, sequenceBits);
+
+            int sequenceInt = Convert.ToInt32(sequenceBit, 2);
+            int workerIdInt = Convert.ToInt32(workerIdBit, 2);
+            long timestampLong = Convert.ToInt64(timestampBit, 2);
+
+            var generateMillisecond = timestampLong + twepoch;
+            string dateTime = new DateTime(generateMillisecond * 10000).ToString("yyyy-MM-dd HH:mm:ss fff");
+            var anonymous = new { CreateTime = dateTime, WorkID = workerIdInt, Sequence = sequenceInt };
+            var jsonAnonymousStr = NewtonsoftHelper.JsonSerializeObjectFormat(anonymous);
+            return jsonAnonymousStr;
+        }
         #endregion
 
         #endregion
+
+
 
 
     }

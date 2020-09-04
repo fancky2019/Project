@@ -25,7 +25,7 @@ namespace ZDFixService.SocketNetty
         IEventLoopGroup _workerGroup;
         IChannel _channel;
 
-        public static ZDFixServiceWebSocketServer Instance;
+        public static ZDFixServiceWebSocketServer Instance { get; private set; }
 
         ZDFixServiceWebSocketServerHandler _serverHandler;
         static ZDFixServiceWebSocketServer()
