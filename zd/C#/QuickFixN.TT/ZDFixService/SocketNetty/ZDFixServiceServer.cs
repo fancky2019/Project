@@ -34,7 +34,12 @@ namespace ZDFixService.SocketNetty
 
         public async Task RunServerAsync()
         {
-            var useLibuv = true;
+            var useLibuvConfig = Configurations.Configuration["ZDFixService:DotNetty:UseLibuv"];
+            var useLibuv = false;
+            if (!string.IsNullOrEmpty(useLibuvConfig))
+            {
+                bool.TryParse(useLibuvConfig, out useLibuv);
+            }
             if (useLibuv)
             {
                 var dispatcher = new DispatcherEventLoopGroup();
@@ -87,10 +92,18 @@ namespace ZDFixService.SocketNetty
 
         public async void Close()
         {
-            await _channel?.CloseAsync();
-            await Task.WhenAll(
-                                _bossGroup?.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)),
-                                _workerGroup?.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)));
+            if (_bossGroup != null)
+            {
+                if (_channel != null)
+                {
+                    await _channel?.CloseAsync();
+                }
+
+                await Task.WhenAll(
+                    _bossGroup?.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)),
+                    _workerGroup?.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1)));
+            }
+
         }
 
         /// <summary>

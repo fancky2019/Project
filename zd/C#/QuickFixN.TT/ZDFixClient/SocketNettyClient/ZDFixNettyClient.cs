@@ -30,36 +30,23 @@ namespace ZDFixClient.SocketNettyClient
 
         IPEndPoint _iPEndPoint = null;
         MultithreadEventLoopGroup group;
-
-        //internal static ZDFixNettyClient Instance;
+        volatile bool _closed = false;
         public event Action<string> ReceiveMsg;
-        //static ZDFixNettyClient()
-        //{
-        //    Instance = new ZDFixNettyClient();
-        //}
+
+
         public ZDFixNettyClient()
         {
             RunClientAsync();
         }
 
-        public async Task RunClientAsync()
+        public async void RunClientAsync()
         {
             var ipPort = ConfigurationManager.AppSettings["FixServer"].ToString().Split(':');
             string ip = ipPort[0];
             //string _ip = "192.168.1.114";
             string port = ipPort[1];
             _iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), int.Parse(port));
-            //ExampleHelper.SetConsoleLogger();
-
             group = new MultithreadEventLoopGroup();
-
-            //X509Certificate2 cert = null;
-            string targetHost = null;
-            //if (ClientSettings.IsSsl)
-            //{
-            //    cert = new X509Certificate2(Path.Combine(ExampleHelper.ProcessDirectory, "dotnetty.com.pfx"), "password");
-            //    targetHost = cert.GetNameInfo(X509NameType.DnsName, false);
-            //}
             try
             {
                 _bootstrap.Group(group)
@@ -68,12 +55,6 @@ namespace ZDFixClient.SocketNettyClient
                     .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
                     {
                         IChannelPipeline pipeline = channel.Pipeline;
-
-                        //if (cert != null)
-                        //{
-                        //    pipeline.AddLast("tls", new TlsHandler(stream => new SslStream(stream, true, (sender, certificate, chain, errors) => true), new ClientTlsSettings(targetHost)));
-                        //}
-                        //pipeline.AddLast(new LoggingHandler());
                         //6s未读写就断开了连接。和java的一样设计
                         IdleStateHandler idleStateHandler = new IdleStateHandler(2, 2, 6);
 
@@ -94,21 +75,10 @@ namespace ZDFixClient.SocketNettyClient
                         ZDFixClientHandler echoClientHandler = new ZDFixClientHandler(ReceiveMsg);
                         echoClientHandler.DisConnected += () =>
                           {
-                              _nLog.Info("Reconnect......");
-                              //最长等待三次读写时间6秒，若仍没有建立连接进行读写，继续回调此事件
-                              //ConnectAsync(_iPEndPoint).Wait(6000);
-                              RetryConnect(_iPEndPoint);
-
-                              //while (!Connect(_iPEndPoint).Wait(2))
-                              //{
-                              //    //两秒内未连接继续尝试连接
-                              //}
-
+                              Connect(_iPEndPoint);
                           };
                         pipeline.AddLast("echo", echoClientHandler);
                     }));
-
-                //_clientChannel = await Connect(_iPEndPoint);
 
             }
             catch (Exception ex)
@@ -119,14 +89,12 @@ namespace ZDFixClient.SocketNettyClient
 
         public void SendMsg<T>(T t)
         {
-
             _clientChannel.WriteAndFlushAsync(t);
-
         }
 
-        public void RetryConnect(IPEndPoint iPEndPoint)
+        public void Connect(IPEndPoint iPEndPoint)
         {
-            if (_clientChannel != null && _clientChannel.Active)
+            if (_closed||(_clientChannel != null && _clientChannel.Active))
             {
                 return;
             }
@@ -134,8 +102,8 @@ namespace ZDFixClient.SocketNettyClient
             {
                 try
                 {
-
-                    var task =  _bootstrap.ConnectAsync(iPEndPoint);// ConnectAsync(iPEndPoint);
+                    _nLog.Info("Reconnect......");
+                    var task = _bootstrap.ConnectAsync(iPEndPoint);
                     task.Wait(2000);
                     _clientChannel = task.Result;
                 }
@@ -145,28 +113,26 @@ namespace ZDFixClient.SocketNettyClient
                     if (_clientChannel != null)
                     {
                         Thread.Sleep(2000);
-                        _nLog.Info("Retry Connect......");
-                        RetryConnect(iPEndPoint);
+                        Connect(iPEndPoint);
                     }
-                
+
                 }
             });
 
 
         }
 
-
-
-        public async Task<IChannel> ConnectAsync(IPEndPoint iPEndPoint)
-        {
-            return await _bootstrap.ConnectAsync(iPEndPoint);
-        }
-
         public async void Close()
         {
-            await _clientChannel?.CloseAsync();
-            await group.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1));
-
+            _closed = true;
+            if (group != null)
+            {
+                if (_clientChannel != null)
+                {
+                    await _clientChannel.CloseAsync();
+                }
+                await group.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(1));
+            }
         }
 
 
