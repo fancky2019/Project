@@ -31,9 +31,9 @@ namespace ZDFixService.Service.Base
 
         internal TradeClientAppService()
         {
+            Init();
             TradeClient.Instance.Logon += (msg =>
             {
-                Init();
                 Logon?.Invoke(msg);
             });
 
@@ -79,7 +79,6 @@ namespace ZDFixService.Service.Base
         private async void Init()
         {
             MemoryData.Init();
-
             //Task.Run(() =>
             //{
             //    ZDFixServiceServer.Instance.RunServerAsync().Wait();
@@ -103,7 +102,7 @@ namespace ZDFixService.Service.Base
             MemoryData.AppStop = true;
             TradeClient.Instance.SocketInitiator.Stop();
             WaitForAdding();
-            MemoryData.IPersist.Persist();
+            MemoryData.IPersist?.Persist();
             ZDFixServiceServer.Instance.Close();
             ZDFixServiceWebSocketServer.Instance.Close();
         }
