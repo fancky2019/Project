@@ -43,4 +43,30 @@ namespace ZDFixService.Models
         BusinessData
     }
 
+    public class MessageData
+    {
+        public string MessageCommand { get; set; }
+        public string ProtocolData { get; set; }
+    }
+
+    public class MessageCommand
+    {
+        /// <summary>
+        /// 下单
+        /// </summary>
+        public const string Order = "Order";
+        /// <summary>
+        /// 获取内存订单信息
+        /// </summary>
+        public const string GetOrders = "GetOrders";
+        /// <summary>
+        /// 添加丢失的内存数据
+        /// </summary>
+        public const string AddLosedOrder = "AddLosedOrder";
+        /// <summary>
+        /// 从日志中获取丢失的Order
+        /// </summary>
+        public const string GetLosedOrderFromLog = "GetLosedOrderFromLog";
+    }
+
 }
