@@ -218,6 +218,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="version.md" />
+    <None Include="调试SeqNum.md" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -235,10 +237,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="version.txt" />
-    <Content Include="调试SeqNum.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QuickFIXn\QuickFix.csproj">

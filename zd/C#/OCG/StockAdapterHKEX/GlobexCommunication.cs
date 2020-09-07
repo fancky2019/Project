@@ -1501,8 +1501,11 @@ namespace StockAdapterHKEX
             refObj.orderID = execReport.OrderID.getValue();
             //add by xiang at 20171011 -end
 
-            info.orderNo = refObj.clOrderID;
-            info.origOrderNo = info.orderNo;
+            //info.orderNo = refObj.clOrderID;
+            //info.origOrderNo = info.orderNo;
+
+            info.orderNo = execReport.ClOrdID.getValue();
+            info.origOrderNo = refObj.clOrderID;
 
             refObj.addGlobexRes(execReport);
 

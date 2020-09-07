@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDFixService", "ZDFixServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDFixClient", "ZDFixClient\ZDFixClient.csproj", "{099D6EB8-8694-4DD0-B467-5635A5F2C640}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeTool", "TradeTool\TradeTool.csproj", "{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -143,6 +145,18 @@ Global
 		{099D6EB8-8694-4DD0-B467-5635A5F2C640}.Release|x64.Build.0 = Release|Any CPU
 		{099D6EB8-8694-4DD0-B467-5635A5F2C640}.Release|x86.ActiveCfg = Release|Any CPU
 		{099D6EB8-8694-4DD0-B467-5635A5F2C640}.Release|x86.Build.0 = Release|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Debug|x64.Build.0 = Debug|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Debug|x86.Build.0 = Debug|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Release|x64.ActiveCfg = Release|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Release|x64.Build.0 = Release|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Release|x86.ActiveCfg = Release|Any CPU
+		{7C55C4DD-83BB-4032-BE9E-F99B0D36E5A1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -552,8 +552,8 @@ namespace ZDFixService.Service.TT
 
             //info.validDate = ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
             orderResponseInfo.validDate = ZDUperTagValueConvert.ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
-            orderResponseInfo.orderNo = order.NewOrderSingleClientID;
-            orderResponseInfo.origOrderNo = execReport.ClOrdID.getValue();
+            orderResponseInfo.orderNo = execReport.ClOrdID.getValue(); 
+            orderResponseInfo.origOrderNo = order.NewOrderSingleClientID;
             orderResponseInfo.code = orderInfo.code;
 
             //盘房和TT对单用，关联字段。
