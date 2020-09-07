@@ -30,7 +30,7 @@ namespace ZDTradeClientTT
 
         public TradeApp tradeApp;
         private ManualOrderIndicator moi = new ManualOrderIndicator(true);
-        
+
         private bool IsTestMode;
         //public ICustomFixStrategy strategy = null;
         // private ZDLogger globexIFLogger = null;
@@ -1242,8 +1242,11 @@ namespace ZDTradeClientTT
             }
             //info.validDate = ConvertToZDTimeInForce(execReport.TimeInForce.ToString());
             info.validDate = ConvertToZDTimeInForce(refObj, execReport.TimeInForce.ToString());
-            info.orderNo = refObj.clOrderID;
-            info.origOrderNo = execReport.ClOrdID.getValue();
+            //info.orderNo = refObj.clOrderID;
+            //info.origOrderNo = execReport.ClOrdID.getValue();
+            //原单号和当前单号位置错误。
+            info.orderNo = execReport.ClOrdID.getValue();
+            info.origOrderNo = refObj.clOrderID;
             //盘房和TT对单用，关联字段。
             if (execReport.IsSetField(Tags.SecondaryClOrdID))
             {
