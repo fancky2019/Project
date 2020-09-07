@@ -44,7 +44,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.rtbNetInfo = new System.Windows.Forms.RichTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.btnResolve = new System.Windows.Forms.Button();
+            this.btnResolveResponse = new System.Windows.Forms.Button();
             this.txtNetInfo = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -57,6 +57,7 @@
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnResolveRequest = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -228,33 +229,34 @@
             // rtbNetInfo
             // 
             this.rtbNetInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbNetInfo.Location = new System.Drawing.Point(3, 71);
+            this.rtbNetInfo.Location = new System.Drawing.Point(3, 105);
             this.rtbNetInfo.Name = "rtbNetInfo";
             this.rtbNetInfo.ReadOnly = true;
-            this.rtbNetInfo.Size = new System.Drawing.Size(792, 465);
+            this.rtbNetInfo.Size = new System.Drawing.Size(792, 431);
             this.rtbNetInfo.TabIndex = 17;
             this.rtbNetInfo.Text = "";
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.btnResolve);
+            this.panel2.Controls.Add(this.btnResolveRequest);
+            this.panel2.Controls.Add(this.btnResolveResponse);
             this.panel2.Controls.Add(this.txtNetInfo);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(792, 68);
+            this.panel2.Size = new System.Drawing.Size(792, 102);
             this.panel2.TabIndex = 16;
             // 
-            // btnResolve
+            // btnResolveResponse
             // 
-            this.btnResolve.Location = new System.Drawing.Point(664, 25);
-            this.btnResolve.Name = "btnResolve";
-            this.btnResolve.Size = new System.Drawing.Size(75, 23);
-            this.btnResolve.TabIndex = 2;
-            this.btnResolve.Text = "Resolve";
-            this.btnResolve.UseVisualStyleBackColor = true;
-            this.btnResolve.Click += new System.EventHandler(this.btnResolve_Click);
+            this.btnResolveResponse.Location = new System.Drawing.Point(664, 25);
+            this.btnResolveResponse.Name = "btnResolveResponse";
+            this.btnResolveResponse.Size = new System.Drawing.Size(111, 23);
+            this.btnResolveResponse.TabIndex = 2;
+            this.btnResolveResponse.Text = "ResolveResponse";
+            this.btnResolveResponse.UseVisualStyleBackColor = true;
+            this.btnResolveResponse.Click += new System.EventHandler(this.btnResolve_Click);
             // 
             // txtNetInfo
             // 
@@ -364,6 +366,16 @@
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.ReadOnly = true;
             // 
+            // btnResolveRequest
+            // 
+            this.btnResolveRequest.Location = new System.Drawing.Point(664, 66);
+            this.btnResolveRequest.Name = "btnResolveRequest";
+            this.btnResolveRequest.Size = new System.Drawing.Size(111, 23);
+            this.btnResolveRequest.TabIndex = 3;
+            this.btnResolveRequest.Text = "ResolveRequest";
+            this.btnResolveRequest.UseVisualStyleBackColor = true;
+            this.btnResolveRequest.Click += new System.EventHandler(this.btnResolveRequest_Click);
+            // 
             // FrmTradeTool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -371,6 +383,7 @@
             this.ClientSize = new System.Drawing.Size(806, 565);
             this.Controls.Add(this.tabControl1);
             this.Name = "FrmTradeTool";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TradeTool";
             this.Load += new System.EventHandler(this.FrmTradeTool_Load);
             this.tabControl1.ResumeLayout(false);
@@ -407,7 +420,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dgvClientIn;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button btnResolve;
+        private System.Windows.Forms.Button btnResolveResponse;
         private System.Windows.Forms.TextBox txtNetInfo;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.RichTextBox rtbNetInfo;
@@ -419,6 +432,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.Button btnResolveRequest;
     }
 }
 

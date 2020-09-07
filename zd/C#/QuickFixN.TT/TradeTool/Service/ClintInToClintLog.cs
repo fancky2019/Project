@@ -164,7 +164,7 @@ namespace TradeTool.Service
             {
                 _logger.WriteLog(ex.ToString());
             }
-            return orderContent;
+            return orderContent.Distinct().ToList();
         }
 
         private string GetNetInfoStr(string content)
