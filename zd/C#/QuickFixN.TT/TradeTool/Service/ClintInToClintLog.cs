@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CommonClassLib;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,18 +10,21 @@ using TradeTool.Model;
 
 namespace TradeTool.Service
 {
-    class ClintInToClintLog
+    public class ClintInToClintLog
     {
-        private List<ClientInLog> ReadData(string fileName)
+        Log _logger = LogManager.GetLogger("TradeTool");
+
+        public List<ClientInLog> ReadClientInData(string fileName)
         {
-            var _logger = LogManager.GetLogger("TradeTool");
             // String fileName = "C:\\Users\\Administrator\\Desktop\\ClientIn_20200115.log";
             List<ClientInLog> orderContent = new List<ClientInLog>();
             try
             {
                 List<string> allContent = TxtFile.ReadTxtFile(fileName);
 
-
+                var skipCount = 0;
+                var repeatCount = 0;
+                var commandCount = 0;
                 foreach (var p in allContent)
                 {
                     try
@@ -47,6 +52,7 @@ namespace TradeTool.Service
                         //不是下单指令，可能是心跳、登录指令
                         if (logContentLength < 100)
                         {
+                            skipCount++;
                             continue;
                         }
                         else
@@ -61,6 +67,7 @@ namespace TradeTool.Service
                             }
                             else
                             {
+                                _logger.WriteLog($"repeat - {logContent}");
                                 String currentContent = "";
                                 while (firstIndex != logContentLength - 1)
                                 {
@@ -72,21 +79,30 @@ namespace TradeTool.Service
                                     firstIndex = logContent.IndexOf('}');
                                 }
                                 listString.Add(logContent);
+                                repeatCount += listString.Count - 1;
+
                             }
 
                             String logTimeStr = p.Substring(0, 21);
-                            DateTime logTime = DateTime.Parse(logTimeStr);
+                            DateTime logTime = DateTime.ParseExact(logTimeStr, "yyyyMMdd HH:mm:ss:fff", CultureInfo.InvariantCulture);
+
+                            //DateTime contractDate = DateTime.ParseExact(timeStr, "yyyyMMdd-HH:mm:ss.fff", CultureInfo.InvariantCulture);
 
                             listString.ForEach(str =>
                               {
                                   ClientInLog clientInLog = new ClientInLog();
 
                                   clientInLog.LogTime = logTime;
-                                  clientInLog.Content = str;
+                                  var netInfoStr = GetNetInfoStr(str);
+                                  NetInfo netInfo = new NetInfo();
+                                  netInfo.MyReadString(netInfoStr);
+                                  clientInLog.NetInfo = netInfo;
+
                                   orderContent.Add(clientInLog);
                               });
 
-                            //                        int m = 0;
+
+
                         }
                     }
                     catch (Exception ex)
@@ -95,13 +111,69 @@ namespace TradeTool.Service
                         _logger.WriteLog(ex.ToString());
                     }
                 }
-
+                commandCount = orderContent.Count;
+                _logger.WriteLog($"totalCount - {allContent.Count} = skipCount:{skipCount} - repeatCount:{repeatCount} + orderContent:{orderContent.Count}");
             }
             catch (Exception ex)
             {
                 _logger.WriteLog(ex.ToString());
             }
             return orderContent;
+        }
+
+        public List<ClientInLog> ReadToClientData(string fileName)
+        {
+            List<ClientInLog> orderContent = new List<ClientInLog>();
+            try
+            {
+                List<string> allContent = TxtFile.ReadTxtFile(fileName);
+                var commandCount = 0;
+                foreach (var p in allContent)
+                {
+                    try
+                    {
+                        if (p.Contains("20200717 09:38:44:024"))
+                        {
+
+                        }
+                        var startIndex = p.IndexOf(": ");
+                        string logContent = p.Substring(startIndex + 2);
+                        int logContentLength = logContent.Length;
+                        String logTimeStr = p.Substring(0, 21);
+                        DateTime logTime = DateTime.ParseExact(logTimeStr, "yyyyMMdd HH:mm:ss:fff", CultureInfo.InvariantCulture);
+                        ClientInLog clientInLog = new ClientInLog();
+
+                        clientInLog.LogTime = logTime;
+
+                        NetInfo netInfo = new NetInfo();
+                        netInfo.MyReadString(logContent);
+                        clientInLog.NetInfo = netInfo;
+
+                        orderContent.Add(clientInLog);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.WriteLog(p);
+                        _logger.WriteLog(ex.ToString());
+                    }
+                }
+                commandCount = orderContent.Count;
+                _logger.WriteLog($"totalCount - {allContent.Count} = orderContent:{orderContent.Count}");
+            }
+            catch (Exception ex)
+            {
+                _logger.WriteLog(ex.ToString());
+            }
+            return orderContent;
+        }
+
+        private string GetNetInfoStr(string content)
+        {
+            //{(len=167)CancStHK@00000@00011140LH000098@8005773@@CO020990001@HKEX@@@@0000588&HKEX_1@@CO020990001@123456@@00011140LH000098@14064865@HKEX@20098.HK@1@12000@0.880000@0@@7@@P@@@@@@}{(len=167)CancStHK@00000@00011140LH000099@8005773@@CO020990001@HKEX@@@@0000589&HKEX_1@@CO020990001@123456@@00011140LH000099@14064866@HKEX@20098.HK@1@12000@0.880000@0@@7@@P@@@@@@}
+            int firstIndex = content.IndexOf(')');
+            var netInfoStrLength = content.Length - (firstIndex + 1) - 1;
+            var netInfoStr = content.Substring(firstIndex + 1, netInfoStrLength);
+            return netInfoStr;
         }
     }
 }

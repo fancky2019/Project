@@ -30,7 +30,7 @@ namespace TradeTool.Common
         public static List<string> ReadTxtFile(string filePath)
         {
             List<string> content = new List<string>();
-            if (File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
                 return content;
             }
