@@ -17,6 +17,7 @@ namespace TradeTool
 {
     public partial class FrmTradeTool : Form
     {
+        Log _logger = LogManager.GetLogger("TradeTool");
         public FrmTradeTool()
         {
             InitializeComponent();
@@ -39,13 +40,30 @@ namespace TradeTool
             //DateTime contractDate = DateTime.ParseExact(timeStr, "yyyyMMdd-HH:mm:ss.fff", CultureInfo.InvariantCulture);
             //var content = new ClintInToClintLog().ReadClientInData(@"C:\Users\Administrator\Desktop\2020-07-17\ClientIn_20200717.log");
 
+            try
+            {
+
+        
             var clientInDatas = new ClintInToClintLog().ReadClientInData(this.txtClientInPath.Text.Trim());
-            var clientInPath = this.txtClientInPath.Text.Trim().Replace("ClientIn", "ToClient");
-            var toClientDatas = new ClintInToClintLog().ReadToClientData(clientInPath);
+            var toClientPath = this.txtClientInPath.Text.Trim().Replace("ClientIn", "ToClient");
+            var toClientDatas = new ClintInToClintLog().ReadToClientData(toClientPath);
+
+            var systemCodes = this.txtSystemCodes.Text.Trim();
+            if (!string.IsNullOrEmpty(systemCodes))
+            {
+                var systemCodeList = systemCodes.Split(';').ToList();
+                clientInDatas = clientInDatas.Where(p => systemCodeList.Contains(p.SystemCode)).ToList();
+                toClientDatas = toClientDatas.Where(p => systemCodeList.Contains(p.SystemCode)).ToList();
+            }
             this.dgvClientIn.DataSource = null;
             this.dgvClientIn.DataSource = clientInDatas;
             this.dgvToClient.DataSource = null;
             this.dgvToClient.DataSource = toClientDatas;
+            }
+            catch(Exception ex)
+            {
+                _logger.WriteLog(ex.ToString());
+            }
         }
 
 
@@ -90,7 +108,7 @@ namespace TradeTool
             {
                 if (this.dgvClientIn.SelectedRows.Count > 0)
                 {
-                    var selectRow = this.dgvClientIn.SelectedRows[0];
+                    var selectRow = this.dgvToClient.SelectedRows[0];
                     var netInfo = selectRow.DataBoundItem as ClientInLog;
                     Clipboard.SetDataObject(netInfo.NetInfo.MyToString());
                 }
@@ -149,6 +167,49 @@ namespace TradeTool
             this.rtbNetInfo.Text = sb.ToString();
         }
 
-      
+        private void btnResolveRequest_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(this.txtNetInfo.Text.Trim()))
+            {
+                return;
+            }
+            NetInfo netInfo = new NetInfo();
+
+            netInfo.MyReadString(this.txtNetInfo.Text.Trim());
+            //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(netinfo);
+            //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
+
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netInfo));
+            sb.Append("\r\n");
+            //var command = netInfoStr.Substring(0, 8);
+            switch (netInfo.code)
+            {
+                case "ORDER001":
+                case "OrdeStHK":
+                    OrderInfo orderInfo = new OrderInfo();
+                    orderInfo.MyReadString(netInfo.infoT);
+                    //@@@@@ICE@BRN2012@1@1@42.59@@1@@@42.59@1@@@@0
+                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
+                    break;
+                case "CANCST01":
+                case "CancStHK":
+                    CancelInfo cancelInfo = new CancelInfo();
+                    cancelInfo.MyReadString(netInfo.infoT);
+                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(cancelInfo));
+                    break;
+                case "MODIFY01":
+                case "ModiStHK":
+                    ModifyInfo modifyInfo = new ModifyInfo();
+                    modifyInfo.MyReadString(netInfo.infoT);
+                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(modifyInfo));
+                    break;
+                default:
+                    MessageBox.Show("订单指令有误！");
+                    return;
+            }
+            this.rtbNetInfo.Text = sb.ToString();
+        }
     }
 }
