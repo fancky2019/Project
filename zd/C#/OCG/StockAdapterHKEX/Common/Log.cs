@@ -90,11 +90,12 @@ namespace StockAdapterHKEX.Common
             {
                 throw new Exception("File is disposed!");
             }
-            if (DateTime.Now.Day != _createLogTime.Day)
+            if (DateTime.Now.Date != _createLogTime.Date)
             {
                 CreateLogFile();
             }
             _sw.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} {content}");
+            _sw.Flush();
             _spinLock.Exit();
         }
 
