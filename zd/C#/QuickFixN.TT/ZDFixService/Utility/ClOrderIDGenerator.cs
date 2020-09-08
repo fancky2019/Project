@@ -15,7 +15,7 @@ namespace ZDFixService.Utility
         {
             this._lastClientOrderID = lastClientOrderID;
 
-            var cliOrderIDScope = Configurations.Configuration["ZDFixService:CliOrderIDScope"].ToString();
+            var cliOrderIDScope = Configurations.Configuration["ZDFixService:CliOrderIDGenerator:CliOrderIDScope"].ToString();
             if (string.IsNullOrEmpty(cliOrderIDScope))
             {
                 throw new Exception("Order_ID_Scope is null!");
@@ -23,17 +23,17 @@ namespace ZDFixService.Utility
             _beginOrderId = long.Parse(cliOrderIDScope.Split(',')[0]);
             _endOrderId = long.Parse(cliOrderIDScope.Split(',')[1]);
 
-            var useSnowFlakeConfig = Configurations.Configuration["ZDFixService:SnowFlake:UseSnowFlake"];
+            var useSnowFlakeConfig = Configurations.Configuration["ZDFixService:CliOrderIDGenerator:UseSnowFlake"];
             if (!string.IsNullOrEmpty(useSnowFlakeConfig))
             {
                 if (bool.TryParse(useSnowFlakeConfig, out bool useSnowFlake))
                 {
                     if (useSnowFlake)
                     {
-                        var workerID = int.Parse(Configurations.Configuration["ZDFixService:SnowFlake:WorkerID"]);
-                        var startDate = DateTime.Parse(Configurations.Configuration["ZDFixService:SnowFlake:StartDate"]);
-                        var sequenceBits = int.Parse(Configurations.Configuration["ZDFixService:SnowFlake:SequenceBits"]);
-                        _snowFlake = new SnowFlake(workerID, startDate, sequenceBits);
+                        var workerID = int.Parse(Configurations.Configuration["ZDFixService:CliOrderIDGenerator:SnowFlake:WorkerID"]);
+                        var startDate = DateTime.Parse(Configurations.Configuration["ZDFixService:CliOrderIDGenerator:SnowFlake:StartDate"]);
+                        var sequenceBits = int.Parse(Configurations.Configuration["ZDFixService:CliOrderIDGenerator:SnowFlake:SequenceBits"]);
+                        _snowFlake = new SnowFlake(workerID, startDate);
                     }
                 }
             }

@@ -105,6 +105,8 @@ namespace ZDFixService.Service.Base
             MemoryData.IPersist?.Persist();
             ZDFixServiceServer.Instance.Close();
             ZDFixServiceWebSocketServer.Instance.Close();
+            //var re = NLog.LogManager.AutoShutdown;//true
+            //NLog.LogManager.Shutdown();
         }
 
         private void WaitForAdding()

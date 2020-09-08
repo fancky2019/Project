@@ -17,7 +17,8 @@ namespace TradeTool.Common
         {
             _logs = new Dictionary<string, Log>();
             _spinLock = new SpinLock(false);
-
+            AppDomain.CurrentDomain.ProcessExit += (o, e) => { ShutDown(); };
+            //AppDomain.CurrentDomain.DomainUnload += (o, e) => { ShutDown(); };
         }
 
 
@@ -28,7 +29,7 @@ namespace TradeTool.Common
         /// <returns></returns>
         public static Log GetLogger(string logName)
         {
-            if (logName.Contains("\\") || logName.Contains("/")|| logName.Contains("."))
+            if (logName.Contains("\\") || logName.Contains("/") || logName.Contains("."))
             {
                 throw new Exception("Invalid logName,logName shold not contain path or extension .");
             }
@@ -43,6 +44,14 @@ namespace TradeTool.Common
 
             _spinLock.Exit();
             return logger;
+        }
+
+        static void ShutDown()
+        {
+            foreach (var log in _logs.Values)
+            {
+                log.Dispose();
+            }
         }
 
 
@@ -96,7 +105,7 @@ namespace TradeTool.Common
                 CreateLogFile();
             }
             _sw.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} {content}");
-            _sw.Flush();
+            //_sw.Flush();
             _spinLock.Exit();
         }
 

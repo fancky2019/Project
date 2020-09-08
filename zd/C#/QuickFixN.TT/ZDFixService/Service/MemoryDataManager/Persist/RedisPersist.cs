@@ -13,16 +13,27 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
 
-        private const string LAST_CLIENT_ORDER_ID_KEY = "LastClientOrderID";
-        private const string ORDER_KEY = "Orders";
+        //private const string LAST_CLIENT_ORDER_ID_KEY = "LastClientOrderID";
+        //private const string ORDER_KEY = "Orders";
+
+        private readonly string _lastCliientOrderIDKey = "LastClientOrderID";
+        private readonly string _orderKey = "Orders";
 
         private object _lockObj = new object();
+
+
+        internal RedisPersist()
+        {
+            _lastCliientOrderIDKey =$"{Configurations.Configuration["ZDFixService:ITradeService"]}_{_lastCliientOrderIDKey}";
+            _orderKey = $"{Configurations.Configuration["ZDFixService:ITradeService"]}_{_orderKey}";
+        }
+
         public void Load()
         {
             try
             {
 
-                var bytes = RedisHelper.GetData(LAST_CLIENT_ORDER_ID_KEY);
+                var bytes = RedisHelper.GetData(_lastCliientOrderIDKey);
                 if (bytes != null)
                 {
                     MemoryData.LastClientOrderID = MessagePackUtility.Deserialize<long>(bytes);
@@ -36,7 +47,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
 
             try
             {
-                var bytes = RedisHelper.GetData(ORDER_KEY);
+                var bytes = RedisHelper.GetData(_orderKey);
                 if (bytes != null)
                 {
                     MemoryData.Orders = MessagePackUtility.Deserialize<ConcurrentDictionary<string, Order>>(bytes);
@@ -61,7 +72,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
                 {
 
                     var lastClientOrderIDBytes = MessagePackUtility.Serialize<long>(MemoryData.LastClientOrderID);
-                    RedisHelper.SaveData(LAST_CLIENT_ORDER_ID_KEY, lastClientOrderIDBytes);
+                    RedisHelper.SaveData(_lastCliientOrderIDKey, lastClientOrderIDBytes);
                 }
                 catch (Exception ex)
                 {
@@ -74,7 +85,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
                 try
                 {
                     var ordersBytes = MessagePackUtility.Serialize<ConcurrentDictionary<string, Order>>(MemoryData.Orders);
-                    RedisHelper.SaveData(ORDER_KEY, ordersBytes);
+                    RedisHelper.SaveData(_orderKey, ordersBytes);
 
                 }
                 catch (Exception ex)
