@@ -208,7 +208,7 @@ namespace ZDFixService.Service.TT
                 {
                     throw new Exception($"Order  is pending .SystemCode- {netInfo.systemCode}");
                 }
-                order.CommandCode = netInfo.code;
+                order.TempCommandCode = netInfo.code;
                 //order.CancelNetInfo = netInfo;
                 QuickFix.FIX42.OrderCancelRequest orderCancelRequest = new QuickFix.FIX42.OrderCancelRequest();
 
@@ -283,7 +283,7 @@ namespace ZDFixService.Service.TT
                 {
                     throw new Exception($"Order  is pending .SystemCode- {netInfo.systemCode}");
                 }
-                order.CommandCode = netInfo.code;
+                order.TempCommandCode = netInfo.code;
                 NetInfo orderNetInfo = order.OrderNetInfo;
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(orderNetInfo.infoT);
@@ -406,6 +406,8 @@ namespace ZDFixService.Service.TT
                 order.NewOrderSingleClientID = currentCliOrderID;
                 order.CurrentCliOrderID = currentCliOrderID;
                 order.TempCliOrderID = "";
+                order.CommandCode = order.TempCommandCode;
+     
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(order.OrderNetInfo.infoT);
                 OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
@@ -498,6 +500,7 @@ namespace ZDFixService.Service.TT
             order.OrderID = execReport.OrderID.getValue();
             order.CurrentCliOrderID = execReport.ClOrdID.getValue();
             order.TempCliOrderID = "";
+            order.CommandCode = order.TempCommandCode;
 
             long origClOrdID = long.Parse(execReport.OrigClOrdID.getValue());
             MemoryData.UsingCliOrderIDSystemCode.TryRemove(origClOrdID, out _);

@@ -154,7 +154,7 @@ namespace ZDFixService.Service.Base
                     {
                         Order order = new Order();
                         order.OrderNetInfo = netInfo;
-                        order.CommandCode = netInfo.code;
+                        order.TempCommandCode = netInfo.code;
                         NewOrderSingle(order);
                     }
                     else if (netInfo.code == CommandCode.MODIFY || netInfo.code == CommandCode.ModifyStockHK)
@@ -347,22 +347,22 @@ namespace ZDFixService.Service.Base
 
                 }
                 netInfo = order.OrderNetInfo.Clone();
-                if (order.CommandCode == CommandCode.ORDER || order.CommandCode == CommandCode.OrderStockHK)
+                if (order.TempCommandCode == CommandCode.ORDER || order.TempCommandCode == CommandCode.OrderStockHK)
                 {
                     //netInfo = order.OrderNetInfo.Clone();
-                    netInfo.NewOrderSingleException(errorMessage, order.CommandCode);
+                    netInfo.NewOrderSingleException(errorMessage, order.TempCommandCode);
                     MemoryData.Orders.TryRemove(order.SystemCode, out _);
                 }
-                else if (order.CommandCode == CommandCode.MODIFY || order.CommandCode == CommandCode.ModifyStockHK)
+                else if (order.TempCommandCode == CommandCode.MODIFY || order.TempCommandCode == CommandCode.ModifyStockHK)
                 {
                     //netInfo = order.AmendNetInfo;
                     //netInfo = order.OrderNetInfo.Clone(); 
-                    netInfo.OrderCancelReplaceRequestException(errorMessage, order.NewOrderSingleClientID, order.CommandCode);
+                    netInfo.OrderCancelReplaceRequestException(errorMessage, order.NewOrderSingleClientID, order.TempCommandCode);
                 }
-                else if (order.CommandCode == CommandCode.CANCEL || order.CommandCode == CommandCode.CancelStockHK)
+                else if (order.TempCommandCode == CommandCode.CANCEL || order.TempCommandCode == CommandCode.CancelStockHK)
                 {
                     //netInfo = order.OrderNetInfo.Clone(); 
-                    netInfo.OrderCancelRequestException(errorMessage, order.NewOrderSingleClientID, order.CommandCode);
+                    netInfo.OrderCancelRequestException(errorMessage, order.NewOrderSingleClientID, order.TempCommandCode);
                 }
             }
             catch (Exception ex)

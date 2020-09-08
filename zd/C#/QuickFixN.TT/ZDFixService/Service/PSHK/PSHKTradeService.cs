@@ -129,7 +129,7 @@ namespace ZDFixService.Service.PSHK
                 {
                     throw new Exception($"Order  is pending .SystemCode- {netInfo.systemCode}");
                 }
-                order.CommandCode = netInfo.code;
+                order.TempCommandCode = netInfo.code;
 
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(order.OrderNetInfo.infoT);
@@ -213,11 +213,14 @@ namespace ZDFixService.Service.PSHK
                 var currentCliOrderID = execReport.ClOrdID.getValue().Replace("DA", "");
                 //var order = MemoryDataManager.Orders.Values.Where(p => p.TempCliOrderID == currentCliOrderID).FirstOrDefault();
                 var order = MemoryData.GetOrderByCliOrderID(currentCliOrderID);
+       
                 order.Pending = false;
                 order.OrderID = execReport.OrderID.getValue();
                 order.NewOrderSingleClientID = currentCliOrderID;
                 order.CurrentCliOrderID = currentCliOrderID;
                 order.TempCliOrderID = "";
+                order.CommandCode = order.TempCommandCode;
+
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(order.OrderNetInfo.infoT);
                 OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
@@ -312,6 +315,7 @@ namespace ZDFixService.Service.PSHK
             order.OrderID = execReport.OrderID.getValue();
             order.CurrentCliOrderID = execReport.ClOrdID.getValue();
             order.TempCliOrderID = "";
+            order.CommandCode = order.TempCommandCode;
 
             long origClOrdID = long.Parse(execReport.OrigClOrdID.getValue());
             MemoryData.UsingCliOrderIDSystemCode.TryRemove(origClOrdID, out _);

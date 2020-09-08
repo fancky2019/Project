@@ -57,9 +57,14 @@ namespace ZDFixService.Models
         //public NetInfo CancelNetInfo { get; set; }
 
         /// <summary>
-        /// 下改撤
+        /// 下改撤成功的指令
         /// </summary>
         public string CommandCode { get; set; }
+
+        /// <summary>
+        /// 保存当前的指令，防止失败，修改了CommandCode
+        /// </summary>
+        public string TempCommandCode { get; set; }
 
         /// <summary>
         /// 订单生成时间，订单持久化用，不保存过期的日单，只保存GTC单
