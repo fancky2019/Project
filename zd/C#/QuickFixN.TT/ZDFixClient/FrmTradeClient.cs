@@ -129,6 +129,7 @@ namespace ZDFixClient
         #region  Test
         private async void btnTest_Click(object sender, EventArgs e)
         {
+            var re = NLog.LogManager.AutoShutdown;
             await ZDFixServiceServer.Instance.RunServerAsync();
             return;
             Scheduler.Init();

@@ -17,7 +17,7 @@ namespace StockAdapterHKEX.Common
         {
             _logs = new Dictionary<string, Log>();
             _spinLock = new SpinLock(false);
-
+            AppDomain.CurrentDomain.ProcessExit += (o, e) => { ShutDown(); };
         }
 
         /// <summary>
@@ -44,7 +44,13 @@ namespace StockAdapterHKEX.Common
             return logger;
         }
 
-
+        static void ShutDown()
+        {
+            foreach (var log in _logs.Values)
+            {
+                log.Dispose();
+            }
+        }
     }
     /// <summary>
     /// 一天生成一个文件
@@ -95,7 +101,7 @@ namespace StockAdapterHKEX.Common
                 CreateLogFile();
             }
             _sw.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} {content}");
-            _sw.Flush();
+            //_sw.Flush();
             _spinLock.Exit();
         }
 

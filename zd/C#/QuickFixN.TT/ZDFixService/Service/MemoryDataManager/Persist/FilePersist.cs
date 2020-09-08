@@ -22,7 +22,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
                 try
                 {
                  
-                    TxtFile.SaveString(Configurations.Configuration["ZDFixService:OrderIDFilePath"], MemoryData.LastClientOrderID.ToString());
+                    TxtFile.SaveString(Configurations.Configuration["ZDFixService:Persist:File:OrderIDFilePath"], MemoryData.LastClientOrderID.ToString());
                 }
                 catch (Exception ex)
                 {
@@ -38,7 +38,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
                     //var jsonStr = NewtonsoftHelper.SerializeObject(MemoryData.Orders);
                     var jsonStr = NewtonsoftHelper.JsonSerializeObjectFormat(MemoryData.Orders);
                     //var jsonStr = MessagePackUtility.SerializeToJson<ConcurrentDictionary<string, Order>>(Orders);
-                    TxtFile.SaveString(Configurations.Configuration["ZDFixService:PersistOrdersPath"].ToString(), jsonStr);
+                    TxtFile.SaveString(Configurations.Configuration["ZDFixService:Persist:File:PersistOrdersPath"].ToString(), jsonStr);
 
                 }
                 catch (Exception ex)
@@ -57,7 +57,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
         {
             try
             {
-                var clientOrderID = TxtFile.ReadString(Configurations.Configuration["ZDFixService:OrderIDFilePath"].ToString()).Trim();
+                var clientOrderID = TxtFile.ReadString(Configurations.Configuration["ZDFixService:Persist:File:OrderIDFilePath"].ToString()).Trim();
                 if (!string.IsNullOrEmpty(clientOrderID))
                 {
                     MemoryData.LastClientOrderID = long.Parse(clientOrderID);
@@ -71,7 +71,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
 
             try
             {
-                var ordersStr = TxtFile.ReadString(Configurations.Configuration["ZDFixService:PersistOrdersPath"].ToString());
+                var ordersStr = TxtFile.ReadString(Configurations.Configuration["ZDFixService:Persist:File:PersistOrdersPath"].ToString());
                 if (!string.IsNullOrEmpty(ordersStr))
                 {
                     MemoryData.Orders = NewtonsoftHelper.DeserializeObject<ConcurrentDictionary<string, Order>>(ordersStr);

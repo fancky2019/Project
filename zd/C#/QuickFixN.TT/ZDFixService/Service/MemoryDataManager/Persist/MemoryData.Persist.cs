@@ -20,7 +20,7 @@ namespace ZDFixService.Service.MemoryDataManager
         private static void InitPersist()
         {
             //持久化方式：SQLite,REDIS,FILE
-            var persistType = Configurations.Configuration["ZDFixService:PersistType"].ToString().ToUpper();
+            var persistType = Configurations.Configuration["ZDFixService:Persist:PersistType"].ToString().ToUpper();
 
             switch (persistType)
             {
@@ -42,7 +42,7 @@ namespace ZDFixService.Service.MemoryDataManager
 
         internal static void PersistTimer()
         {
-            var persistInterval = int.Parse(Configurations.Configuration["ZDFixService:PersistInterval"].ToString());
+            var persistInterval = int.Parse(Configurations.Configuration["ZDFixService:Persist:PersistInterval"].ToString());
             _timer = new System.Threading.Timer((param) =>
             {
                 if (!AppStop)
