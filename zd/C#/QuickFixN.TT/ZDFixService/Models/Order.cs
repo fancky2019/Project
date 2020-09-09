@@ -1,6 +1,7 @@
 ﻿using CommonClassLib;
 using QuickFix.FIX42;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ZDFixService.Models
 {
-    public class Order
+    public partial class Order
     {
         public bool Pending { get; set; }
         /// <summary>
@@ -81,5 +82,14 @@ namespace ZDFixService.Models
         /// </summary>
         public string OrderCancelReplaceRequest { get; set; }
 
+        //内存暂时没处理冗余数据。可能有脏数据
+        /// <summary>
+        /// 
+        /// </summary>
+        public ConcurrentDictionary<string, string> ClientOrderIDCommandCode { get; set; }
+        public Order()
+        {
+            ClientOrderIDCommandCode = new ConcurrentDictionary<string, string>();
+        }
     }
 }

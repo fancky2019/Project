@@ -347,22 +347,28 @@ namespace ZDFixService.Service.Base
 
                 }
                 netInfo = order.OrderNetInfo.Clone();
-                if (order.TempCommandCode == CommandCode.ORDER || order.TempCommandCode == CommandCode.OrderStockHK)
+                var tempCommandCode = order.TempCommandCode;
+
+                if (string.IsNullOrEmpty(tempCommandCode))
+                {
+                    tempCommandCode = order.ClientOrderIDCommandCode[currentCliOrderID];
+                }
+                if (tempCommandCode == CommandCode.ORDER || tempCommandCode == CommandCode.OrderStockHK)
                 {
                     //netInfo = order.OrderNetInfo.Clone();
-                    netInfo.NewOrderSingleException(errorMessage, order.TempCommandCode);
+                    netInfo.NewOrderSingleException(errorMessage, tempCommandCode);
                     MemoryData.Orders.TryRemove(order.SystemCode, out _);
                 }
-                else if (order.TempCommandCode == CommandCode.MODIFY || order.TempCommandCode == CommandCode.ModifyStockHK)
+                else if (tempCommandCode == CommandCode.MODIFY || tempCommandCode == CommandCode.ModifyStockHK)
                 {
                     //netInfo = order.AmendNetInfo;
                     //netInfo = order.OrderNetInfo.Clone(); 
-                    netInfo.OrderCancelReplaceRequestException(errorMessage, order.NewOrderSingleClientID, order.TempCommandCode);
+                    netInfo.OrderCancelReplaceRequestException(errorMessage, order.NewOrderSingleClientID, tempCommandCode);
                 }
-                else if (order.TempCommandCode == CommandCode.CANCEL || order.TempCommandCode == CommandCode.CancelStockHK)
+                else if (tempCommandCode == CommandCode.CANCEL || tempCommandCode == CommandCode.CancelStockHK)
                 {
                     //netInfo = order.OrderNetInfo.Clone(); 
-                    netInfo.OrderCancelRequestException(errorMessage, order.NewOrderSingleClientID, order.TempCommandCode);
+                    netInfo.OrderCancelRequestException(errorMessage, order.NewOrderSingleClientID, tempCommandCode);
                 }
             }
             catch (Exception ex)
