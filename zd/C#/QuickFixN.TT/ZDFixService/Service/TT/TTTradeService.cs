@@ -407,7 +407,8 @@ namespace ZDFixService.Service.TT
                 order.CurrentCliOrderID = currentCliOrderID;
                 order.TempCliOrderID = "";
                 order.CommandCode = order.TempCommandCode;
-     
+                order.TempCommandCode = "";
+
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(order.OrderNetInfo.infoT);
                 OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
@@ -501,6 +502,7 @@ namespace ZDFixService.Service.TT
             order.CurrentCliOrderID = execReport.ClOrdID.getValue();
             order.TempCliOrderID = "";
             order.CommandCode = order.TempCommandCode;
+            order.TempCommandCode = "";
 
             long origClOrdID = long.Parse(execReport.OrigClOrdID.getValue());
             MemoryData.UsingCliOrderIDSystemCode.TryRemove(origClOrdID, out _);

@@ -28,7 +28,7 @@ namespace ZDFixService.Service.PSHK
                 orderInfo.MyReadString(netInfo.infoT);
 
                 string clOrdID = MemoryData.GetNextClOrderID().ToString();
-
+                order.ClientOrderIDCommandCode.TryAdd(clOrdID, netInfo.code);
                 NewOrderSingle newOrderSingle = new NewOrderSingle();
                 // Tag1  上手号
                 newOrderSingle.Account = new Account(netInfo.accountNo);
@@ -141,6 +141,7 @@ namespace ZDFixService.Service.PSHK
                 //Tag 11
                 var clOrdID = MemoryData.GetNextClOrderID().ToString();
                 orderCancelRequest.ClOrdID = new ClOrdID($"DA{clOrdID}");
+                order.ClientOrderIDCommandCode.TryAdd(clOrdID, netInfo.code);
                 //Tag 41
                 orderCancelRequest.OrigClOrdID = new OrigClOrdID($"DA{order.CurrentCliOrderID.ToString()}");
 
@@ -220,6 +221,7 @@ namespace ZDFixService.Service.PSHK
                 order.CurrentCliOrderID = currentCliOrderID;
                 order.TempCliOrderID = "";
                 order.CommandCode = order.TempCommandCode;
+                order.TempCommandCode = "";
 
                 OrderInfo orderInfo = new OrderInfo();
                 orderInfo.MyReadString(order.OrderNetInfo.infoT);
@@ -316,6 +318,7 @@ namespace ZDFixService.Service.PSHK
             order.CurrentCliOrderID = execReport.ClOrdID.getValue();
             order.TempCliOrderID = "";
             order.CommandCode = order.TempCommandCode;
+            order.TempCommandCode = "";
 
             long origClOrdID = long.Parse(execReport.OrigClOrdID.getValue());
             MemoryData.UsingCliOrderIDSystemCode.TryRemove(origClOrdID, out _);
