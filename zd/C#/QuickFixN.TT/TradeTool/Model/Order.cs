@@ -1,5 +1,4 @@
 ﻿using CommonClassLib;
-using QuickFix.FIX42;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZDFixService.Models
+namespace TradeTool.Model
 {
     public partial class Order
     {
@@ -81,8 +80,6 @@ namespace ZDFixService.Models
         /// 改单FIX
         /// </summary>
         public string OrderCancelReplaceRequest { get; set; }
-
-        public bool RepairedDangerously { get; set; }
 
         //内存暂时没处理冗余数据。可能有脏数据
         /// <summary>

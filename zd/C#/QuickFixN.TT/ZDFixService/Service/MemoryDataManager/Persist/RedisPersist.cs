@@ -12,7 +12,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
     class RedisPersist : IPersist
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
-
+        Log _logger = LogManager.GetLogger("SerializeTime");
         //private const string LAST_CLIENT_ORDER_ID_KEY = "LastClientOrderID";
         //private const string ORDER_KEY = "Orders";
 
@@ -84,8 +84,14 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
 
                 try
                 {
+                    var startSerializeTime = DateTime.Now;
                     var ordersBytes = MessagePackUtility.Serialize<ConcurrentDictionary<string, Order>>(MemoryData.Orders);
+                    var endSerializeTime = DateTime.Now;
                     RedisHelper.SaveData(_orderKey, ordersBytes);
+                    _logger.WriteLog($"{startSerializeTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}|{endSerializeTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}");
+
+                    //var ordersBytes = MessagePackUtility.Serialize<ConcurrentDictionary<string, Order>>(MemoryData.Orders);
+                    //RedisHelper.SaveData(_orderKey, ordersBytes);
 
                 }
                 catch (Exception ex)

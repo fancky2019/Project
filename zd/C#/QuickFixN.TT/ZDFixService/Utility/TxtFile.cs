@@ -16,7 +16,8 @@ namespace ZDFixService.Utility
                 return jsonStr;
             }
 
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+            //using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+            using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 fileStream.Seek(0, SeekOrigin.Begin);
                 var bytes = new byte[fileStream.Length];
@@ -34,8 +35,10 @@ namespace ZDFixService.Utility
             {
                 return content;
             }
-
-            using (StreamReader sr = new StreamReader(new FileStream(filePath, FileMode.Open)))
+            //_sw = new StreamWriter(File.Open(_filePath, FileMode.Append, FileAccess.Write), System.Text.Encoding.UTF8);
+            //using (StreamReader sr = new StreamReader(new FileStream(filePath, FileMode.Open)))
+            // FileStream fs = new FileStream(url, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using (StreamReader sr = new StreamReader(new FileStream(filePath, FileMode.Open,FileAccess.Read, FileShare.ReadWrite)))
             {
                 try
                 {
@@ -75,16 +78,34 @@ namespace ZDFixService.Utility
             }
         }
 
-
-
-
-        public static void SaveString(string filePath, string content)
+        public static void SaveTxtFile(string filePath, string content, FileMode fileMode = FileMode.Create)
         {
             CheckDirectory(filePath);
-            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            using (StreamWriter sw = new StreamWriter(File.Open(filePath, fileMode, FileAccess.ReadWrite), System.Text.Encoding.UTF8))
+            {
+                sw.WriteLine(content);
+            }
+        }
+
+
+
+        public static void SaveString(string filePath, string content, FileMode fileMode = FileMode.Create)
+        {
+            CheckDirectory(filePath);
+            using (FileStream fs = new FileStream(filePath, fileMode))
             {
                 byte[] data = System.Text.Encoding.UTF8.GetBytes(content);
                 fs.Write(data, 0, data.Length);
+            }
+        }
+
+        public static void AppendFile(string filePath, string content)
+        {
+            CheckDirectory(filePath);
+            using (StreamWriter sw = new StreamWriter(filePath, true, System.Text.Encoding.UTF8))
+            {
+                sw.WriteLine(content);
+                sw.Flush();
             }
         }
 

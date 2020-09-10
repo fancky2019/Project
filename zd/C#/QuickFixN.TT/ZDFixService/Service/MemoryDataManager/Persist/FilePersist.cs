@@ -14,6 +14,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
     class FilePersist : IPersist
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+        Log _logger = LogManager.GetLogger("SerializeTime");
         private object _lockObj = new object();
         public void Persist()
         {
@@ -21,7 +22,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
             {
                 try
                 {
-                 
+
                     TxtFile.SaveString(Configurations.Configuration["ZDFixService:Persist:File:OrderIDFilePath"], MemoryData.LastClientOrderID.ToString());
                 }
                 catch (Exception ex)
@@ -34,11 +35,13 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
 
                 try
                 {
-
+                    var startSerializeTime = DateTime.Now;
                     //var jsonStr = NewtonsoftHelper.SerializeObject(MemoryData.Orders);
                     var jsonStr = NewtonsoftHelper.JsonSerializeObjectFormat(MemoryData.Orders);
+                    var endSerializeTime = DateTime.Now;
                     //var jsonStr = MessagePackUtility.SerializeToJson<ConcurrentDictionary<string, Order>>(Orders);
                     TxtFile.SaveString(Configurations.Configuration["ZDFixService:Persist:File:PersistOrdersPath"].ToString(), jsonStr);
+                    _logger.WriteLog($"{startSerializeTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}|{endSerializeTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}");
 
                 }
                 catch (Exception ex)
@@ -47,7 +50,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
                     _nLog.Error(ex.ToString());
                 }
 
-         
+
 
             }
 

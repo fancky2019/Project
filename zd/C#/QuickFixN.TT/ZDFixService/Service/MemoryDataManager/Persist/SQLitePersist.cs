@@ -9,13 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZDFixService.Utility;
-using ZDFixService.Models;
 
 namespace ZDFixService.Service.MemoryDataManager.Persist
 {
     class SQLitePersist : IPersist
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+        Log _logger = LogManager.GetLogger("SerializeTime");
+
         private object _lockObj = new object();
 
         public SQLitePersist()
@@ -78,8 +79,13 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
 
                 try
                 {
+                    var startSerializeTime = DateTime.Now;
                     var ordersBytes = MessagePackUtility.Serialize<ConcurrentDictionary<string, Order>>(MemoryData.Orders);
+                    var endSerializeTime = DateTime.Now;
+                    //var ordersBytes = MessagePackUtility.Serialize<ConcurrentDictionary<string, Order>>(MemoryData.Orders);
                     SQLiteHelper.UpdateOrder(ordersBytes);
+                    _logger.WriteLog($"{startSerializeTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}|{endSerializeTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}");
+
 
                 }
                 catch (Exception ex)

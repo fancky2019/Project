@@ -73,13 +73,14 @@ namespace ZDFixService.Utility
                 _sw.Dispose();
                 _sw = null;
             }
-            _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Log\\{DateTime.Now.Year}-{DateTime.Now.Month.ToString("D2")}\\{DateTime.Now.Year}-{DateTime.Now.Month.ToString("D2")}-{DateTime.Now.Day.ToString("D2")}\\{_logName}.log");
+            _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"logs\\{DateTime.Now.Year}-{DateTime.Now.Month.ToString("D2")}\\{DateTime.Now.Year}-{DateTime.Now.Month.ToString("D2")}-{DateTime.Now.Day.ToString("D2")}\\{_logName}.log");
             var directory = Path.GetDirectoryName(_filePath);
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }
             _sw = new StreamWriter(_filePath, true, System.Text.Encoding.UTF8);
+            //_sw = new StreamWriter(File.Open(_filePath, FileMode.Append, FileAccess.Write), System.Text.Encoding.UTF8);
         }
 
 
