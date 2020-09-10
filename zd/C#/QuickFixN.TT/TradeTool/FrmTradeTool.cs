@@ -1,5 +1,6 @@
 ﻿using CommonClassLib;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -43,24 +44,57 @@ namespace TradeTool
             try
             {
 
-        
-            var clientInDatas = new ClintInToClintLog().ReadClientInData(this.txtClientInPath.Text.Trim());
-            var toClientPath = this.txtClientInPath.Text.Trim().Replace("ClientIn", "ToClient");
-            var toClientDatas = new ClintInToClintLog().ReadToClientData(toClientPath);
 
-            var systemCodes = this.txtSystemCodes.Text.Trim();
-            if (!string.IsNullOrEmpty(systemCodes))
-            {
-                var systemCodeList = systemCodes.Split(';').ToList();
-                clientInDatas = clientInDatas.Where(p => systemCodeList.Contains(p.SystemCode)).ToList();
-                toClientDatas = toClientDatas.Where(p => systemCodeList.Contains(p.SystemCode)).ToList();
+                var clientInDatas = new ClintInToClintLog().ReadClientInData(this.txtClientInPath.Text.Trim());
+                var toClientPath = this.txtClientInPath.Text.Trim().Replace("ClientIn", "ToClient");
+                var toClientDatas = new ClintInToClintLog().ReadToClientData(toClientPath);
+
+                var systemCodes = this.txtSystemCodes.Text.Trim();
+                if (!string.IsNullOrEmpty(systemCodes))
+                {
+                    var systemCodeList = systemCodes.Split(';').ToList();
+                    clientInDatas = clientInDatas.Where(p => systemCodeList.Contains(p.SystemCode)).ToList();
+                    toClientDatas = toClientDatas.Where(p => systemCodeList.Contains(p.SystemCode)).ToList();
+                }
+
+                this.dgvClientIn.DataSource = null;
+                this.dgvClientIn.DataSource = clientInDatas;
+                this.dgvToClient.DataSource = null;
+                this.dgvToClient.DataSource = toClientDatas;
+
+                //生成order
+                ConcurrentDictionary<string, Order> orders = new ConcurrentDictionary<string, Order>();
+                Task.Run(() =>
+                {
+                    clientInDatas.ForEach(p =>
+                    {
+                        NetInfo netInfo = p.NetInfo;
+                        if (netInfo.code == CommandCode.ORDER || netInfo.code == CommandCode.OrderStockHK)
+                        {
+                            //Order order = new Order();
+                            //order.OrderNetInfo = netInfo;
+                            //order.TempCommandCode = netInfo.code;
+
+                        }
+                        else if (netInfo.code == CommandCode.MODIFY || netInfo.code == CommandCode.ModifyStockHK)
+                        {
+
+                        }
+                        else if (netInfo.code == CommandCode.CANCEL || netInfo.code == CommandCode.CancelStockHK)
+                        {
+
+                        }
+                        else
+                        {
+                            throw new Exception("Can not find appropriate CommandCode");
+                        }
+             
+                       
+                    });
+
+                });
             }
-            this.dgvClientIn.DataSource = null;
-            this.dgvClientIn.DataSource = clientInDatas;
-            this.dgvToClient.DataSource = null;
-            this.dgvToClient.DataSource = toClientDatas;
-            }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.WriteLog(ex.ToString());
             }
@@ -92,13 +126,13 @@ namespace TradeTool
         {
             if ((e.Control) && e.KeyCode == Keys.C)
             {
-                if(this.dgvClientIn.SelectedRows.Count>0)
+                if (this.dgvClientIn.SelectedRows.Count > 0)
                 {
                     var selectRow = this.dgvClientIn.SelectedRows[0];
                     var netInfo = selectRow.DataBoundItem as ClientInLog;
                     Clipboard.SetDataObject(netInfo.NetInfo.MyToString());
                 }
-             
+
             }
         }
 
@@ -123,7 +157,7 @@ namespace TradeTool
                 return;
             }
             NetInfo netInfo = new NetInfo();
-          
+
             netInfo.MyReadString(this.txtNetInfo.Text.Trim());
             //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(netinfo);
             //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));

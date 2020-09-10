@@ -23,6 +23,7 @@ using ZDFixService.Utility;
 using System.Collections.Concurrent;
 using ZDFixClient.SocketNettyClient;
 using System.Net;
+using ZDFixService.Service.RepairOrders;
 
 namespace ZDFixClient
 {
@@ -422,6 +423,8 @@ namespace ZDFixClient
 
         #endregion
 
+        #region 
+        #endregion
 
         #region SnowFlake
         private void btnResolve_Click(object sender, EventArgs e)
@@ -457,12 +460,18 @@ namespace ZDFixClient
             var jsonAnonymousStr = NewtonsoftHelper.JsonSerializeObjectFormat(anonymous);
             return jsonAnonymousStr;
         }
+
+
+
+
         #endregion
 
         #endregion
 
-
-
-
+        private void btnRepair_Click(object sender, EventArgs e)
+        {
+            RepairOrder repairOrder = new RepairOrder();
+            repairOrder.Repair();
+        }
     }
 }
