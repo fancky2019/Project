@@ -470,8 +470,8 @@ namespace ZDFixClient
 
         private void btnRepair_Click(object sender, EventArgs e)
         {
-            RepairOrder repairOrder = new RepairOrder();
-            repairOrder.Repair();
+            //RepairOrder repairOrder = new RepairOrder();
+            //repairOrder.Repair();
         }
     }
 }
