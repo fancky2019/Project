@@ -14,18 +14,19 @@ namespace ZDFixService.SocketNetty.NettyCodec
 {
     public class ObjectDecoder<T> : ByteToMessageDecoder
     {
-        protected override void Decode(IChannelHandlerContext context, IByteBuffer message, List<object> output)
+        protected override void Decode(IChannelHandlerContext context, IByteBuffer byteBuffer, List<object> output)
         {
-            int readableBytes = message.ReadableBytes;
+            int readableBytes = byteBuffer.ReadableBytes;
         
             if (readableBytes > 0)
             {
                 try
                 {
-                    ArraySegment<byte> ioBuf = message.GetIoBuffer(0, message.ReadableBytes);
+                    ArraySegment<byte> ioBuf = byteBuffer.GetIoBuffer(0, byteBuffer.ReadableBytes);
                     MessagePackSerializer.DefaultOptions = ContractlessStandardResolver.Options;
                     var bytes = new byte[readableBytes];
-                    message.GetBytes(0, bytes);
+                    byteBuffer.GetBytes(0, bytes);
+                    //byteBuffer.GetBytes(byteBuffer.ReaderIndex, bytes, 0, readableBytes);
                     var t = MessagePackSerializer.Deserialize<T>(bytes);
 
                     if (t != null)
@@ -37,7 +38,8 @@ namespace ZDFixService.SocketNetty.NettyCodec
                 {
                     throw new CodecException(innerException);
                 }
-                message.SkipBytes(message.ReadableBytes);
+                //必须要跳过
+                byteBuffer.SkipBytes(byteBuffer.ReadableBytes);
             }
         }
     }
