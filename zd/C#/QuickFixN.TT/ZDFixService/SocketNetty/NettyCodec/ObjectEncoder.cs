@@ -15,12 +15,19 @@ namespace ZDFixService.SocketNetty.NettyCodec
     {
         protected override void Encode(IChannelHandlerContext context, object message, IByteBuffer output)
         {
+            //MessagePackSerializer.DefaultOptions = ContractlessStandardResolver.Options;
+            //// Now serializable...
+            //var messageBytes = MessagePackSerializer.Serialize(message);
+            //IByteBuffer byteBuffer = Unpooled.DirectBuffer(messageBytes.Length);
+            //byteBuffer.WriteBytes(messageBytes);
+            //context.WriteAndFlushAsync(byteBuffer);
+
+
             MessagePackSerializer.DefaultOptions = ContractlessStandardResolver.Options;
             // Now serializable...
             var messageBytes = MessagePackSerializer.Serialize(message);
-            IByteBuffer byteBuffer = Unpooled.DirectBuffer(messageBytes.Length);
-            byteBuffer.WriteBytes(messageBytes);
-            context.WriteAndFlushAsync(byteBuffer);
+            output = Unpooled.WrappedBuffer(messageBytes);
+            context.WriteAndFlushAsync(output);
 
         }
     }

@@ -89,7 +89,19 @@ namespace ZDFixClient.SocketNettyClient
 
         public void SendMsg<T>(T t)
         {
-            _clientChannel.WriteAndFlushAsync(t);
+            try
+            {
+                if(_clientChannel==null )
+                {
+                    _nLog.Info("连接异常，确保网络连接正常。");
+                    return;
+                }
+                _clientChannel.WriteAndFlushAsync(t);
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error(ex.ToString());
+            }
         }
 
         public void Connect(IPEndPoint iPEndPoint)
