@@ -11,6 +11,7 @@ using ZDFixService.Service.MemoryDataManager;
 using ZDFixService.SocketNetty;
 using ZDFixService.Service.ZDCommon;
 using ZDFixService.Utility;
+using ZDFixService.Utility.Queue;
 
 namespace ZDFixService.Service.Base
 {
@@ -18,8 +19,7 @@ namespace ZDFixService.Service.Base
     {
         #region 私有成员
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
-        private BlockingCollection<QuickFix.Message> _receiveFromAppMsgs = new BlockingCollection<QuickFix.Message>();
-        private BlockingCollection<NetInfo> _orderQueue = new BlockingCollection<NetInfo>();
+        IQueue _queue = null;
         #endregion
 
         #region 公有成员
@@ -31,6 +31,7 @@ namespace ZDFixService.Service.Base
 
         internal TradeClientAppService()
         {
+            this._queue = RedisQueue.Instance;
             Init();
             TradeClient.Instance.Logon += (msg =>
             {
@@ -44,31 +45,11 @@ namespace ZDFixService.Service.Base
 
             TradeClient.Instance.ReceiveMsgFromApp += (message, sessionID) =>
             {
-                if (!_receiveFromAppMsgs.IsAddingCompleted)
-                {
-                    if (!_receiveFromAppMsgs.TryAdd(message, 1000))
-                    {
-                        //异常
-
-                    }
-                }
-
+                _queue.EnqueueFixMessage(message);
 
             };
-
-
-            Task.Run(() =>
-            {
-                ConsumerOrders();
-            });
-
-
-            Task.Run(() =>
-            {
-                ConsumerFromAppMsgs();
-            });
-
-
+            _queue.OrderDequeue += ConsumerOrder;
+            _queue.MessageDequeue += ConsumerFromAppMsg;
         }
 
         public void Start()
@@ -111,17 +92,7 @@ namespace ZDFixService.Service.Base
 
         private void WaitForAdding()
         {
-            _orderQueue.CompleteAdding();
-            _receiveFromAppMsgs.CompleteAdding();
-            //为了避免异常--未扔到交易所的单在内存就丢失
-            while (_orderQueue.Count != 0 || _receiveFromAppMsgs.Count != 0)
-            {
-                //直到所有的单据处理完成。
-                Thread.Sleep(1);
-
-            }
-
-
+            _queue.WaitForAdding();
         }
 
 
@@ -133,53 +104,46 @@ namespace ZDFixService.Service.Base
                 _nLog.Info($"PreOrder return - {netInfo.MyToString()}");
                 return;
             }
-            if (!_orderQueue.IsAddingCompleted)
-            {
-                if (!_orderQueue.TryAdd(netInfo, 1000))
-                {
-                    //异常
-                }
-            }
-
+            _queue.EnqueueOrder(netInfo);
         }
 
-        private void ConsumerOrders()
+
+        private void ConsumerOrder(NetInfo netInfo)
         {
-            foreach (NetInfo netInfo in _orderQueue.GetConsumingEnumerable())
+
+            try
             {
-                try
+
+                if (netInfo.code == CommandCode.ORDER || netInfo.code == CommandCode.OrderStockHK)
                 {
-
-                    if (netInfo.code == CommandCode.ORDER || netInfo.code == CommandCode.OrderStockHK)
-                    {
-                        Order order = new Order();
-                        order.OrderNetInfo = netInfo;
-                        order.TempCommandCode = netInfo.code;
-                        NewOrderSingle(order);
-                    }
-                    else if (netInfo.code == CommandCode.MODIFY || netInfo.code == CommandCode.ModifyStockHK)
-                    {
-                        OrderCancelReplaceRequest(netInfo);
-                    }
-                    else if (netInfo.code == CommandCode.CANCEL || netInfo.code == CommandCode.CancelStockHK)
-                    {
-
-                        OrderCancelRequest(netInfo);
-                    }
-                    else
-                    {
-                        throw new Exception("Can not find appropriate CommandCode");
-                    }
+                    Order order = new Order();
+                    order.OrderNetInfo = netInfo;
+                    order.TempCommandCode = netInfo.code;
+                    NewOrderSingle(order);
                 }
-                catch (Exception ex)
+                else if (netInfo.code == CommandCode.MODIFY || netInfo.code == CommandCode.ModifyStockHK)
                 {
-                    _nLog.Info(ex.ToString());
-                    var str = netInfo?.MyToString();
-                    ExecutionReport?.Invoke(str);
-                    ZDFixServiceServer.Instance.SendMsgAsync<SocketMessage<NetInfo>>(netInfo);
-                    ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
+                    OrderCancelReplaceRequest(netInfo);
+                }
+                else if (netInfo.code == CommandCode.CANCEL || netInfo.code == CommandCode.CancelStockHK)
+                {
+
+                    OrderCancelRequest(netInfo);
+                }
+                else
+                {
+                    throw new Exception("Can not find appropriate CommandCode");
                 }
             }
+            catch (Exception ex)
+            {
+                _nLog.Info(ex.ToString());
+                var str = netInfo?.MyToString();
+                ExecutionReport?.Invoke(str);
+                ZDFixServiceServer.Instance.SendMsgAsync<SocketMessage<NetInfo>>(netInfo);
+                ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
+            }
+
         }
 
         /// <summary>
@@ -200,21 +164,6 @@ namespace ZDFixService.Service.Base
 
         #region FromAppMsg
 
-        private void ConsumerFromAppMsgs()
-        {
-            try
-            {
-                foreach (var message in _receiveFromAppMsgs.GetConsumingEnumerable())
-                {
-                    ConsumerFromAppMsg(message);
-                }
-            }
-            catch (Exception ex)
-            {
-                _nLog.Info(ex.ToString());
-            }
-        }
-
         private void ConsumerFromAppMsg(QuickFix.Message message)
         {
             NetInfo netInfo = null;
@@ -226,8 +175,6 @@ namespace ZDFixService.Service.Base
                     case ExecutionReport executionReport:
                         //ExecutionReport?.Invoke(executionReport.ToString());
                         char execType = executionReport.ExecType.getValue();
-
-
                         switch (execType)
                         {
                             case ExecType.NEW:

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ServiceStack;
 using ZDFixService;
+using System.Threading;
 
 namespace ZDFixService.Utility
 {
@@ -101,6 +102,36 @@ namespace ZDFixService.Utility
                 bytes = redisClient.Get(key);
             }
             return bytes;
+        }
+
+
+        static internal void ListEnqueue(string listKey, byte[] data)
+        {
+            using (var redisClient = GetRedisClient())
+            {
+                redisClient.LPush(listKey, data);
+            }
+        }
+
+        static internal byte[] ListDequeue(string listKey)
+        {
+            using (var redisClient = GetRedisClient())
+            {
+                //没有数据就阻塞
+                var re = redisClient.BRPop(listKey, 0);
+                var value = re[1];
+                return value;
+            }
+        }
+
+        static internal long ListLen(string listKey)
+        {
+            var len = 0L;
+            using (var redisClient = GetRedisClient())
+            {
+                len = redisClient.LLen(listKey);
+            }
+            return len;
         }
 
     }
