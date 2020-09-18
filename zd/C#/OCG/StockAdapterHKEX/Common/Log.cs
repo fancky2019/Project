@@ -101,7 +101,7 @@ namespace StockAdapterHKEX.Common
                 CreateLogFile();
             }
             _sw.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} {content}");
-            //_sw.Flush();
+            _sw.Flush();
             _spinLock.Exit();
         }
 

@@ -210,6 +210,7 @@ namespace StockAdapterHKEX
             //Common_comboBox_OrderType_StockHK_8=特别限价盘[SL: Special limit ordre]
             OrderTypeIdx = new Dictionary<string, int>();
             OrderTypeIdx.Add("5", 0);
+            OrderTypeIdx.Add("6", 0);//市价竞价盘
             OrderTypeIdx.Add("7", 1);
 
 
@@ -1951,7 +1952,7 @@ namespace StockAdapterHKEX
                     //else if (flag == 'N')
                     //    caseNum = 1;
 
-                    if (flag == 'Y')
+                    else if (flag == 'Y')
                     {
                         long clOrdID = Convert.ToInt64(info.orderNo);
                         RefObj refObj;

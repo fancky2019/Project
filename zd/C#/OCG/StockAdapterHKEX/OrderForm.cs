@@ -51,12 +51,13 @@ namespace StockAdapterHKEX
             combOrderType.SelectedIndex = 1;
 
 
-            tifDict.Add("增强限价盘<0>[EL: Enhace limit]", "7");
-            tifDict.Add("竞价限价盘<9>[ALO: Auction limit Order]", "5");
+      
+            tifDict.Add("竞价限价盘<5-9>[ALO: Auction limit Order]", "5");
             //竞价盘不要价格
-            tifDict.Add("竞价盘<9>[AO: Auction Order]", "6");
-            tifDict.Add("IOC<3> Type [Only Test]", "3");
-            tifDict.Add("FOK<4> Type [Only Test]", "4");
+            tifDict.Add("竞价盘<6-9>[AO: Auction Order]", "6");
+            tifDict.Add("增强限价盘<7-0>[EL: Enhace limit]", "7");
+            //tifDict.Add("IOC<3> Type [Only Test]", "3");
+            //tifDict.Add("FOK<4> Type [Only Test]", "4");
 
             foreach (string tif in tifDict.Keys)
             {
@@ -99,7 +100,7 @@ namespace StockAdapterHKEX
             info.priceType = tifDict[combTIF.Text];
             //直接发送FixMessage：globexCommu.PlaceOrder(obj, info);
             //info.priceType = orderTypeDict[combOrderType.Text];
-            info.validDate = tifDict[combTIF.Text];
+            info.validDate = "1";// tifDict[combTIF.Text];//股票只有日单，根据时间判断 TimeInForce.AT_CROSSING
 
             //Code for OCG simulator start
             info.userType = (checkBox1.Checked ? "1" : "2") + "|" + textBox2.Text + "|" + textBox1.Text + "|" + (checkBox3.Checked ? "1" : "2");
@@ -118,16 +119,18 @@ namespace StockAdapterHKEX
             globexCommu.doOrder(netInfo);
 
 
-            //  var orderInfoStr = @"OrdeStHK@00000@00015270JA000268@8206675@@CO020990001@HKEX@@8206675@@&HKEX_1@@CO020990001@123456@P@HKEX@4.HK@2@75000@0.186@@7@@@@1@0@@@@@@@@@1";
-            //  NetInfo netInfoOrder = new NetInfo();
-            //  netInfoOrder.MyReadString(orderInfoStr);
-            //  OrderInfo orderInfo = new OrderInfo();
-            //  orderInfo.MyReadString(netInfoOrder.infoT);
-            //  orderInfo.code = "4";
-            //  orderInfo.orderPrice = "100";
-            ////  globexCommu.doOrder(netInfoOrder);
+            //var orderInfoStr = @"OrdeStHK@00000@00035925WG000118@lh02@@7184@HKEX@@lh02@@@20&7184@@7184@-@C@HKEX@00006.HK@1@500@42.000@@5@@@@1@0@@@@@@@@@@@@@@@0@@0@";
+            //NetInfo netInfoOrder = new NetInfo();
+            //netInfoOrder.MyReadString(orderInfoStr);
+            ////OrderInfo orderInfo = new OrderInfo();
+            ////orderInfo.MyReadString(netInfoOrder.infoT);
+            ////orderInfo.code = "4";
+            ////orderInfo.orderPrice = "100";
+            //globexCommu.doOrder(netInfoOrder);
 
             //  globexCommu.PlaceOrder(netInfoOrder, orderInfo);
+
+
         }
 
         private void btnCancelOrder_Click(object sender, EventArgs e)
@@ -202,7 +205,7 @@ namespace StockAdapterHKEX
             info.buySale = orderSideDict[combSide.Text];
             //info.priceType = orderTypeDict[combOrderType.Text];
             info.priceType = tifDict[combTIF.Text];
-            info.validDate = tifDict[combTIF.Text];
+            info.validDate = "1";// tifDict[combTIF.Text];
             info.orderNo = tbClOrderID.Text;
 
             //Code for OCG simulator start

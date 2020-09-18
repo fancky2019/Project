@@ -38,7 +38,7 @@ namespace ZDFixService.Utility
             //_sw = new StreamWriter(File.Open(_filePath, FileMode.Append, FileAccess.Write), System.Text.Encoding.UTF8);
             //using (StreamReader sr = new StreamReader(new FileStream(filePath, FileMode.Open)))
             // FileStream fs = new FileStream(url, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using (StreamReader sr = new StreamReader(new FileStream(filePath, FileMode.Open,FileAccess.Read, FileShare.ReadWrite)))
+            using (StreamReader sr = new StreamReader(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
             {
                 try
                 {
@@ -98,6 +98,32 @@ namespace ZDFixService.Utility
                 fs.Write(data, 0, data.Length);
             }
         }
+
+        public static void BackUpSaveString(string filePath, string content, FileMode fileMode = FileMode.Create)
+        {
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+            string destFileName = $"{Path.GetFileNameWithoutExtension(filePath)}_backup{Path.GetExtension(filePath)}";
+            var destFullFileName = Path.Combine(Path.GetDirectoryName(filePath), destFileName);
+            File.Copy(filePath, destFullFileName, true);
+            SaveString(filePath, content);
+            File.Delete(destFullFileName);
+        }
+
+        public static void BackUp(string sourceFileName)
+        {
+            if (!File.Exists(sourceFileName))
+            {
+                return;
+            }
+            string destFileName = $"{Path.GetFileNameWithoutExtension(sourceFileName)}_backup{Path.GetExtension(sourceFileName)}";
+            File.Copy(sourceFileName, destFileName, true);
+        }
+
+
+
 
         public static void AppendFile(string filePath, string content)
         {
