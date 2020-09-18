@@ -143,8 +143,8 @@
             this.opdSysCode = new System.Windows.Forms.OpenFileDialog();
             this.tbnMassCancelAll = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.btnMassCancelSecurityID = new System.Windows.Forms.Button();
             this.btnMassCancelSegment = new System.Windows.Forms.Button();
+            this.btnMassCancelSecurityID = new System.Windows.Forms.Button();
             this.btnTCR = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -170,6 +170,7 @@
             this.label1.Size = new System.Drawing.Size(71, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "Order type:";
+            this.label1.Visible = false;
             // 
             // label2
             // 
@@ -232,6 +233,7 @@
             this.combOrderType.Name = "combOrderType";
             this.combOrderType.Size = new System.Drawing.Size(121, 20);
             this.combOrderType.TabIndex = 7;
+            this.combOrderType.Visible = false;
             // 
             // combTIF
             // 
@@ -1271,16 +1273,6 @@
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Mass Cancel";
             // 
-            // btnMassCancelSecurityID
-            // 
-            this.btnMassCancelSecurityID.Location = new System.Drawing.Point(111, 15);
-            this.btnMassCancelSecurityID.Name = "btnMassCancelSecurityID";
-            this.btnMassCancelSecurityID.Size = new System.Drawing.Size(75, 23);
-            this.btnMassCancelSecurityID.TabIndex = 49;
-            this.btnMassCancelSecurityID.Text = "SecurityID";
-            this.btnMassCancelSecurityID.UseVisualStyleBackColor = true;
-            this.btnMassCancelSecurityID.Click += new System.EventHandler(this.btnMassCancelSecurityID_Click);
-            // 
             // btnMassCancelSegment
             // 
             this.btnMassCancelSegment.Location = new System.Drawing.Point(205, 15);
@@ -1290,6 +1282,16 @@
             this.btnMassCancelSegment.Text = "Segment";
             this.btnMassCancelSegment.UseVisualStyleBackColor = true;
             this.btnMassCancelSegment.Click += new System.EventHandler(this.btnMassCancelSegment_Click);
+            // 
+            // btnMassCancelSecurityID
+            // 
+            this.btnMassCancelSecurityID.Location = new System.Drawing.Point(111, 15);
+            this.btnMassCancelSecurityID.Name = "btnMassCancelSecurityID";
+            this.btnMassCancelSecurityID.Size = new System.Drawing.Size(75, 23);
+            this.btnMassCancelSecurityID.TabIndex = 49;
+            this.btnMassCancelSecurityID.Text = "SecurityID";
+            this.btnMassCancelSecurityID.UseVisualStyleBackColor = true;
+            this.btnMassCancelSecurityID.Click += new System.EventHandler(this.btnMassCancelSecurityID_Click);
             // 
             // btnTCR
             // 

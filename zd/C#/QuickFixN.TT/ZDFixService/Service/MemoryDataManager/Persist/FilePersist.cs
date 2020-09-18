@@ -23,15 +23,13 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
                 try
                 {
 
-                    TxtFile.SaveString(Configurations.Configuration["ZDFixService:Persist:File:OrderIDFilePath"], MemoryData.LastClientOrderID.ToString());
+                    TxtFile.BackUpSaveString(Configurations.Configuration["ZDFixService:Persist:File:OrderIDFilePath"], MemoryData.LastClientOrderID.ToString());
                 }
                 catch (Exception ex)
                 {
                     _nLog.Error("Save LastClientOrderID Failed");
                     _nLog.Error(ex.ToString());
                 }
-
-
 
                 try
                 {
@@ -40,7 +38,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
                     var jsonStr = NewtonsoftHelper.JsonSerializeObjectFormat(MemoryData.Orders);
                     var endSerializeTime = DateTime.Now;
                     //var jsonStr = MessagePackUtility.SerializeToJson<ConcurrentDictionary<string, Order>>(Orders);
-                    TxtFile.SaveString(Configurations.Configuration["ZDFixService:Persist:File:PersistOrdersPath"].ToString(), jsonStr);
+                    TxtFile.BackUpSaveString(Configurations.Configuration["ZDFixService:Persist:File:PersistOrdersPath"].ToString(), jsonStr);
                     _logger.WriteLog($"{startSerializeTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}|{endSerializeTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}");
 
                 }
@@ -49,9 +47,6 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
                     _nLog.Error("Save Orders Failed");
                     _nLog.Error(ex.ToString());
                 }
-
-
-
             }
 
         }
@@ -86,13 +81,7 @@ namespace ZDFixService.Service.MemoryDataManager.Persist
                 _nLog.Error("Load Orders Failed");
                 _nLog.Error(ex.ToString());
             }
-
-
-
             MemoryData.InitUsingCliOrderIDSystemCode();
-
-
-
         }
     }
 }

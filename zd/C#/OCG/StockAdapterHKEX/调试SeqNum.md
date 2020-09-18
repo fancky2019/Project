@@ -22,4 +22,7 @@ seqnums文件
 
 FileStore:
 writer.Write(GetNextSenderMsgSeqNum().ToString("D10") + " : " + GetNextTargetMsgSeqNum().ToString("D10") + "  ");
+
+序列号调整：
+current报错:后一个，message报错:前一个
  
