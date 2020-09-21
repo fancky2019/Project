@@ -10,91 +10,64 @@ using System.Threading.Tasks;
 namespace ZDFixService.Utility.Queue
 {
     /// <summary>
-    /// 消费失败无法重试。
-    /// </summary>
-    class RedisQueue : IQueue
+    /// 不支持消费失败重试。不支持Fix Message队列。
+    /// 
+    ///序列化造成Message子类类型丢失，只支持内存队列。
+    ///如果强制实现，需要修改Fix的MessageFactory相关代码，性能不太好。
+    /// </summary
+    public class RedisQueue<T> : IMessageQueue<T>
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
 
-        private const string List_Order_Queue = "ListKeyOrderQueue";
-        private const string List_Message_Queue = "ListKeyMessageQueue";
+        //private const string List_Order_Queue = "ListKeyOrderQueue";
+        private string _listOrderQueue = "ListKeyOrderQueue";
 
-        public static RedisQueue Instance { get; private set; }
-        public event Action<NetInfo> OrderDequeue;
-        //持久化信息类型丢失，只支持内存队列。
-        public event Action<Message> MessageDequeue;
+        public event Action<T> Dequeue;
+        //序列化造成Message子类类型丢失，只支持内存队列。
+        //如果强制实现，需要修改Fix的MessageFactory相关代码，性能不太好。
+        //public event Action<Message> MessageDequeue;
 
 
-        static RedisQueue()
+
+
+        public RedisQueue()
         {
-            Instance = new RedisQueue();
-
-        }
-        private RedisQueue()
-        {
+            var tradeServiceName = Configurations.Configuration["ZDFixService:ITradeService"];
+            _listOrderQueue = $"{tradeServiceName}_{_listOrderQueue}";
             Task.Run(() =>
             {
-                DequeueOrder();
-            });
-
-            Task.Run(() =>
-            {
-                DequeueFixMessage();
+                DequeueMessage();
             });
         }
 
-        public void EnqueueOrder(NetInfo netInfo)
+        public void Enqueue(T t)
         {
-
-            var bytes = MessagePackUtility.Serialize<NetInfo>(netInfo);
-            RedisHelper.ListEnqueue(List_Order_Queue, bytes);
-
+            var bytes = MessagePackUtility.Serialize<T>(t);
+            RedisHelper.ListEnqueue(_listOrderQueue, bytes);
         }
 
-        public void DequeueOrder()
+        public void DequeueMessage()
         {
             while (true)
             {
-                var bytes = RedisHelper.ListDequeue(List_Order_Queue);
-                var netInfo = MessagePackUtility.Deserialize<NetInfo>(bytes);
-                this.OrderDequeue?.Invoke(netInfo);
+                var bytes = RedisHelper.ListDequeue(_listOrderQueue);
+                var netInfo = MessagePackUtility.Deserialize<T>(bytes);
+                this.Dequeue?.Invoke(netInfo);
             }
         }
 
-        public void EnqueueFixMessage(Message message)
+        public void WaitForCompleting()
         {
-            //没解决Message 序列化问题
-            this.MessageDequeue?.Invoke(message);
-        }
-
-        public void DequeueFixMessage()
-        {
-            //while (true)
-            //{
-            //    var bytes = RedisHelper.ListDequeue(List_Message_Queue);
-            //    Message message = new Message();
-            //    var msgStr = MessagePackUtility.Deserialize<string>(bytes);
-            //    msgStr = msgStr.Replace('|', (char)1);
-            //    message.FromString(msgStr, false, null, null);
-            //    this.MessageDequeue?.Invoke(message);
-            //}
-        }
-
-        public void WaitForAdding()
-        {
-            while (RedisHelper.ListLen(List_Order_Queue) != 0 || RedisHelper.ListLen(List_Message_Queue) != 0)
+            while (RedisHelper.ListLen(_listOrderQueue) != 0)
             {
                 //直到所有的单据处理完成。
                 Thread.Sleep(1);
             }
+
+            RedisHelper.Close();
         }
 
-        public bool RemoveFixMessage(Message message)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveOrder()
+        public void Remove(T t)
         {
             throw new NotImplementedException();
         }

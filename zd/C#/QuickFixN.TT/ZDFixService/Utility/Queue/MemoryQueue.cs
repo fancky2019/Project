@@ -9,52 +9,45 @@ using System.Threading.Tasks;
 
 namespace ZDFixService.Utility.Queue
 {
-    class MemoryQueue : IQueue
+    public class MemoryQueue<T> : IMessageQueue<T>
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
-        private BlockingCollection<QuickFix.Message> _messageQueue = new BlockingCollection<QuickFix.Message>();
-        private BlockingCollection<NetInfo> _orderQueue = new BlockingCollection<NetInfo>();
+        private BlockingCollection<T> _queue = new BlockingCollection<T>();
 
-        public event Action<NetInfo> OrderDequeue;
-        public event Action<Message> MessageDequeue;
-        public static MemoryQueue Instance { get; private set; }
+        public event Action<T> Dequeue;
+        //public static MemoryQueue<T> Instance { get; private set; }
 
-        static MemoryQueue()
-        {
-            Instance = new MemoryQueue();
+        //static MemoryQueue()
+        //{
+        //    Instance = new MemoryQueue<T>();
 
-        }
-        private MemoryQueue()
+        //}
+        public MemoryQueue()
         {
             Task.Run(() =>
             {
-                DequeueOrder();
-            });
-
-            Task.Run(() =>
-            {
-                DequeueFixMessage();
+                DequeueMessage();
             });
         }
 
-        public void EnqueueOrder(NetInfo netInfo)
+        public void Enqueue(T t)
         {
-            if (!_orderQueue.IsAddingCompleted)
+            if (!_queue.IsAddingCompleted)
             {
-                if (!_orderQueue.TryAdd(netInfo, 1000))
+                if (!_queue.TryAdd(t, 1000))
                 {
                     //异常
                 }
             }
         }
 
-        public void DequeueOrder()
+        public void DequeueMessage()
         {
-            foreach (NetInfo netInfo in _orderQueue.GetConsumingEnumerable())
+            foreach (T t in _queue.GetConsumingEnumerable())
             {
                 try
                 {
-                    OrderDequeue?.Invoke(netInfo);
+                    Dequeue?.Invoke(t);
                 }
                 catch (Exception ex)
                 {
@@ -64,51 +57,16 @@ namespace ZDFixService.Utility.Queue
         }
 
 
-
-
-        public void EnqueueFixMessage(Message message)
-        {
-            if (!_messageQueue.IsAddingCompleted)
-            {
-                if (!_messageQueue.TryAdd(message, 1000))
-                {
-                    //异常
-
-                }
-            }
-        }
-
-        public void DequeueFixMessage()
-        {
-            foreach (var message in _messageQueue.GetConsumingEnumerable())
-            {
-                try
-                {
-                    MessageDequeue?.Invoke(message);
-                }
-                catch (Exception ex)
-                {
-                    _nLog.Info(ex.ToString());
-                }
-            }
-        }
-
-        public bool RemoveFixMessage(Message message)
+        public void Remove(T t)
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveOrder()
+        public void WaitForCompleting()
         {
-            throw new NotImplementedException();
-        }
-
-        public void WaitForAdding()
-        {
-            _orderQueue.CompleteAdding();
-            _messageQueue.CompleteAdding();
-            //为了避免异常--未扔到交易所的单在内存就丢失
-            while (_orderQueue.Count != 0 || _messageQueue.Count != 0)
+            _queue.CompleteAdding();
+            ////为了避免异常--未扔到交易所的单在内存就丢失
+            while (_queue.Count != 0)
             {
                 //直到所有的单据处理完成。
                 Thread.Sleep(1);
