@@ -129,6 +129,9 @@ namespace ZDFixClient
         #region  Test
         private async void btnTest_Click(object sender, EventArgs e)
         {
+
+
+            return;
             var fileName = @"C:\Users\Administrator\Desktop\20200917\ClientIn.log";
             TxtFile.BackUpSaveString(fileName, "dssdsdsdsd");
             return;

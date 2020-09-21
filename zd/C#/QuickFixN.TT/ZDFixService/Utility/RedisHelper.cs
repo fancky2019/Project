@@ -33,7 +33,6 @@ namespace ZDFixService.Utility
             //不能将下面语句放入配置文件，读取的配置无法连接redis
             //var redisConStr = "fancky123456@127.0.0.1:6379?db=13&amp;connectTimeout=2&amp;sendtimeout=3&amp;receiveTimeout=4&amp;idletimeoutsecs=5&amp;NamespacePrefix=prefix.";
             //fancky123456@127.0.0.1:6379 ? db = 0
-
             var redisConStr = Configurations.Configuration["ZDFixService:Persist:Redis:ServiceStackMasterRedis"].ToString();
             var slaveRedis = "";
             _pooledRedisClientManager = new PooledRedisClientManager(new string[] { redisConStr },
@@ -88,7 +87,8 @@ namespace ZDFixService.Utility
         {
             using (var redisClient = GetRedisClient())
             {
-                redisClient.Del(key);
+                //更新：覆盖原有值
+                //redisClient.Del(key);
                 redisClient.Set(key, bytes);
             }
 
@@ -132,6 +132,11 @@ namespace ZDFixService.Utility
                 len = redisClient.LLen(listKey);
             }
             return len;
+        }
+
+        static internal void Close()
+        {
+            _pooledRedisClientManager?.Dispose();
         }
 
     }

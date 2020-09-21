@@ -1,6 +1,5 @@
 ﻿using CommonClassLib;
 using QuickFix.Fields;
-using QuickFix.FIX42;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -12,6 +11,9 @@ using ZDFixService.SocketNetty;
 using ZDFixService.Service.ZDCommon;
 using ZDFixService.Utility;
 using ZDFixService.Utility.Queue;
+using QuickFix.FIX42;
+
+using Message = QuickFix.Message;
 
 namespace ZDFixService.Service.Base
 {
@@ -19,7 +21,8 @@ namespace ZDFixService.Service.Base
     {
         #region 私有成员
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
-        IQueue _queue = null;
+        IMessageQueue<NetInfo> _orderQueue = null;
+        IMessageQueue<Message> _fixMessageQueue = null;
         #endregion
 
         #region 公有成员
@@ -31,11 +34,11 @@ namespace ZDFixService.Service.Base
 
         internal TradeClientAppService()
         {
-            this._queue = RedisQueue.Instance;
-            Init();
+
             TradeClient.Instance.Logon += (msg =>
             {
                 Logon?.Invoke(msg);
+                Init();
             });
 
             TradeClient.Instance.LogOut += (msg =>
@@ -45,11 +48,10 @@ namespace ZDFixService.Service.Base
 
             TradeClient.Instance.ReceiveMsgFromApp += (message, sessionID) =>
             {
-                _queue.EnqueueFixMessage(message);
+                _fixMessageQueue.Enqueue(message);
 
             };
-            _queue.OrderDequeue += ConsumerOrder;
-            _queue.MessageDequeue += ConsumerFromAppMsg;
+
         }
 
         public void Start()
@@ -59,6 +61,12 @@ namespace ZDFixService.Service.Base
 
         private async void Init()
         {
+
+            var messageQeue = Configurations.Configuration["ZDFixService:MessageQeue:Type"];
+            this._orderQueue = UnityRegister.Resolve<IMessageQueue<NetInfo>>(messageQeue);// RabbitMQQueue<NetInfo>.Instance;
+            _fixMessageQueue = new MemoryQueue<Message>();
+            _orderQueue.Dequeue += ConsumerOrder;
+            _fixMessageQueue.Dequeue += ConsumerFromAppMsg;
             MemoryData.Init();
             //Task.Run(() =>
             //{
@@ -82,7 +90,7 @@ namespace ZDFixService.Service.Base
         {
             MemoryData.AppStop = true;
             TradeClient.Instance.SocketInitiator.Stop();
-            WaitForAdding();
+            WaitForCompleting();
             MemoryData.IPersist?.Persist();
             ZDFixServiceServer.Instance.Close();
             ZDFixServiceWebSocketServer.Instance.Close();
@@ -90,9 +98,10 @@ namespace ZDFixService.Service.Base
             //NLog.LogManager.Shutdown();
         }
 
-        private void WaitForAdding()
+        private void WaitForCompleting()
         {
-            _queue.WaitForAdding();
+            _orderQueue.WaitForCompleting();
+            _fixMessageQueue.WaitForCompleting();
         }
 
 
@@ -104,7 +113,7 @@ namespace ZDFixService.Service.Base
                 _nLog.Info($"PreOrder return - {netInfo.MyToString()}");
                 return;
             }
-            _queue.EnqueueOrder(netInfo);
+            _orderQueue.Enqueue(netInfo);
         }
 
 
@@ -147,7 +156,7 @@ namespace ZDFixService.Service.Base
         }
 
         /// <summary>
-        /// 子类可实现该方法，拦截是否允许下单。
+        /// 子类可重写该方法，拦截是否允许下单。
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
@@ -261,14 +270,14 @@ namespace ZDFixService.Service.Base
 
         protected abstract NetInfo ExecType_New(ExecutionReport execReport);
 
-        protected abstract NetInfo Replaced(QuickFix.FIX42.ExecutionReport execReport);
+        protected abstract NetInfo Replaced(ExecutionReport execReport);
 
-        protected abstract NetInfo Cancelled(QuickFix.FIX42.ExecutionReport execReport);
+        protected abstract NetInfo Cancelled(ExecutionReport execReport);
 
-        protected abstract NetInfo PartiallyFilledOrFilled(QuickFix.FIX42.ExecutionReport execReport);
+        protected abstract NetInfo PartiallyFilledOrFilled(ExecutionReport execReport);
 
         #region Rejected
-        NetInfo ExecType_Rejected(QuickFix.Message message)
+        NetInfo ExecType_Rejected(Message message)
         {
             NetInfo netInfo = null;
             try

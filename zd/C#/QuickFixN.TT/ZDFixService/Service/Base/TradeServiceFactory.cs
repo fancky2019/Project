@@ -5,6 +5,7 @@ using System.Reflection;
 using Unity;
 using ZDFixService.Service.PSHK;
 using ZDFixService.Service.TT;
+using ZDFixService.Utility;
 
 namespace ZDFixService.Service.Base
 {
@@ -16,7 +17,9 @@ namespace ZDFixService.Service.Base
 
         static TradeServiceFactory()
         {
-            ITradeService = RegisterResolve();
+            UnityRegister.Register();
+            var tradeServiceName = Configurations.Configuration["ZDFixService:ITradeService"];
+            ITradeService = UnityRegister.Resolve<ITradeService>(tradeServiceName);// RegisterResolve();
         }
 
         static ITradeService RegisterResolve()
@@ -35,7 +38,9 @@ namespace ZDFixService.Service.Base
             //var currentService = types.Where(p => p.Name == tradeServiceName).FirstOrDefault();
             //if (currentService != null)
             //{
+            //    //ServiceStack 拓展CreateInstance()
             //    tradeService = (ITradeService)currentService.CreateInstance();
+            //    //tradeService = (ITradeService)Activator.CreateInstance(currentService);
             //    var serviceName = tradeService.GetType().Name;
             //}
 
