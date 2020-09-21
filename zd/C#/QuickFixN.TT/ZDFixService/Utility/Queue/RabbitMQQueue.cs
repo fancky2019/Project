@@ -37,7 +37,13 @@ namespace ZDFixService.Utility.Queue
             _routingKey = $"{tradeServiceName}_{_routingKey}";
             _orderQueue = $"{tradeServiceName}_{_orderQueue}";
 
-            var factory = new ConnectionFactory() { HostName = "192.168.1.105", Port = 5672, UserName = "fancky", Password = "123456" };
+            var factory = new ConnectionFactory()
+            {
+                HostName = Configurations.Configuration["ZDFixService:MessageQeue:RabbitMQ:HostName"],
+                Port = int.Parse(Configurations.Configuration["ZDFixService:MessageQeue:RabbitMQ:Port"]),
+                UserName = Configurations.Configuration["ZDFixService:MessageQeue:RabbitMQ:UserName"],
+                Password = Configurations.Configuration["ZDFixService:MessageQeue:RabbitMQ:Password"]
+            };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
 
