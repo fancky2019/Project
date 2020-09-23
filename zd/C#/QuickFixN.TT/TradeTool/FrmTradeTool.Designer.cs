@@ -32,8 +32,14 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dgvToClient = new System.Windows.Forms.DataGridView();
+            this.ToClientLogTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dgvClientIn = new System.Windows.Forms.DataGridView();
+            this.ClientInLogTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.btnLoadClientInToClient = new System.Windows.Forms.Button();
@@ -51,12 +57,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnOpenDirectory = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.ClientInLogTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ToClientLogTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -128,6 +128,29 @@
             this.dgvToClient.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvToClient_CellDoubleClick);
             this.dgvToClient.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dgvToClient_KeyUp);
             // 
+            // ToClientLogTime
+            // 
+            this.ToClientLogTime.DataPropertyName = "LogTime";
+            this.ToClientLogTime.HeaderText = "LogTime";
+            this.ToClientLogTime.Name = "ToClientLogTime";
+            this.ToClientLogTime.ReadOnly = true;
+            this.ToClientLogTime.Width = 160;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "SystemCode";
+            this.dataGridViewTextBoxColumn2.HeaderText = "SystemCode";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            this.dataGridViewTextBoxColumn2.Width = 110;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.DataPropertyName = "Command";
+            this.dataGridViewTextBoxColumn3.HeaderText = "Command";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.dgvClientIn);
@@ -161,6 +184,29 @@
             this.dgvClientIn.TabIndex = 0;
             this.dgvClientIn.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClientIn_CellDoubleClick);
             this.dgvClientIn.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dgvClientIn_KeyUp);
+            // 
+            // ClientInLogTime
+            // 
+            this.ClientInLogTime.DataPropertyName = "LogTime";
+            this.ClientInLogTime.HeaderText = "LogTime";
+            this.ClientInLogTime.Name = "ClientInLogTime";
+            this.ClientInLogTime.ReadOnly = true;
+            this.ClientInLogTime.Width = 160;
+            // 
+            // Column2
+            // 
+            this.Column2.DataPropertyName = "SystemCode";
+            this.Column2.HeaderText = "SystemCode";
+            this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
+            this.Column2.Width = 110;
+            // 
+            // Column3
+            // 
+            this.Column3.DataPropertyName = "Command";
+            this.Column3.HeaderText = "Command";
+            this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
             // 
             // panel1
             // 
@@ -204,11 +250,14 @@
             // 
             // txtClientInPath
             // 
+            this.txtClientInPath.AllowDrop = true;
             this.txtClientInPath.Location = new System.Drawing.Point(79, 15);
             this.txtClientInPath.Name = "txtClientInPath";
             this.txtClientInPath.ReadOnly = true;
             this.txtClientInPath.Size = new System.Drawing.Size(540, 21);
             this.txtClientInPath.TabIndex = 3;
+            this.txtClientInPath.DragDrop += new System.Windows.Forms.DragEventHandler(this.txtClientInPath_DragDrop);
+            this.txtClientInPath.DragEnter += new System.Windows.Forms.DragEventHandler(this.txtClientInPath_DragEnter);
             // 
             // label2
             // 
@@ -236,7 +285,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(833, 539);
+            this.tabPage3.Size = new System.Drawing.Size(798, 539);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "NetInfo";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -247,7 +296,7 @@
             this.rtbNetInfo.Location = new System.Drawing.Point(3, 99);
             this.rtbNetInfo.Name = "rtbNetInfo";
             this.rtbNetInfo.ReadOnly = true;
-            this.rtbNetInfo.Size = new System.Drawing.Size(827, 437);
+            this.rtbNetInfo.Size = new System.Drawing.Size(792, 437);
             this.rtbNetInfo.TabIndex = 17;
             this.rtbNetInfo.Text = "";
             // 
@@ -260,7 +309,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(827, 96);
+            this.panel2.Size = new System.Drawing.Size(792, 96);
             this.panel2.TabIndex = 16;
             // 
             // btnResolveRequest
@@ -305,7 +354,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(833, 539);
+            this.tabPage2.Size = new System.Drawing.Size(798, 539);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "通用";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -324,58 +373,13 @@
             // 
             this.openFileDialog.FileName = "openFileDialog1";
             // 
-            // ClientInLogTime
-            // 
-            this.ClientInLogTime.DataPropertyName = "LogTime";
-            this.ClientInLogTime.HeaderText = "LogTime";
-            this.ClientInLogTime.Name = "ClientInLogTime";
-            this.ClientInLogTime.ReadOnly = true;
-            this.ClientInLogTime.Width = 160;
-            // 
-            // Column2
-            // 
-            this.Column2.DataPropertyName = "SystemCode";
-            this.Column2.HeaderText = "SystemCode";
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            this.Column2.Width = 110;
-            // 
-            // Column3
-            // 
-            this.Column3.DataPropertyName = "Command";
-            this.Column3.HeaderText = "Command";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            // 
-            // ToClientLogTime
-            // 
-            this.ToClientLogTime.DataPropertyName = "LogTime";
-            this.ToClientLogTime.HeaderText = "LogTime";
-            this.ToClientLogTime.Name = "ToClientLogTime";
-            this.ToClientLogTime.ReadOnly = true;
-            this.ToClientLogTime.Width = 160;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "SystemCode";
-            this.dataGridViewTextBoxColumn2.HeaderText = "SystemCode";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            this.dataGridViewTextBoxColumn2.Width = 110;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.DataPropertyName = "Command";
-            this.dataGridViewTextBoxColumn3.HeaderText = "Command";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
-            // 
             // FrmTradeTool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(806, 565);
             this.Controls.Add(this.tabControl1);
+            this.MaximizeBox = false;
             this.Name = "FrmTradeTool";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TradeTool";
