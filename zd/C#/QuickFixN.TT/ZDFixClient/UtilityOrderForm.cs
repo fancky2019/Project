@@ -245,61 +245,14 @@ namespace ZDFixClient
             }
         }
 
-        /*
-         * 50=0:ErrorCode.ERR_ORDER_0000;CommandCode.ORDER
-         * 150=5:ErrorCode.ERR_ORDER_0016;CommandCode.MODIFY
-         * 150=4:ErrorCode.ERR_ORDER_0014;CommandCode.CANCELCAST
-         * 150=2:ErrorCode.SUCCESS;CommandCode.FILLEDCAST;
-         */
         private void lbMsgs_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.lbMsgs.SelectedItem == null)
             {
                 return;
             }
-            NetInfo netInfo = new NetInfo();
-            var netInfoStr = this.lbMsgs.SelectedItem.ToString();
-            netInfo.MyReadString(netInfoStr);
-            //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(netinfo);
-            //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
 
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netInfo));
-            sb.Append("\r\n");
-            //var command = netInfoStr.Substring(0, 8);
-            switch (netInfo.code)
-            {
-                case "ORDER001":
-                case "OrdeStHK":
-                    OrderResponseInfo orderInfo = new OrderResponseInfo();
-                    orderInfo.MyReadString(netInfo.infoT);
-                    //@@@@@ICE@BRN2012@1@1@42.59@@1@@@42.59@1@@@@0
-                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
-                    break;
-                case "CANCST01":
-                case "CancStHK":
-                    CancelResponseInfo cancelInfo = new CancelResponseInfo();
-                    cancelInfo.MyReadString(netInfo.infoT);
-                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(cancelInfo));
-                    break;
-                case "MODIFY01":
-                case "ModiStHK":
-                    OrderResponseInfo modifyInfo = new OrderResponseInfo();
-                    modifyInfo.MyReadString(netInfo.infoT);
-                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(modifyInfo));
-                    break;
-                case "FILCST01":
-                case "FillStHK":
-                    FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
-                    filledResponseInfo.MyReadString(netInfo.infoT);
-                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(filledResponseInfo));
-                    break;
-                default:
-                    MessageBox.Show("订单指令有误！");
-                    return;
-            }
-            this.rtbNetInfo.Text = sb.ToString();
+            this.rtbNetInfo.Text = new NetInfo().ToResponseJson(this.lbMsgs.SelectedItem.ToString());
         }
 
         private void OrderForm_FormClosing(object sender, FormClosingEventArgs e)

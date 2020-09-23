@@ -132,7 +132,7 @@ namespace TradeTool.Service
                 {
                     try
                     {
-                        if (p.Contains("20200717 09:38:44:024"))
+                        if (p.Contains("00007818JM000002"))
                         {
 
                         }
@@ -148,7 +148,7 @@ namespace TradeTool.Service
                         NetInfo netInfo = new NetInfo();
                         netInfo.MyReadString(logContent);
                         clientInLog.NetInfo = netInfo;
-
+                        CheckSystemCode(netInfo);
                         orderContent.Add(clientInLog);
                     }
                     catch (Exception ex)
@@ -165,6 +165,45 @@ namespace TradeTool.Service
                 _logger.WriteLog(ex.ToString());
             }
             return orderContent.Distinct().ToList();
+        }
+
+        /// <summary>
+        /// OCG Fill返回头里未赋值SysCode
+        /// </summary>
+        /// <param name="netInfo"></param>
+        private void CheckSystemCode(NetInfo netInfo)
+        {
+            if (!string.IsNullOrEmpty(netInfo.systemCode))
+            {
+                return;
+            }
+            switch (netInfo.code)
+            {
+                case "ORDER001":
+                case "OrdeStHK":
+
+
+                    break;
+                case "CANCST01":
+                case "CancStHK":
+
+                    break;
+                case "MODIFY01":
+                case "ModiStHK":
+
+
+                    break;
+                case "FILCST01":
+                case "FillStHK":
+
+                    FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
+                    filledResponseInfo.MyReadString(netInfo.infoT);
+                    netInfo.systemCode = filledResponseInfo.systemNo;
+                    break;
+                default:
+                    _logger.WriteLog($"订单指令有误 - {netInfo.MyToString()}");
+                    break;
+            }
         }
 
         private string GetNetInfoStr(string content)
