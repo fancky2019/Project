@@ -131,13 +131,13 @@ namespace ZDFixClient
         {
 
 
-            return;
-            var fileName = @"C:\Users\Administrator\Desktop\20200917\ClientIn.log";
-            TxtFile.BackUpSaveString(fileName, "dssdsdsdsd");
-            return;
-            var re = NLog.LogManager.AutoShutdown;
-            await ZDFixServiceServer.Instance.RunServerAsync();
-            return;
+
+            //var fileName = @"C:\Users\Administrator\Desktop\20200917\ClientIn.log";
+            //TxtFile.BackUpSaveString(fileName, "dssdsdsdsd");
+            //return;
+            //var re = NLog.LogManager.AutoShutdown;
+            //await ZDFixServiceServer.Instance.RunServerAsync();
+            //return;
             Scheduler.Init();
             return;
             var str111 = @"CancStHK@00000@000008391V000128@8003288@00000@I5555@HKEX@@8003288@@&@I5555@000008391V000128@1010091@1010091@HKEX@00002.HK@1@500@@0.0@0@@7@@2020-08-31@10:50:17@@@@@@@@@";
