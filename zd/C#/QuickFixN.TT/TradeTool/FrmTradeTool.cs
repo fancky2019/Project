@@ -26,9 +26,14 @@ namespace TradeTool
 
         private void FrmTradeTool_Load(object sender, EventArgs e)
         {
-            this.txtClientInPath.Text = @"C:\Users\Administrator\Desktop\2020-07-17\ClientIn_20200717.log";
-            this.dgvClientIn.Columns["LogTime"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
+            //SystemInformation.HorizontalScrollBarHeight;
+            //SystemInformation.VerticalScrollBarWidth;
+            //this.txtClientInPath.Text = @"C:\Users\Administrator\Desktop\2020-07-17\ClientIn_20200717.log";
+            this.txtClientInPath.Text = @"C:\\Users\\Administrator\\Desktop\\TradeTool\\20200922\\ClientIn_20200922.log";
+            this.dgvClientIn.Columns["ClientInLogTime"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
             this.dgvClientIn.AutoGenerateColumns = false;
+            this.dgvToClient.Columns["ToClientLogTime"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
+            this.dgvToClient.AutoGenerateColumns = false;
         }
 
         private void btnOpenDirectory_Click(object sender, EventArgs e)
@@ -36,7 +41,7 @@ namespace TradeTool
             System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory);
         }
 
-        private void btnClientIn_Click(object sender, EventArgs e)
+        private void btnLoadClientInToClient_Click(object sender, EventArgs e)
         {
             //DateTime contractDate = DateTime.ParseExact(timeStr, "yyyyMMdd-HH:mm:ss.fff", CultureInfo.InvariantCulture);
             //var content = new ClintInToClintLog().ReadClientInData(@"C:\Users\Administrator\Desktop\2020-07-17\ClientIn_20200717.log");
@@ -88,8 +93,8 @@ namespace TradeTool
                         {
                             throw new Exception("Can not find appropriate CommandCode");
                         }
-             
-                       
+
+
                     });
 
                 });
@@ -140,7 +145,7 @@ namespace TradeTool
         {
             if ((e.Control) && e.KeyCode == Keys.C)
             {
-                if (this.dgvClientIn.SelectedRows.Count > 0)
+                if (this.dgvToClient.SelectedRows.Count > 0)
                 {
                     var selectRow = this.dgvToClient.SelectedRows[0];
                     var netInfo = selectRow.DataBoundItem as ClientInLog;
@@ -156,49 +161,7 @@ namespace TradeTool
             {
                 return;
             }
-            NetInfo netInfo = new NetInfo();
-
-            netInfo.MyReadString(this.txtNetInfo.Text.Trim());
-            //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(netinfo);
-            //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
-
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netInfo));
-            sb.Append("\r\n");
-            //var command = netInfoStr.Substring(0, 8);
-            switch (netInfo.code)
-            {
-                case "ORDER001":
-                case "OrdeStHK":
-                    OrderResponseInfo orderInfo = new OrderResponseInfo();
-                    orderInfo.MyReadString(netInfo.infoT);
-                    //@@@@@ICE@BRN2012@1@1@42.59@@1@@@42.59@1@@@@0
-                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
-                    break;
-                case "CANCST01":
-                case "CancStHK":
-                    CancelResponseInfo cancelInfo = new CancelResponseInfo();
-                    cancelInfo.MyReadString(netInfo.infoT);
-                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(cancelInfo));
-                    break;
-                case "MODIFY01":
-                case "ModiStHK":
-                    OrderResponseInfo modifyInfo = new OrderResponseInfo();
-                    modifyInfo.MyReadString(netInfo.infoT);
-                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(modifyInfo));
-                    break;
-                case "FILCST01":
-                case "FillStHK":
-                    FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
-                    filledResponseInfo.MyReadString(netInfo.infoT);
-                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(filledResponseInfo));
-                    break;
-                default:
-                    MessageBox.Show("订单指令有误！");
-                    return;
-            }
-            this.rtbNetInfo.Text = sb.ToString();
+            this.rtbNetInfo.Text = new NetInfo().ToResponseJson(this.txtNetInfo.Text.Trim());
         }
 
         private void btnResolveRequest_Click(object sender, EventArgs e)
@@ -207,43 +170,49 @@ namespace TradeTool
             {
                 return;
             }
-            NetInfo netInfo = new NetInfo();
+            this.rtbNetInfo.Text = new NetInfo().ToRequestJson(this.txtNetInfo.Text.Trim());
+        }
 
-            netInfo.MyReadString(this.txtNetInfo.Text.Trim());
-            //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(netinfo);
-            //this.rtbNetInfo.Text = MessagePackUtility.SerializeToJson(NewtonsoftHelper.JsonSerializeObjectFormat(netinfo));
+        private void ShowJson(NetInfo netInfo, bool request = true)
+        {
 
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(netInfo));
-            sb.Append("\r\n");
-            //var command = netInfoStr.Substring(0, 8);
-            switch (netInfo.code)
+            if (netInfo != null)
             {
-                case "ORDER001":
-                case "OrdeStHK":
-                    OrderInfo orderInfo = new OrderInfo();
-                    orderInfo.MyReadString(netInfo.infoT);
-                    //@@@@@ICE@BRN2012@1@1@42.59@@1@@@42.59@1@@@@0
-                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(orderInfo));
-                    break;
-                case "CANCST01":
-                case "CancStHK":
-                    CancelInfo cancelInfo = new CancelInfo();
-                    cancelInfo.MyReadString(netInfo.infoT);
-                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(cancelInfo));
-                    break;
-                case "MODIFY01":
-                case "ModiStHK":
-                    ModifyInfo modifyInfo = new ModifyInfo();
-                    modifyInfo.MyReadString(netInfo.infoT);
-                    sb.Append(NewtonsoftHelper.JsonSerializeObjectFormat(modifyInfo));
-                    break;
-                default:
-                    MessageBox.Show("订单指令有误！");
-                    return;
+                var json = request ? netInfo.ToRequestJson() : netInfo.ToResponseJson();
+                FrmNetInfoJson frmNetInfoJson = new FrmNetInfoJson(json);
+                frmNetInfoJson.Show();
             }
-            this.rtbNetInfo.Text = sb.ToString();
+        }
+
+        private NetInfo GetNetInfo(DataGridView dgv)
+        {
+            if (dgv.SelectedRows.Count > 0)
+            {
+                var selectRow = dgv.SelectedRows[0];
+                var netInfo = selectRow.DataBoundItem as ClientInLog;
+                return netInfo.NetInfo;
+            }
+            return null;
+        }
+
+        private void dgvClientIn_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //单击表头
+            if (e.RowIndex == -1)
+            { 
+                return; 
+            }
+            ShowJson(GetNetInfo(this.dgvClientIn));
+        }
+
+        private void dgvToClient_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //单击表头
+            if (e.RowIndex == -1)
+            {
+                return;
+            }
+            ShowJson(GetNetInfo(this.dgvToClient), false);
         }
     }
 }

@@ -54,8 +54,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Log.cs" />
+    <Compile Include="Common\NetInfoExtensions.cs" />
     <Compile Include="Common\NewtonsoftHelper.cs" />
     <Compile Include="Common\TxtFile.cs" />
+    <Compile Include="FrmNetInfoJson.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmNetInfoJson.Designer.cs">
+      <DependentUpon>FrmNetInfoJson.cs</DependentUpon>
+    </Compile>
     <Compile Include="Model\Order.cs" />
     <Compile Include="Service\ClintInToClintLog.cs" />
     <Compile Include="FrmTradeTool.cs">
@@ -67,6 +74,9 @@
     <Compile Include="Model\ClientInLog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FrmNetInfoJson.resx">
+      <DependentUpon>FrmNetInfoJson.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmTradeTool.resx">
       <DependentUpon>FrmTradeTool.cs</DependentUpon>
     </EmbeddedResource>

@@ -31,7 +31,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.dgvToClient = new System.Windows.Forms.DataGridView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dgvClientIn = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -44,30 +44,29 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.rtbNetInfo = new System.Windows.Forms.RichTextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnResolveRequest = new System.Windows.Forms.Button();
             this.btnResolveResponse = new System.Windows.Forms.Button();
             this.txtNetInfo = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnOpenDirectory = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.LogTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ClientInLogTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dgvToClient = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ToClientLogTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnResolveRequest = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvToClient)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientIn)).BeginInit();
             this.panel1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvToClient)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -85,7 +84,6 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Controls.Add(this.splitter1);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -100,28 +98,43 @@
             // 
             this.groupBox2.Controls.Add(this.dgvToClient);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(409, 108);
+            this.groupBox2.Location = new System.Drawing.Point(399, 86);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(386, 428);
+            this.groupBox2.Size = new System.Drawing.Size(396, 450);
             this.groupBox2.TabIndex = 13;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "ToClient";
             // 
-            // splitter1
+            // dgvToClient
             // 
-            this.splitter1.Location = new System.Drawing.Point(399, 108);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(10, 428);
-            this.splitter1.TabIndex = 12;
-            this.splitter1.TabStop = false;
+            this.dgvToClient.AllowUserToAddRows = false;
+            this.dgvToClient.AllowUserToDeleteRows = false;
+            this.dgvToClient.AllowUserToResizeRows = false;
+            this.dgvToClient.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvToClient.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ToClientLogTime,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3});
+            this.dgvToClient.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvToClient.Location = new System.Drawing.Point(3, 17);
+            this.dgvToClient.MultiSelect = false;
+            this.dgvToClient.Name = "dgvToClient";
+            this.dgvToClient.ReadOnly = true;
+            this.dgvToClient.RowHeadersVisible = false;
+            this.dgvToClient.RowTemplate.Height = 23;
+            this.dgvToClient.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvToClient.Size = new System.Drawing.Size(390, 430);
+            this.dgvToClient.TabIndex = 1;
+            this.dgvToClient.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvToClient_CellDoubleClick);
+            this.dgvToClient.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dgvToClient_KeyUp);
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.dgvClientIn);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox1.Location = new System.Drawing.Point(3, 108);
+            this.groupBox1.Location = new System.Drawing.Point(3, 86);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(396, 428);
+            this.groupBox1.Size = new System.Drawing.Size(396, 450);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "ClientIn";
@@ -133,7 +146,7 @@
             this.dgvClientIn.AllowUserToResizeRows = false;
             this.dgvClientIn.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvClientIn.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.LogTime,
+            this.ClientInLogTime,
             this.Column2,
             this.Column3});
             this.dgvClientIn.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -141,10 +154,12 @@
             this.dgvClientIn.MultiSelect = false;
             this.dgvClientIn.Name = "dgvClientIn";
             this.dgvClientIn.ReadOnly = true;
+            this.dgvClientIn.RowHeadersVisible = false;
             this.dgvClientIn.RowTemplate.Height = 23;
             this.dgvClientIn.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvClientIn.Size = new System.Drawing.Size(390, 408);
+            this.dgvClientIn.Size = new System.Drawing.Size(390, 430);
             this.dgvClientIn.TabIndex = 0;
+            this.dgvClientIn.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvClientIn_CellDoubleClick);
             this.dgvClientIn.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dgvClientIn_KeyUp);
             // 
             // panel1
@@ -158,7 +173,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(792, 105);
+            this.panel1.Size = new System.Drawing.Size(792, 83);
             this.panel1.TabIndex = 7;
             // 
             // label1
@@ -178,7 +193,7 @@
             this.btnLoadClientInToClient.TabIndex = 0;
             this.btnLoadClientInToClient.Text = "Read";
             this.btnLoadClientInToClient.UseVisualStyleBackColor = true;
-            this.btnLoadClientInToClient.Click += new System.EventHandler(this.btnClientIn_Click);
+            this.btnLoadClientInToClient.Click += new System.EventHandler(this.btnLoadClientInToClient_Click);
             // 
             // txtSystemCodes
             // 
@@ -221,7 +236,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(798, 539);
+            this.tabPage3.Size = new System.Drawing.Size(833, 539);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "NetInfo";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -229,10 +244,10 @@
             // rtbNetInfo
             // 
             this.rtbNetInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbNetInfo.Location = new System.Drawing.Point(3, 105);
+            this.rtbNetInfo.Location = new System.Drawing.Point(3, 99);
             this.rtbNetInfo.Name = "rtbNetInfo";
             this.rtbNetInfo.ReadOnly = true;
-            this.rtbNetInfo.Size = new System.Drawing.Size(792, 431);
+            this.rtbNetInfo.Size = new System.Drawing.Size(827, 437);
             this.rtbNetInfo.TabIndex = 17;
             this.rtbNetInfo.Text = "";
             // 
@@ -245,8 +260,18 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(792, 102);
+            this.panel2.Size = new System.Drawing.Size(827, 96);
             this.panel2.TabIndex = 16;
+            // 
+            // btnResolveRequest
+            // 
+            this.btnResolveRequest.Location = new System.Drawing.Point(664, 66);
+            this.btnResolveRequest.Name = "btnResolveRequest";
+            this.btnResolveRequest.Size = new System.Drawing.Size(111, 23);
+            this.btnResolveRequest.TabIndex = 3;
+            this.btnResolveRequest.Text = "ResolveRequest";
+            this.btnResolveRequest.UseVisualStyleBackColor = true;
+            this.btnResolveRequest.Click += new System.EventHandler(this.btnResolveRequest_Click);
             // 
             // btnResolveResponse
             // 
@@ -280,7 +305,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(798, 539);
+            this.tabPage2.Size = new System.Drawing.Size(833, 539);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "通用";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -299,13 +324,13 @@
             // 
             this.openFileDialog.FileName = "openFileDialog1";
             // 
-            // LogTime
+            // ClientInLogTime
             // 
-            this.LogTime.DataPropertyName = "LogTime";
-            this.LogTime.HeaderText = "LogTime";
-            this.LogTime.Name = "LogTime";
-            this.LogTime.ReadOnly = true;
-            this.LogTime.Width = 150;
+            this.ClientInLogTime.DataPropertyName = "LogTime";
+            this.ClientInLogTime.HeaderText = "LogTime";
+            this.ClientInLogTime.Name = "ClientInLogTime";
+            this.ClientInLogTime.ReadOnly = true;
+            this.ClientInLogTime.Width = 160;
             // 
             // Column2
             // 
@@ -322,34 +347,13 @@
             this.Column3.Name = "Column3";
             this.Column3.ReadOnly = true;
             // 
-            // dgvToClient
+            // ToClientLogTime
             // 
-            this.dgvToClient.AllowUserToAddRows = false;
-            this.dgvToClient.AllowUserToDeleteRows = false;
-            this.dgvToClient.AllowUserToResizeRows = false;
-            this.dgvToClient.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvToClient.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn3});
-            this.dgvToClient.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvToClient.Location = new System.Drawing.Point(3, 17);
-            this.dgvToClient.MultiSelect = false;
-            this.dgvToClient.Name = "dgvToClient";
-            this.dgvToClient.ReadOnly = true;
-            this.dgvToClient.RowTemplate.Height = 23;
-            this.dgvToClient.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvToClient.Size = new System.Drawing.Size(380, 408);
-            this.dgvToClient.TabIndex = 1;
-            this.dgvToClient.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dgvToClient_KeyUp);
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "LogTime";
-            this.dataGridViewTextBoxColumn1.HeaderText = "LogTime";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.Width = 150;
+            this.ToClientLogTime.DataPropertyName = "LogTime";
+            this.ToClientLogTime.HeaderText = "LogTime";
+            this.ToClientLogTime.Name = "ToClientLogTime";
+            this.ToClientLogTime.ReadOnly = true;
+            this.ToClientLogTime.Width = 160;
             // 
             // dataGridViewTextBoxColumn2
             // 
@@ -366,16 +370,6 @@
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.ReadOnly = true;
             // 
-            // btnResolveRequest
-            // 
-            this.btnResolveRequest.Location = new System.Drawing.Point(664, 66);
-            this.btnResolveRequest.Name = "btnResolveRequest";
-            this.btnResolveRequest.Size = new System.Drawing.Size(111, 23);
-            this.btnResolveRequest.TabIndex = 3;
-            this.btnResolveRequest.Text = "ResolveRequest";
-            this.btnResolveRequest.UseVisualStyleBackColor = true;
-            this.btnResolveRequest.Click += new System.EventHandler(this.btnResolveRequest_Click);
-            // 
             // FrmTradeTool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -389,6 +383,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvToClient)).EndInit();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvClientIn)).EndInit();
             this.panel1.ResumeLayout(false);
@@ -397,7 +392,6 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvToClient)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -416,7 +410,6 @@
         private System.Windows.Forms.TextBox txtSystemCodes;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dgvClientIn;
         private System.Windows.Forms.TabPage tabPage3;
@@ -425,14 +418,14 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.RichTextBox rtbNetInfo;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LogTime;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridView dgvToClient;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.Button btnResolveRequest;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ToClientLogTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.Button btnResolveRequest;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ClientInLogTime;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
     }
 }
 

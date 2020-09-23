@@ -1190,6 +1190,7 @@ namespace StockAdapterHKEX
                 obj.errorCode = ErrorCode.SUCCESS;
                 obj.code = Command.FilledStockHK; //CommandCode.FILLEDCAST;
                 obj.accountNo = info.accountNo;
+                obj.systemCode = info.systemNo;
                 obj.todayCanUse = refObj.strArray[2];  //execReport.Header.GetField(Tags.SenderSubID);
 
                 TradeServerFacade.SendString(obj);
