@@ -16,7 +16,8 @@ namespace ZDFixService.Utility
 
         public static async void Init()
         {
-
+            //禁止Quartz内部log打印。或者配置Nlog
+            Quartz.Logging.LogProvider.IsDisabled = true;
 
             ISchedulerFactory sf = new StdSchedulerFactory();
             IScheduler sched = await sf.GetScheduler();
@@ -37,7 +38,7 @@ namespace ZDFixService.Utility
 
             sched.ScheduleJob(pSHKTradeServiceJob, triggerPSHKTradeServiceJob);
 
-            //var testJobCron = Configurations.Configuration["ZDFixService:Jobs:TestJob"].ToString();
+            var testJobCron = Configurations.Configuration["ZDFixService:Jobs:TestJob"].ToString();
 
             //// job 2 will run every other minute (at 15 seconds past the minute)
             //var testJob = JobBuilder.Create<TestJob>()
