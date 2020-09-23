@@ -105,6 +105,41 @@ namespace TradeTool
             }
         }
 
+        //拖入，释放鼠标此事件发生
+        private void txtClientInPath_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] rs = (string[])e.Data.GetData(DataFormats.FileDrop);
+                var filePath = rs[0];
+                this.txtClientInPath.Text = filePath;
+            }
+        }
+
+        //拖入发生此事件
+        private void txtClientInPath_DragEnter(object sender, DragEventArgs e)
+        {
+            //只允许文件拖放
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] rs = (string[])e.Data.GetData(DataFormats.FileDrop);
+                var filePath = rs[0];
+                var fileName = Path.GetFileName(filePath);
+                if (fileName.StartsWith("ClientIn"))
+                {
+                    e.Effect = DragDropEffects.Copy;
+                }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                }
+         
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
 
         private void btnView_Click(object sender, EventArgs e)
         {
@@ -199,8 +234,8 @@ namespace TradeTool
         {
             //单击表头
             if (e.RowIndex == -1)
-            { 
-                return; 
+            {
+                return;
             }
             ShowJson(GetNetInfo(this.dgvClientIn));
         }
@@ -214,5 +249,7 @@ namespace TradeTool
             }
             ShowJson(GetNetInfo(this.dgvToClient), false);
         }
+
+
     }
 }
