@@ -110,7 +110,13 @@ namespace ZDFixService.Service.Base
             _nLog.Info($"ClientIn:{netInfo.MyToString()}");
             if (!PreOrder(netInfo))
             {
-                _nLog.Info($"PreOrder return - {netInfo.MyToString()}");
+                _nLog.Info($"Server forbidden - {netInfo.MyToString()}");
+                if (string.IsNullOrEmpty(netInfo.errorMsg))
+                {
+                    netInfo.errorMsg = "Server forbidden!";
+                }
+                netInfo.Exception();
+                ResponseClient(netInfo);
                 return;
             }
             _orderQueue.Enqueue(netInfo);
@@ -147,10 +153,9 @@ namespace ZDFixService.Service.Base
             catch (Exception ex)
             {
                 _nLog.Info(ex.ToString());
-                var str = netInfo?.MyToString();
-                ExecutionReport?.Invoke(str);
-                ZDFixServiceServer.Instance.SendMsgAsync<SocketMessage<NetInfo>>(netInfo);
-                ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
+                netInfo.errorMsg = ex.Message;
+                netInfo.Exception();
+                ResponseClient(netInfo);
             }
 
         }
@@ -170,6 +175,17 @@ namespace ZDFixService.Service.Base
         protected abstract void OrderCancelReplaceRequest(NetInfo netInfo);
 
         protected abstract void OrderCancelRequest(NetInfo netInfo);
+
+        private void ResponseClient(NetInfo netInfo)
+        {
+
+            var str = netInfo.MyToString();
+            ExecutionReport?.Invoke(str);
+            _nLog.Info($"ToClient:{str}");
+            ZDFixServiceServer.Instance.SendMsgAsync<SocketMessage<NetInfo>>(netInfo);
+            ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
+
+        }
 
         #region FromAppMsg
 
@@ -245,12 +261,7 @@ namespace ZDFixService.Service.Base
 
             if (netInfo != null)
             {
-                var str = netInfo.MyToString();
-                ExecutionReport?.Invoke(str);
-                _nLog.Info($"ToClient:{str}");
-                ZDFixServiceServer.Instance.SendMsgAsync<SocketMessage<NetInfo>>(netInfo);
-                ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
-
+                ResponseClient(netInfo);
             }
             else
             {
@@ -343,12 +354,7 @@ namespace ZDFixService.Service.Base
         {
             if (netInfo != null)
             {
-                var str = netInfo.MyToString();
-                ExecutionReport?.Invoke(str);
-                _nLog.Info($"ToClient:{str}");
-                ZDFixServiceServer.Instance.SendMsgAsync<SocketMessage<NetInfo>>(netInfo);
-                ZDFixServiceWebSocketServer.Instance.SendMsgAsync(str);
-
+                ResponseClient(netInfo);
             }
         }
     }
