@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using Unity;
 using ZDFixService.Service.Base;
-using ZDFixService.Service.PSHK;
-using ZDFixService.Service.TT;
+using ZDFixService.Service.SubService.PSHK;
+using ZDFixService.Service.SubService.TT;
 using ZDFixService.Utility.Queue;
 
 namespace ZDFixService.Utility

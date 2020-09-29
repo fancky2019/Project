@@ -3,8 +3,8 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Unity;
-using ZDFixService.Service.PSHK;
-using ZDFixService.Service.TT;
+using ZDFixService.Service.SubService.PSHK;
+using ZDFixService.Service.SubService.TT;
 using ZDFixService.Utility;
 
 namespace ZDFixService.Service.Base

@@ -22,6 +22,41 @@ namespace ZDFixService.Service.ZDCommon
     public static class NetInfoExtensions
     {
         private static readonly NLog.Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
+
+        public static NetInfo Exception(this NetInfo netInfo)
+        {
+            try
+            {
+
+                if (netInfo.code == CommandCode.ORDER || netInfo.code == CommandCode.OrderStockHK)
+                {
+                    netInfo.NewOrderSingleException(netInfo.errorMsg,netInfo.code);
+                }
+                else if (netInfo.code == CommandCode.MODIFY || netInfo.code == CommandCode.ModifyStockHK)
+                {
+                    CancelInfo cancelInfo = new CancelInfo();
+                    cancelInfo.MyReadString(netInfo.infoT);
+                    netInfo.OrderCancelRequestException(netInfo.errorMsg, cancelInfo.orderNo, netInfo.code);
+                }
+                else if (netInfo.code == CommandCode.CANCEL || netInfo.code == CommandCode.CancelStockHK)
+                {
+                    ModifyInfo modifyInfo = new ModifyInfo();
+                    modifyInfo.MyReadString(netInfo.infoT);
+                    netInfo.OrderCancelReplaceRequestException(netInfo.errorMsg, modifyInfo.orderNo, netInfo.code);
+                }
+                else
+                {
+                    throw new Exception("Can not find appropriate CommandCode");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error(ex.ToString());
+            }
+            return netInfo;
+        }
+
         public static NetInfo NewOrderSingleException(this NetInfo netInfo, string errorMsg, string commandCode)
         {
             try

@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using ZDFixService.Models;
 using ZDFixService.Service.Base;
 using ZDFixService.Service.MemoryDataManager;
-using ZDFixService.Service.PSHK;
-using ZDFixService.Service.TT;
+using ZDFixService.Service.SubService.PSHK;
+using ZDFixService.Service.SubService.TT;
 using ZDFixService.Service.ZDCommon;
 
 namespace ZDFixService.Utility.Jobs
