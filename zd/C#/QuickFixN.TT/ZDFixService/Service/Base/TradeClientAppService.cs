@@ -84,6 +84,12 @@ namespace ZDFixService.Service.Base
 
             await ZDFixServiceServer.Instance.RunServerAsync();
             await ZDFixServiceWebSocketServer.Instance.RunServerAsync();
+
+
+            CommunicationClient.Instance.ReceiveMsg += ExecutionReport;
+            CommunicationClient.Instance.Connect();
+
+
         }
 
         public void Stop()
@@ -92,6 +98,7 @@ namespace ZDFixService.Service.Base
             TradeClient.Instance.SocketInitiator.Stop();
             WaitForCompleting();
             MemoryData.IPersist?.Persist();
+            CommunicationClient.Instance.Close();
             ZDFixServiceServer.Instance.Close();
             ZDFixServiceWebSocketServer.Instance.Close();
             //var re = NLog.LogManager.AutoShutdown;//true
