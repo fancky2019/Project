@@ -18,11 +18,12 @@ using System.Configuration;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ZDFixService.Models;
+using ZDFixService;
 
-namespace ZDFixClient.SocketNettyClient
+namespace ZDFixService.SocketNetty
 {
 
-    public class ZDFixNettyClient
+    public class CommunicationClient
     {
         private static readonly Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
         Bootstrap _bootstrap = new Bootstrap();
@@ -33,15 +34,20 @@ namespace ZDFixClient.SocketNettyClient
         volatile bool _closed = false;
         public event Action<string> ReceiveMsg;
 
+        public static CommunicationClient Instance { get; private set; }
+        static CommunicationClient()
+        {
+            Instance = new CommunicationClient();
+        }
 
-        public ZDFixNettyClient()
+        public CommunicationClient()
         {
             RunClientAsync();
         }
 
         public async void RunClientAsync()
         {
-            var ipPort = ConfigurationManager.AppSettings["FixServer"].ToString().Split(':');
+            var ipPort = Configurations.Configuration["ZDFixService:CommunicationIPPort"].Split(':'); ;
             string ip = ipPort[0];
             //string _ip = "192.168.1.114";
             string port = ipPort[1];
@@ -59,8 +65,8 @@ namespace ZDFixClient.SocketNettyClient
                         IdleStateHandler idleStateHandler = new IdleStateHandler(2, 2, 6);
 
                         pipeline.AddLast("timeout", idleStateHandler);
-                        pipeline.AddLast("framing-enc", new LengthFieldPrepender(2));
-                        pipeline.AddLast("framing-dec", new LengthFieldBasedFrameDecoder(ushort.MaxValue, 0, 2, 0, 2));
+                        //pipeline.AddLast("framing-enc", new LengthFieldPrepender(2));
+                        //pipeline.AddLast("framing-dec", new LengthFieldBasedFrameDecoder(ushort.MaxValue, 0, 2, 0, 2));
 
                         //无参数，默认系统默认编码: Encoding.Default
                         //pipeline.AddLast("StringDecoder", new StringDecoder(Encoding.UTF8));
@@ -70,13 +76,13 @@ namespace ZDFixClient.SocketNettyClient
                         //pipeline.AddLast("ProtobufDecoder", new ProtobufDecoder(PersonProto.Parser));
                         //pipeline.AddLast("ProtobufEncoder", new ProtobufEncoder());
 
-                        pipeline.AddLast("ObjectDecoder", new ObjectDecoder<SocketMessage<NetInfo>>());
-                        pipeline.AddLast("ObjectEncoder", new ObjectEncoder());
+                        //pipeline.AddLast("ObjectDecoder", new ObjectDecoder<SocketMessage<NetInfo>>());
+                        //pipeline.AddLast("ObjectEncoder", new ObjectEncoder());
 
-                        //pipeline.AddLast("ZDDecoder", new ZDDecoder());
-                        //pipeline.AddLast("ZDEncoder", new ZDEncoder());
+                        pipeline.AddLast("ZDDecoder", new ZDDecoder());
+                        pipeline.AddLast("ZDEncoder", new ZDEncoder());
 
-                        ZDFixClientHandler echoClientHandler = new ZDFixClientHandler(ReceiveMsg);
+                        CommunicationClientHandler echoClientHandler = new CommunicationClientHandler(ReceiveMsg);
                         echoClientHandler.DisConnected += () =>
                           {
                               Connect(_iPEndPoint);
@@ -95,7 +101,7 @@ namespace ZDFixClient.SocketNettyClient
         {
             try
             {
-                if(_clientChannel==null )
+                if (_clientChannel == null)
                 {
                     _nLog.Info("连接异常，确保网络连接正常。");
                     return;
@@ -108,9 +114,14 @@ namespace ZDFixClient.SocketNettyClient
             }
         }
 
+        public void Connect()
+        {
+            Connect(_iPEndPoint);
+        }
+
         public void Connect(IPEndPoint iPEndPoint)
         {
-            if (_closed||(_clientChannel != null && _clientChannel.Active))
+            if (_closed || (_clientChannel != null && _clientChannel.Active))
             {
                 return;
             }

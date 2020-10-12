@@ -76,6 +76,9 @@ namespace ZDFixService.SocketNetty
                         pipeline.AddLast("framing-dec", new LengthFieldBasedFrameDecoder(ushort.MaxValue, 0, 2, 0, 2));
                         pipeline.AddLast("ObjectDecoder", new ObjectDecoder<SocketMessage<NetInfo>>());
                         pipeline.AddLast("ObjectEncoder", new ObjectEncoder());
+
+                        //pipeline.AddLast("ZDDecoder", new ZDDecoder());
+                        //pipeline.AddLast("ZDEncoder", new ZDEncoder());
                         _serverHandler = new ZDFixServiceServerHandler();
                         pipeline.AddLast("ZDFixServiceServerHandler", _serverHandler);
                     }));

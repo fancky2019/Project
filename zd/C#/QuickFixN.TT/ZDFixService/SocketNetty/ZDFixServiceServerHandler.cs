@@ -71,12 +71,27 @@ namespace ZDFixService.SocketNetty
             }
             else
             {
-                var socketMessage = (SocketMessage<NetInfo>)message;
-
-                _nLog.Info($"Received from client:{socketMessage.ToString()}");
-                if (socketMessage.MessageType == MessageType.BusinessData)
+                if (message is string msg)
                 {
-                    TradeServiceFactory.ITradeService.Order(socketMessage.Data);
+                    _nLog.Info($"Received from client:{msg}");
+                    //不是心跳
+                    if (!msg.StartsWith("TEST0001"))
+                    {
+                        NetInfo netInfo = new NetInfo();
+                        netInfo.MyReadString(msg);
+                        TradeServiceFactory.ITradeService.Order(netInfo);
+                    }
+
+                }
+                else
+                {
+                    var socketMessage = (SocketMessage<NetInfo>)message;
+
+                    _nLog.Info($"Received from client:{socketMessage.ToString()}");
+                    if (socketMessage.MessageType == MessageType.BusinessData)
+                    {
+                        TradeServiceFactory.ITradeService.Order(socketMessage.Data);
+                    }
                 }
 
             }

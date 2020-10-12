@@ -274,6 +274,8 @@ namespace ZDFixClient
             else
             {
                 _zDFixNettyClient.SendMsg<SocketMessage<NetInfo>>(netInfo);
+
+                //_zDFixNettyClient.SendMsg<string>(netInfo.MyToString());
             }
 
         }

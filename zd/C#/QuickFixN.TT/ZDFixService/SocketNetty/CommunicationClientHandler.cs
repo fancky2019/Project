@@ -12,7 +12,7 @@ using NLog;
 using CommonClassLib;
 using ZDFixService.Models;
 
-namespace ZDFixClient.SocketNettyClient
+namespace ZDFixService.SocketNetty
 {
 
     /*
@@ -27,7 +27,7 @@ namespace ZDFixClient.SocketNettyClient
      *    然后重连，重连时进行判断，只执行一次ConnectToServer。
      * 2、加入 new IdleStateHandler后，会触发UserEventTriggered事件，可以该事件中进行心跳检测。
      */
-    public class ZDFixClientHandler : ChannelHandlerAdapter
+    public class CommunicationClientHandler : ChannelHandlerAdapter
     {
         private static readonly Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
         private readonly SocketMessage<NetInfo> _heartBeart = null;
@@ -36,7 +36,7 @@ namespace ZDFixClient.SocketNettyClient
         public event Action DisConnected;
 
         public event Action<string> _receiveMsg;
-        public ZDFixClientHandler(Action<string> receiveMsg)
+        public CommunicationClientHandler(Action<string> receiveMsg)
         {
             _heartBeart = new SocketMessage<NetInfo>() { MessageType = MessageType.HeartBeat };
 
@@ -152,13 +152,13 @@ namespace ZDFixClient.SocketNettyClient
                             break;
                         case IdleState.WriterIdle:
                             // 长时间未写入数据, 则发送心跳数据
-                            context.WriteAndFlushAsync(_heartBeart);
-                            //context.WriteAndFlushAsync(_zdHeartBeat);
+                            //context.WriteAndFlushAsync(_heartBeart);
+                            context.WriteAndFlushAsync(_zdHeartBeat);
                             break;
                         case IdleState.AllIdle:
                             //服务端会主动断开此链接，进入ChannelInactive
                             ////6秒既没有读，也没有写，即发生了3次没有读写，可认为网络断开。
-                            context.DisconnectAsync();
+                            //context.DisconnectAsync();
                             break;
                     }
                 }
