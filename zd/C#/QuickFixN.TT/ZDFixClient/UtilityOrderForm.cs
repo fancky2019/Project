@@ -99,7 +99,11 @@ namespace ZDFixClient
                 //  };
 
                 //窗体关闭要注销事件。
-                TradeServiceFactory.ITradeService.ExecutionReport += ExecutionReport;
+                if (!_console)
+                {
+                    TradeServiceFactory.ITradeService.ExecutionReport += ExecutionReport;
+                }
+
             }
             catch (Exception ex)
             {
@@ -257,8 +261,12 @@ namespace ZDFixClient
 
         private void OrderForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //窗体关闭要注销事件。
-            TradeServiceFactory.ITradeService.ExecutionReport -= ExecutionReport;
+            if (!_console)
+            {
+                //窗体关闭要注销事件。
+                TradeServiceFactory.ITradeService.ExecutionReport -= ExecutionReport;
+            }
+
         }
         #endregion
 
