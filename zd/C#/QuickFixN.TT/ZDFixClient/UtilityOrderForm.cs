@@ -98,6 +98,8 @@ namespace ZDFixClient
                 //      }
                 //  };
 
+
+                //如果是控制台操作下单，就不用注册，避免重复注册ExecutionReport
                 //窗体关闭要注销事件。
                 if (!_console)
                 {
@@ -158,73 +160,83 @@ namespace ZDFixClient
 
         public void ExecutionReport(string netInfoStr)
         {
-            this.BeginInvoke((MethodInvoker)(() =>
+            //维护客户端内存数据。
+            if (!string.IsNullOrEmpty(netInfoStr))
             {
-                if (!string.IsNullOrEmpty(netInfoStr))
+                NetInfo netInfo = new NetInfo();
+
+                netInfo.MyReadString(netInfoStr);
+                OrderInfo orderInfo = null;
+
+                switch (netInfo.code)
                 {
-                    NetInfo netInfo = new NetInfo();
+                    case "ORDER001":
+                    case "OrdeStHK":
+                        if (netInfo.errorCode != ErrorCode.SUCCESS)
+                        {
+                            _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
+                        }
 
-                    netInfo.MyReadString(netInfoStr);
-                    OrderInfo orderInfo = null;
+                        break;
+                    case "CANCST01":
+                    case "CancStHK":
+                        if (netInfo.errorCode == ErrorCode.SUCCESS)
+                        {
+                            _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
+                        }
+                        break;
+                    case "MODIFY01":
+                    case "ModiStHK":
 
-                    switch (netInfo.code)
-                    {
-                        case "ORDER001":
-                        case "OrdeStHK":
-                            if (netInfo.errorCode != ErrorCode.SUCCESS)
-                            {
-                                _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
-                            }
+                        if (netInfo.errorCode == ErrorCode.SUCCESS)
+                        {
+                            NetInfo newOrderSingleNetInfo = null;
+                            orderInfo = GetNewOrderSingleNetInfo(netInfo.systemCode, out newOrderSingleNetInfo);
 
-                            break;
-                        case "CANCST01":
-                        case "CancStHK":
-                            if (netInfo.errorCode == ErrorCode.SUCCESS)
-                            {
-                                _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
-                            }
-                            break;
-                        case "MODIFY01":
-                        case "ModiStHK":
+                            OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
+                            orderResponseInfo.MyReadString(netInfo.infoT);
 
-                            if (netInfo.errorCode == ErrorCode.SUCCESS)
-                            {
-                                NetInfo newOrderSingleNetInfo = null;
-                                orderInfo = GetNewOrderSingleNetInfo(netInfo.systemCode, out newOrderSingleNetInfo);
-
-                                OrderResponseInfo orderResponseInfo = new OrderResponseInfo();
-                                orderResponseInfo.MyReadString(netInfo.infoT);
-
-                                orderInfo.orderNumber = orderResponseInfo.orderNumber;
-                                newOrderSingleNetInfo.infoT = orderInfo.MyToString();
-                            }
-                            break;
-                        case "FILCST01":
-                        case "FillStHK":
-                            orderInfo = GetNewOrderSingleNetInfo(netInfo.systemCode, out _);
-                            if (orderInfo == null)
-                            {
-                                return;
-                            }
-                            FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
-                            filledResponseInfo.MyReadString(netInfo.infoT);
-                            if (filledResponseInfo.filledNumber == orderInfo.orderNumber)
-                            {
-                                _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
-                            }
-                            break;
-                        default:
-                            MessageBox.Show("订单指令有误！");
+                            orderInfo.orderNumber = orderResponseInfo.orderNumber;
+                            newOrderSingleNetInfo.infoT = orderInfo.MyToString();
+                        }
+                        break;
+                    case "FILCST01":
+                    case "FillStHK":
+                        orderInfo = GetNewOrderSingleNetInfo(netInfo.systemCode, out _);
+                        if (orderInfo == null)
+                        {
                             return;
-                    }
+                        }
+                        FilledResponseInfo filledResponseInfo = new FilledResponseInfo();
+                        filledResponseInfo.MyReadString(netInfo.infoT);
+                        if (filledResponseInfo.filledNumber == orderInfo.orderNumber)
+                        {
+                            _newOrderSingleNetInfos.TryRemove(netInfo.systemCode, out _);
+                        }
+                        break;
+                    default:
+                        MessageBox.Show("订单指令有误！");
+                        return;
                 }
+            }
 
-                if (!string.IsNullOrEmpty(netInfoStr))
+            //在创建窗口句柄之前，不能在控件上调用 Invoke 或 BeginInvoke。
+            if (this.IsHandleCreated)
+            {
+                this.BeginInvoke((MethodInvoker)(() =>
                 {
-                    this.lbMsgs.Items.Add(netInfoStr);
-                }
+                    if (!string.IsNullOrEmpty(netInfoStr))
+                    {
+                        this.lbMsgs.Items.Add(netInfoStr);
+                    }
 
-            }));
+                }));
+            }
+            else
+            {
+                _nLog.Info($"下单窗体已关闭 - {netInfoStr}");
+            }
+
         }
 
         private OrderInfo GetNewOrderSingleNetInfo(string systemCode, out NetInfo newOrderSingleNetInfo)
