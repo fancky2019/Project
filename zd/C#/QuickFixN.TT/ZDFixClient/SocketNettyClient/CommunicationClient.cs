@@ -20,7 +20,7 @@ using System.Threading;
 using ZDFixService.Models;
 using ZDFixService;
 
-namespace ZDFixService.SocketNetty
+namespace ZDFixClient.SocketNettyClient
 {
 
     public class CommunicationClient
@@ -47,7 +47,7 @@ namespace ZDFixService.SocketNetty
 
         public async void RunClientAsync()
         {
-            var ipPort = Configurations.Configuration["ZDFixService:CommunicationIPPort"].Split(':'); ;
+            var ipPort = ConfigurationManager.AppSettings["CommunicationIPPort"].ToString().Split(':');
             string ip = ipPort[0];
             //string _ip = "192.168.1.114";
             string port = ipPort[1];
@@ -107,6 +107,7 @@ namespace ZDFixService.SocketNetty
                     return;
                 }
                 _clientChannel.WriteAndFlushAsync(t);
+                //_nLog.Info($"Sent to Communication:{t.ToString()}");
             }
             catch (Exception ex)
             {
