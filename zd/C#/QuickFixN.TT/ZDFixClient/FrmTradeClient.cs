@@ -62,6 +62,16 @@ namespace ZDFixClient
                       this.btnStop.Enabled = true;
                   }
 
+                  if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["CommunicationIPPort"].ToString()))
+                  {
+                      TradeServiceFactory.ITradeService.ExecutionReport += (netInfoStr) =>
+                        {
+                            CommunicationClient.Instance.SendMsg<string>(netInfoStr);
+                        };
+                      CommunicationClient.Instance.RunClientAsync();
+                      CommunicationClient.Instance.Connect();
+                  }
+
               };
 
             TradeServiceFactory.ITradeService.Logout += msg =>
@@ -97,6 +107,10 @@ namespace ZDFixClient
         internal void btnStop_Click(object sender, EventArgs e)
         {
             TradeServiceFactory.ITradeService.Stop();
+            if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["CommunicationIPPort"].ToString()))
+            {
+                CommunicationClient.Instance.Close();
+            }
             _runStart = false;
         }
 

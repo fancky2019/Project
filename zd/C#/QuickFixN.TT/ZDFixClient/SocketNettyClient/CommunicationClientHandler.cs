@@ -11,8 +11,9 @@ using System.Threading.Tasks;
 using NLog;
 using CommonClassLib;
 using ZDFixService.Models;
+using ZDFixService.Service.Base;
 
-namespace ZDFixService.SocketNetty
+namespace ZDFixClient.SocketNettyClient
 {
 
     /*
@@ -106,7 +107,7 @@ namespace ZDFixService.SocketNetty
             var byteBuffer = message as IByteBuffer;
             if (byteBuffer != null)
             {
-                _nLog.Info("Received from server: " + byteBuffer.ToString(Encoding.UTF8));
+                _nLog.Info("Received from Communication: " + byteBuffer.ToString(Encoding.UTF8));
 
                 //这样会造成从堆外的直接内存将数据拷贝到内存堆内，
                 //但是可以用Netty的其他特性，比传统Socket仍有优势。
@@ -118,15 +119,28 @@ namespace ZDFixService.SocketNetty
             }
             else
             {
-                var socketMessage = (SocketMessage<NetInfo>)message;
-                var receiveMsg = socketMessage.ToString();
-                _nLog.Info($"Received from server:{receiveMsg}");
-                if (socketMessage.MessageType == MessageType.BusinessData)
+                if (message is string msg)
                 {
-                    _nLog.Info($"Received from server:{receiveMsg}");
-                    _receiveMsg?.Invoke(receiveMsg);
-                }
+                    _nLog.Info($"Received from Communication:{msg}");
+                    //不是心跳
+                    if (!msg.StartsWith("TEST0001"))
+                    {
+                        NetInfo netInfo = new NetInfo();
+                        netInfo.MyReadString(msg);
+                        TradeServiceFactory.ITradeService.Order(netInfo);
+                    }
 
+                }
+                else
+                {
+                    var socketMessage = (SocketMessage<NetInfo>)message;
+
+                    _nLog.Info($"Received from Communication:{socketMessage.ToString()}");
+                    if (socketMessage.MessageType == MessageType.BusinessData)
+                    {
+                        TradeServiceFactory.ITradeService.Order(socketMessage.Data);
+                    }
+                }
             }
             //避免死循环，客户服务端不停互相发消息
             //context.WriteAsync(message);
@@ -158,7 +172,7 @@ namespace ZDFixService.SocketNetty
                         case IdleState.AllIdle:
                             //服务端会主动断开此链接，进入ChannelInactive
                             ////6秒既没有读，也没有写，即发生了3次没有读写，可认为网络断开。
-                            //context.DisconnectAsync();
+                            context.DisconnectAsync();
                             break;
                     }
                 }

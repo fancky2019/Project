@@ -66,6 +66,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SocketNettyClient\CommunicationClient.cs" />
+    <Compile Include="SocketNettyClient\CommunicationClientHandler.cs" />
     <Compile Include="SocketNettyClient\ZDFixClientHandler.cs" />
     <Compile Include="SocketNettyClient\ZDFixNettyClient.cs" />
     <Compile Include="UserControls\BaseNetInfoControl\CancelNetInfoControl.cs">
