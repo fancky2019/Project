@@ -29,18 +29,18 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnOpenDirectory = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.btnLogOut = new System.Windows.Forms.Button();
+            this.btnSend = new System.Windows.Forms.Button();
             this.btnLogin = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.btnOpenDirectory = new System.Windows.Forms.Button();
-            this.btnSend = new System.Windows.Forms.Button();
-            this.btnLogOut = new System.Windows.Forms.Button();
+            this.nudUserAccount = new System.Windows.Forms.NumericUpDown();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudUserAccount)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -51,6 +51,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(800, 64);
             this.panel1.TabIndex = 0;
+            // 
+            // btnOpenDirectory
+            // 
+            this.btnOpenDirectory.Location = new System.Drawing.Point(720, 12);
+            this.btnOpenDirectory.Name = "btnOpenDirectory";
+            this.btnOpenDirectory.Size = new System.Drawing.Size(68, 23);
+            this.btnOpenDirectory.TabIndex = 37;
+            this.btnOpenDirectory.Text = "目录";
+            this.btnOpenDirectory.UseVisualStyleBackColor = true;
+            this.btnOpenDirectory.Click += new System.EventHandler(this.btnOpenDirectory_Click);
             // 
             // panel2
             // 
@@ -67,48 +77,22 @@
             this.panel3.Controls.Add(this.btnSend);
             this.panel3.Controls.Add(this.btnLogin);
             this.panel3.Controls.Add(this.label1);
-            this.panel3.Controls.Add(this.numericUpDown1);
+            this.panel3.Controls.Add(this.nudUserAccount);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(800, 100);
             this.panel3.TabIndex = 0;
             // 
-            // btnLogin
+            // btnLogOut
             // 
-            this.btnLogin.Location = new System.Drawing.Point(228, 30);
-            this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(75, 23);
-            this.btnLogin.TabIndex = 2;
-            this.btnLogin.Text = "Login";
-            this.btnLogin.UseVisualStyleBackColor = true;
-            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(25, 32);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "label1";
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Location = new System.Drawing.Point(86, 30);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 21);
-            this.numericUpDown1.TabIndex = 1;
-            // 
-            // btnOpenDirectory
-            // 
-            this.btnOpenDirectory.Location = new System.Drawing.Point(720, 12);
-            this.btnOpenDirectory.Name = "btnOpenDirectory";
-            this.btnOpenDirectory.Size = new System.Drawing.Size(68, 23);
-            this.btnOpenDirectory.TabIndex = 37;
-            this.btnOpenDirectory.Text = "目录";
-            this.btnOpenDirectory.UseVisualStyleBackColor = true;
-            this.btnOpenDirectory.Click += new System.EventHandler(this.btnOpenDirectory_Click);
+            this.btnLogOut.Location = new System.Drawing.Point(401, 32);
+            this.btnLogOut.Name = "btnLogOut";
+            this.btnLogOut.Size = new System.Drawing.Size(75, 23);
+            this.btnLogOut.TabIndex = 4;
+            this.btnLogOut.Text = "Logout";
+            this.btnLogOut.UseVisualStyleBackColor = true;
+            this.btnLogOut.Click += new System.EventHandler(this.btnLogOut_Click);
             // 
             // btnSend
             // 
@@ -120,15 +104,36 @@
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
-            // btnLogOut
+            // btnLogin
             // 
-            this.btnLogOut.Location = new System.Drawing.Point(401, 32);
-            this.btnLogOut.Name = "btnLogOut";
-            this.btnLogOut.Size = new System.Drawing.Size(75, 23);
-            this.btnLogOut.TabIndex = 4;
-            this.btnLogOut.Text = "Logout";
-            this.btnLogOut.UseVisualStyleBackColor = true;
-            this.btnLogOut.Click += new System.EventHandler(this.btnLogOut_Click);
+            this.btnLogin.Location = new System.Drawing.Point(158, 13);
+            this.btnLogin.Name = "btnLogin";
+            this.btnLogin.Size = new System.Drawing.Size(75, 23);
+            this.btnLogin.TabIndex = 2;
+            this.btnLogin.Text = "Login";
+            this.btnLogin.UseVisualStyleBackColor = true;
+            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(47, 12);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "用户数:";
+            // 
+            // nudUserAccount
+            // 
+            this.nudUserAccount.Location = new System.Drawing.Point(65, 16);
+            this.nudUserAccount.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
+            this.nudUserAccount.Name = "nudUserAccount";
+            this.nudUserAccount.Size = new System.Drawing.Size(72, 21);
+            this.nudUserAccount.TabIndex = 1;
             // 
             // FrmMain
             // 
@@ -143,7 +148,7 @@
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudUserAccount)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -155,7 +160,7 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown nudUserAccount;
         private System.Windows.Forms.Button btnOpenDirectory;
         private System.Windows.Forms.Button btnLogOut;
         private System.Windows.Forms.Button btnSend;
