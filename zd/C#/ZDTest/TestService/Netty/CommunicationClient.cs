@@ -28,25 +28,30 @@ namespace TestService.Netty
         IChannel _clientChannel = null;
 
         IPEndPoint _iPEndPoint = null;
-        MultithreadEventLoopGroup _group;
+        static MultithreadEventLoopGroup _group;
         volatile bool _closed = false;
         public event Action<string> ReceiveMsg;
+        public event Action Connected;
 
-        public string Port { get;  set; }
+        public string Port { get; set; }
         public string IP { get; set; }
 
-        public CommunicationClient( string ip,string port)
+        static CommunicationClient()
+        {
+            _group = new MultithreadEventLoopGroup();
+        }
+        public CommunicationClient(string ip, string port)
         {
             this.IP = ip;
             this.Port = port;
         }
         public async void RunClientAsync()
         {
-         
+
             //string _ip = "192.168.1.114";
 
             _iPEndPoint = new IPEndPoint(IPAddress.Parse(IP), int.Parse(Port));
-            _group = new MultithreadEventLoopGroup();
+            //_group = new MultithreadEventLoopGroup();
             try
             {
                 _bootstrap.Group(_group)
@@ -59,7 +64,7 @@ namespace TestService.Netty
                         IdleStateHandler idleStateHandler = new IdleStateHandler(2, 2, 6);
 
                         pipeline.AddLast("timeout", idleStateHandler);
- 
+
                         pipeline.AddLast("ZDDecoder", new ZDDecoder());
                         pipeline.AddLast("ZDEncoder", new ZDEncoder());
 
@@ -68,6 +73,12 @@ namespace TestService.Netty
                           {
                               Connect(_iPEndPoint);
                           };
+                        echoClientHandler.Connected += (content) =>
+                        {
+                            _nLog.Info("Connected to server......");
+                            _clientChannel = content.Channel;
+                            Connected?.Invoke();
+                        };
                         pipeline.AddLast("echo", echoClientHandler);
                     }));
 
@@ -96,37 +107,42 @@ namespace TestService.Netty
             }
         }
 
-        public void Connect()
+        public async void Connect()
         {
             Connect(_iPEndPoint);
         }
 
-        public void Connect(IPEndPoint iPEndPoint)
+        Task<IChannel> connectedChannel = null;
+        public async void Connect(IPEndPoint iPEndPoint)
         {
             if (_closed || (_clientChannel != null && _clientChannel.Active))
             {
                 return;
             }
-            Task.Run(() =>
-            {
-                try
-                {
-                    _nLog.Info("Reconnect......");
-                    var task = _bootstrap.ConnectAsync(iPEndPoint);
-                    task.Wait(2000);
-                    _clientChannel = task.Result;
-                }
-                catch (Exception ex)
-                {
-                    _nLog.Error($"{ex.Message} - {ex.InnerException.Message}");
-                    if (_clientChannel != null)
-                    {
-                        Thread.Sleep(2000);
-                        Connect(iPEndPoint);
-                    }
 
+            try
+            {
+                _nLog.Info("Connecting to server......");
+
+                //connectedChannel =  _bootstrap.ConnectAsync(iPEndPoint);
+
+                //_clientChannel = await _bootstrap.ConnectAsync(iPEndPoint);
+
+                _bootstrap.ConnectAsync(iPEndPoint);
+                //_nLog.Info("Connected to server......");
+                //Connected?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                _nLog.Error($"{ex.Message} - {ex.InnerException.Message}");
+                if (_clientChannel != null)
+                {
+                    Thread.Sleep(2000);
+                    Connect(iPEndPoint);
                 }
-            });
+
+            }
+
 
 
         }

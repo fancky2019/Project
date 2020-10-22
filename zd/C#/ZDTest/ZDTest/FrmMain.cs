@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Model.Entity;
+using NLog;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TestCommon;
@@ -15,23 +18,98 @@ namespace ZDTest
 {
     public partial class FrmMain : Form
     {
+        private static readonly Logger _nLog = NLog.LogManager.GetCurrentClassLogger();
         TClientBaseInfoService _clientBaseInfoService = new TClientBaseInfoService();
+        List<TClientBaseInfo> _users = new List<TClientBaseInfo>();
         public FrmMain()
         {
             InitializeComponent();
+            _users = _clientBaseInfoService.GetTClientBaseInfos();
         }
 
-        CommunicationClient _client;
+
         private void btnOpenDirectory_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(AppDomain.CurrentDomain.BaseDirectory);
         }
+
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            //var str = Configurations.Configuration["TestDal:PressTestConStr"];
+            //_users = _clientBaseInfoService.GetTClientBaseInfos();
+            var users = _users.Take((int)this.nudUserAccount.Value).ToList();
 
-            _client = new CommunicationClient(Configurations.Configuration["TestService:FrontIP"], Configurations.Configuration["TestService:FrontPort"]);
-            _client.RunClientAsync();
-            _client.Connect();
+            //List<Thread> listThread = new List<Thread>();
+            //users.ForEach(p =>
+            //{
+            //    //Task.Run(() =>
+            //    //{
+
+            //    Thread thread = new Thread(() =>
+            //     {
+
+
+            //         CommunicationClient client = new CommunicationClient(Configurations.Configuration["TestService:FrontIP"], Configurations.Configuration["TestService:FrontPort"]);
+            //         client.ReceiveMsg += msg =>
+            //           {
+            //               _nLog.Info(msg);
+            //           };
+            //         client.Connected += () =>
+            //           {
+            //               var loginCommand = $"LOGINHK1@@ClientIP:172.17.254.65:PC_V2.0.392@C@@@192.168.2.166:59289@R@1@@@0&{p.FUpperNo}@888888@1@00:15:5D:64:81:32@DESKTOP-3HM9UQG";
+            //               client.SendMsg<string>(loginCommand);
+            //           };
+
+            //         client.RunClientAsync();
+            //         client.Connect();
+            //     });
+            //    thread.Name = p.FClientNo;
+            //    //thread.Start();
+            //    listThread.Add(thread);
+            //    //});
+
+            //});
+            //listThread.ForEach(p =>
+            //{
+            //    p.Start();
+            //});
+
+
+
+
+
+
+
+            users.ForEach(p =>
+            {
+                Task.Run(() =>
+                {
+
+
+
+                    CommunicationClient client = new CommunicationClient(Configurations.Configuration["TestService:FrontIP"], Configurations.Configuration["TestService:FrontPort"]);
+                    client.ReceiveMsg += msg =>
+                      {
+                          _nLog.Info(msg);
+                      };
+                    client.Connected += () =>
+                      {
+                          var loginCommand = $"LOGINHK1@@ClientIP:172.17.254.65:PC_V2.0.392@C@@@192.168.2.166:59289@R@1@@@0&{p.FUpperNo}@888888@1@00:15:5D:64:81:32@DESKTOP-3HM9UQG";
+                          client.SendMsg<string>(loginCommand);
+                      };
+
+                    client.RunClientAsync();
+                    client.Connect();
+                });
+
+            });
+
+
+
+
+
+
+
 
 
 
@@ -100,20 +178,20 @@ namespace ZDTest
 
             var lenEndStr = ")";
             var lenEndStrIndex = logContent.IndexOf(lenEndStr);
-            var content = logContent.Substring(lenEndStrIndex + 1, logContent.Length - (lenEndStrIndex +1)- 1);
+            var content = logContent.Substring(lenEndStrIndex + 1, logContent.Length - (lenEndStrIndex + 1) - 1);
             return content;
         }
 
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            var loginCommand = $"LOGINHK1@@ClientIP:172.17.254.65:PC_V2.0.392@C@@@192.168.2.166:59289@R@1@@@0&1000009@888888@1@00:15:5D:64:81:32@DESKTOP-3HM9UQG";
-            _client.SendMsg<string>(loginCommand);
+            //var loginCommand = $"LOGINHK1@@ClientIP:172.17.254.65:PC_V2.0.392@C@@@192.168.2.166:59289@R@1@@@0&1000009@888888@1@00:15:5D:64:81:32@DESKTOP-3HM9UQG";
+            //_client.SendMsg<string>(loginCommand);
         }
 
         private void btnLogOut_Click(object sender, EventArgs e)
         {
-            _client.Close();
+            //_client.Close();
         }
     }
 }

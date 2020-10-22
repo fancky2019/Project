@@ -32,7 +32,7 @@ namespace TestService.Netty
         private const string _zdHeartBeat = "TEST0001@@@@@@@@@@@0&";
         readonly IByteBuffer initialMessage;
         public event Action DisConnected;
-
+        public event Action<IChannelHandlerContext> Connected;
         public event Action<string> _receiveMsg;
         public CommunicationClientHandler(Action<string> receiveMsg)
         {
@@ -81,6 +81,15 @@ namespace TestService.Netty
             //this.initialMessage.WriteBytes(messageBytes);
             //context.WriteAndFlushAsync(this.initialMessage);
             _nLog.Info($"Connect to server - {context.Channel.RemoteAddress.ToString()}");
+
+            Connected?.Invoke(context);
+            //var loginCommand = $"LOGINHK1@@ClientIP:172.17.254.65:PC_V2.0.392@C@@@192.168.2.166:59289@R@1@@@0&{p.FUpperNo}@888888@1@00:15:5D:64:81:32@DESKTOP-3HM9UQG";
+
+            //var messageBytes = Encoding.UTF8.GetBytes(loginCommand);
+            //var byteBuffer = Unpooled.WrappedBuffer(messageBytes);
+
+            //context.WriteAndFlushAsync(byteBuffer);
+            //Connected?.Invoke();
 
 
         }
