@@ -24,6 +24,8 @@ namespace ZDTest
         public FrmMain()
         {
             InitializeComponent();
+
+         
             _users = _clientBaseInfoService.GetTClientBaseInfos();
         }
 
