@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Model.ViewModel;
+using TestCommon;
 
 namespace ZDTest.UserControls
 {
@@ -48,6 +49,22 @@ namespace ZDTest.UserControls
                 this.dgvMemoryData.DataSource = _users.Where(p => p.ClientNo.Contains(clientNo)).ToList();
             }
        
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+             List<User> list=this.dgvMemoryData.DataSource as List<User>;
+            if(list!=null&&list.Count>0)
+            {
+                List<string> content = new List<string>();
+                content.Add("ClientNo,Login,ConnectingTime,ConnectedTime,SendLoginCmdTime,ReceiveLogonTime");
+                list.ForEach(p =>
+                {
+                    content.Add($"{p.ClientNo},{p.Login},{p.ConnectingTime.ToString("yyyy-MM-dd HH:mm:ss.fff")},{p.ConnectedTime.ToString("yyyy-MM-dd HH:mm:ss.fff")},{p.SendLoginCmdTime.ToString("yyyy-MM-dd HH:mm:ss.fff")},{p.ReceiveLogonTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}");
+                });
+
+                TxtFile.SaveTxtFile("data/login.csv", content);
+            }
         }
     }
 }

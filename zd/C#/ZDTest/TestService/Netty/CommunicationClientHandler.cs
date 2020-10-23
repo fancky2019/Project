@@ -135,6 +135,7 @@ namespace TestService.Netty
                     //不是心跳
                     if (!msg.StartsWith("TEST0001"))
                     {
+                        MemoryData.Users[_clientNo].Login = true; 
                         MemoryData.Users[_clientNo].ReceiveLogonTime = DateTime.Now;
                         NetInfo netInfo = new NetInfo();
                         netInfo.MyReadString(msg);
