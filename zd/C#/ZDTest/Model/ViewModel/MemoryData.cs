@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZDTest
+namespace Model.ViewModel
 {
     public class MemoryData
     {
         public static ConcurrentDictionary<string, User> Users { get; set; }
+        static MemoryData()
+        {
+            Users = new ConcurrentDictionary<string, User>();
+        }
     }
 
-    public class User
-    {
-        public string ClientNo { get; set; }
-        public bool  Login { get; set; }
-    }
+
 }

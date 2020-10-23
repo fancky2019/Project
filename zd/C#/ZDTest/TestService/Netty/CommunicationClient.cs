@@ -16,7 +16,7 @@ using NLog;
 using System.Configuration;
 using System.Runtime.InteropServices;
 using System.Threading;
-
+using Model.ViewModel;
 
 namespace TestService.Netty
 {
@@ -36,6 +36,7 @@ namespace TestService.Netty
         public string Port { get; set; }
         public string IP { get; set; }
 
+        public string ClientNo { get; set; }
         static CommunicationClient()
         {
             _group = new MultithreadEventLoopGroup();
@@ -68,7 +69,7 @@ namespace TestService.Netty
                         pipeline.AddLast("ZDDecoder", new ZDDecoder());
                         pipeline.AddLast("ZDEncoder", new ZDEncoder());
 
-                        CommunicationClientHandler echoClientHandler = new CommunicationClientHandler(ReceiveMsg);
+                        CommunicationClientHandler echoClientHandler = new CommunicationClientHandler(ReceiveMsg, this.ClientNo);
                         echoClientHandler.DisConnected += () =>
                           {
                               Connect(_iPEndPoint);
@@ -77,11 +78,12 @@ namespace TestService.Netty
                         {
                             _nLog.Info("Connected to server......");
                             _clientChannel = content.Channel;
+                            MemoryData.Users[ClientNo].ConnectedTime = DateTime.Now;
                             Connected?.Invoke();
                         };
                         pipeline.AddLast("echo", echoClientHandler);
                     }));
-
+                Connect(_iPEndPoint);
             }
             catch (Exception ex)
             {
@@ -99,6 +101,7 @@ namespace TestService.Netty
                     return;
                 }
                 _clientChannel.WriteAndFlushAsync(t);
+                MemoryData.Users[ClientNo].SendLoginCmdTime = DateTime.Now;
                 _nLog.Info($"Sent to Communication:{t.ToString()}");
             }
             catch (Exception ex)
@@ -107,10 +110,7 @@ namespace TestService.Netty
             }
         }
 
-        public async void Connect()
-        {
-            Connect(_iPEndPoint);
-        }
+
 
         Task<IChannel> connectedChannel = null;
         public async void Connect(IPEndPoint iPEndPoint)

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NLog;
 using CommonClassLib;
+using Model.ViewModel;
 
 namespace TestService.Netty
 {
@@ -34,11 +35,13 @@ namespace TestService.Netty
         public event Action DisConnected;
         public event Action<IChannelHandlerContext> Connected;
         public event Action<string> _receiveMsg;
-        public CommunicationClientHandler(Action<string> receiveMsg)
+        private string _clientNo;
+        public CommunicationClientHandler(Action<string> receiveMsg, string clientNo)
         {
             //_heartBeart = new SocketMessage<NetInfo>() { MessageType = MessageType.HeartBeat };
 
             this._receiveMsg = receiveMsg;
+            this._clientNo = clientNo;
             /*
              * 如果使用传统的堆内存分配，当我们需要将数据通过socket发送的时候，就需要从堆内存拷贝到直接内存，
              * 然后再由直接内存拷贝到网卡接口层。Netty提供的直接Buffer，直接将数据分配到内存空间，
@@ -49,6 +52,7 @@ namespace TestService.Netty
             //this.initialMessage = Unpooled.Buffer(256);
             //直接从内存分配
             this.initialMessage = Unpooled.DirectBuffer(1024);
+            
         }
 
         /// <summary>
@@ -131,6 +135,7 @@ namespace TestService.Netty
                     //不是心跳
                     if (!msg.StartsWith("TEST0001"))
                     {
+                        MemoryData.Users[_clientNo].ReceiveLogonTime = DateTime.Now;
                         NetInfo netInfo = new NetInfo();
                         netInfo.MyReadString(msg);
                         
