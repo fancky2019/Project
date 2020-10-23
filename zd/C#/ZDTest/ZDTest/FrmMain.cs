@@ -1,9 +1,11 @@
 ﻿using Model.Entity;
+using Model.ViewModel;
 using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,6 +15,7 @@ using System.Windows.Forms;
 using TestCommon;
 using TestService.Netty;
 using TestService.Services;
+using ZDTest.UserControls;
 
 namespace ZDTest
 {
@@ -25,7 +28,7 @@ namespace ZDTest
         {
             InitializeComponent();
 
-         
+
             _users = _clientBaseInfoService.GetTClientBaseInfos();
         }
 
@@ -78,17 +81,10 @@ namespace ZDTest
 
 
 
-
-
-
-
             users.ForEach(p =>
             {
                 Task.Run(() =>
                 {
-
-
-
                     CommunicationClient client = new CommunicationClient(Configurations.Configuration["TestService:FrontIP"], Configurations.Configuration["TestService:FrontPort"]);
                     client.ReceiveMsg += msg =>
                       {
@@ -99,18 +95,51 @@ namespace ZDTest
                           var loginCommand = $"LOGINHK1@@ClientIP:172.17.254.65:PC_V2.0.392@C@@@192.168.2.166:59289@R@1@@@0&{p.FUpperNo}@888888@1@00:15:5D:64:81:32@DESKTOP-3HM9UQG";
                           client.SendMsg<string>(loginCommand);
                       };
-
+                    client.ClientNo = p.FClientNo;
                     client.RunClientAsync();
-                    client.Connect();
+                    MemoryData.Users.TryAdd(p.FClientNo, new User() { ClientNo = p.FClientNo, ConnectingTime = DateTime.Now });
+                    //client.Connect();
                 });
 
             });
 
 
+            #region  先创建
+            //List<Task> tasks = new List<Task>();
+            //users.ForEach(p =>
+            //{
+            //    Task task = new Task(() =>
+            //      {
 
 
 
+            //          CommunicationClient client = new CommunicationClient(Configurations.Configuration["TestService:FrontIP"], Configurations.Configuration["TestService:FrontPort"]);
+            //          client.ReceiveMsg += msg =>
+            //            {
+            //                _nLog.Info(msg);
+            //            };
+            //          client.Connected += () =>
+            //            {
+            //                var loginCommand = $"LOGINHK1@@ClientIP:172.17.254.65:PC_V2.0.392@C@@@192.168.2.166:59289@R@1@@@0&{p.FUpperNo}@888888@1@00:15:5D:64:81:32@DESKTOP-3HM9UQG";
+            //                client.SendMsg<string>(loginCommand);
+            //            };
 
+            //          client.RunClientAsync();
+            //          client.Connect();
+            //      });
+            //    //task.Start();
+            //    tasks.Add(task);
+            //});
+
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
+            //tasks.ForEach(t => t.Start());
+
+            //Task.WhenAll(tasks);
+
+            //stopwatch.Stop();
+            //var mills = stopwatch.ElapsedMilliseconds;
+            #endregion
 
 
 
@@ -194,6 +223,19 @@ namespace ZDTest
         private void btnLogOut_Click(object sender, EventArgs e)
         {
             //_client.Close();
+        }
+
+        Login _login = null;
+        private void btnLoginTest_Click(object sender, EventArgs e)
+        {
+            _login = new Login();
+            _login.Dock = DockStyle.Fill;
+            this.panelUserControl.Controls.Add(_login);
+        }
+
+        private void btnLoadMemoryDta_Click(object sender, EventArgs e)
+        {
+            _login.Users = MemoryData.Users.Values.ToList();
         }
     }
 }
