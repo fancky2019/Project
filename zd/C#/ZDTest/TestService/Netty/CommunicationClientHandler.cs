@@ -51,7 +51,7 @@ namespace TestService.Netty
             //从堆上分配
             //this.initialMessage = Unpooled.Buffer(256);
             //直接从内存分配
-            this.initialMessage = Unpooled.DirectBuffer(1024);
+            this.initialMessage = Unpooled.DirectBuffer(4096);
             
         }
 
