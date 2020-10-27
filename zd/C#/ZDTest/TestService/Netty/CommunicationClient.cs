@@ -58,7 +58,9 @@ namespace TestService.Netty
                 _bootstrap.Group(_group)
                     .Channel<TcpSocketChannel>()
                     .Option(ChannelOption.TcpNodelay, true)
-                    .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
+                    //解决接收缓冲区默认1024问题
+                      .Option(ChannelOption.RcvbufAllocator, new FixedRecvByteBufAllocator(65535))
+                       .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
                     {
                         IChannelPipeline pipeline = channel.Pipeline;
                         //6s未读写就断开了连接。和java的一样设计
