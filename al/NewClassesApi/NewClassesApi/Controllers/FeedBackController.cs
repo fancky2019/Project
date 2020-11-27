@@ -63,7 +63,7 @@ namespace NewClassesApi.Controllers
 
                 var files = this.HttpContext.Request.Form.Files;
                 var param = this.HttpContext.Request.Form.Keys.ToList();
-                string val = "";
+
                 var suggestion=   this.HttpContext.Request.Form[param[0]];
                 var phone = this.HttpContext.Request.Form[param[1]];
                 //var host = this.HttpContext.Request.Host;
