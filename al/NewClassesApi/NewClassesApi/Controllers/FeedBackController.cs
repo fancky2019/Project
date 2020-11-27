@@ -37,11 +37,7 @@ namespace NewClassesApi.Controllers
         public List<FeedBack> GetFeedBackList([FromQuery] FeedBackQM feedBackQM)
         {
             List<FeedBack> list = new List<FeedBack>();
-
             list = _newClassesDbContext.FeedBack.ToList();
-            //IActionResult
-            //return Json(list);
-
             return list;
         }
 
