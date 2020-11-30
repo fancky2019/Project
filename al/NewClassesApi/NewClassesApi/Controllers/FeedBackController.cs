@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using NewClassesApi.Model.Entity;
 using NewClassesApi.Model.QM;
 using NewClassesApi.Model.VM;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace NewClassesApi.Controllers
 {
+    [EnableCors("AnyOrigin")]
     [ApiController]
     [Route("Api/FeedBack")]
     public class FeedBackController : ControllerBase
@@ -53,6 +55,7 @@ namespace NewClassesApi.Controllers
             return null;
         }
 
+      
         [HttpPost("Add")]
         public MessageResult<FeedBack> Add()
         {
@@ -62,9 +65,21 @@ namespace NewClassesApi.Controllers
                 _nLog.Info("开始上传！");
 
                 var files = this.HttpContext.Request.Form.Files;
+
+                List<string> imgExtensions = new List<string>() { "jpg", "jpeg", "gif", "bmp", "png" };
+                foreach (var file in files)
+                {
+                }
+                var extentsions = files.Select(p => Path.GetExtension(p.FileName).ToLower()).ToList();
+                if(!extentsions.Exists(p=>! imgExtensions.Contains(p)))
+                {
+                    messageResult.Success = false;
+                    messageResult.Message = "附件存在非图片文件。";
+                    return messageResult;
+                }
                 var param = this.HttpContext.Request.Form.Keys.ToList();
 
-                var suggestion=   this.HttpContext.Request.Form[param[0]];
+                var suggestion = this.HttpContext.Request.Form[param[0]];
                 var phone = this.HttpContext.Request.Form[param[1]];
                 //var host = this.HttpContext.Request.Host;
                 var directory = Path.Combine(Directory.GetCurrentDirectory(), $"UpLoad\\{DateTime.Now.ToString("yyyy-MM-dd")}");
@@ -92,6 +107,8 @@ namespace NewClassesApi.Controllers
                 this._newClassesDbContext.SaveChanges();
 
                 messageResult.Success = true;
+                //跨域问题：返回数据跨域
+                Response.Headers.Add("Access-Control-Allow-Origin", "*");
             }
             catch (Exception ex)
             {

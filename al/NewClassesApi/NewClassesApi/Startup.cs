@@ -37,24 +37,46 @@ namespace NewClassesApi
             {
                 options.AutomaticAuthentication = false;
                 options.ForwardClientCertificate = false;
-             
+
             });
+            #region 跨域
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AnyOrigin", 
+                    builder => {
+                        //支持多个域名端口，注意端口号后不要带/斜杆：比如localhost:8000/，是错的 
+                        //.WithOrigins("https://127.0.0.1:44329", "http://127.0.0.1:44329", "http://localhost:8021", "http://localhost:8081")
+
+                        builder.AllowAnyOrigin().
+                                AllowAnyMethod().
+                                AllowAnyHeader(); 
+                    });
+            });
+
+            #endregion
+    
+
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+           
             app.UseAuthorization();
 
+            //跨域:位置要在UseRouting()之后，UseEndpoints之前。
+            app.UseCors("AnyOrigin");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -1,0 +1,38 @@
+@font-face {
+  font-family: 'hh-icon';
+  src:  url('../fonts/hh-icon.eot?6mh1it');
+  src:  url('../fonts/hh-icon.eot?6mh1it#iefix') format('embedded-opentype'),
+    url('../fonts/hh-icon.ttf?6mh1it') format('truetype'),
+    url('../fonts/hh-icon.woff?6mh1it') format('woff'),
+    url('../fonts/hh-icon.svg?6mh1it#hh-icon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'hh-icon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-caidan:before {
+  content: "\e900";
+}
+.icon-gotop:before {
+  content: "\e901";
+}
+.icon-kefu:before {
+  content: "\e902";
+}
+.icon-zixun:before {
+  content: "\e903";
+}
