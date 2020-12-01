@@ -67,9 +67,9 @@ namespace NewClassesApi.Controllers
                 var files = this.HttpContext.Request.Form.Files;
 
                 List<string> imgExtensions = new List<string>() { "jpg", "jpeg", "gif", "bmp", "png" };
-                foreach (var file in files)
-                {
-                }
+                //foreach (var file in files)
+                //{
+                //}
                 var extentsions = files.Select(p => Path.GetExtension(p.FileName).ToLower()).ToList();
                 if(!extentsions.Exists(p=>! imgExtensions.Contains(p)))
                 {
