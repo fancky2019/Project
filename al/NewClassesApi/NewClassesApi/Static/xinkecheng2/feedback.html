@@ -120,8 +120,8 @@
                             <a href="http://www.newclasses.org/pingce/index.aspx" target="_blank">专业测评</a>
                             <a href="http://www.newclasses.org/jiangzuo/all/" target="_blank">公开讲座</a>
                             <a href="../xinkecheng2/teacher.html" target="_blank">教师资质</a>
-                            <a href="../xinkecheng/commonProblem.html" target="_blank">常见问题</a>
-                            <a href="../xinkecheng/feedback.html" target="_blank">意见反馈</a>
+                            <a href="../xinkecheng2/commonProblem.html" target="_blank">常见问题</a>
+                            <a href="../xinkecheng2/feedback.html" target="_blank">意见反馈</a>
                         </div>
                     </li>
                     <li class="nav-list">
@@ -509,7 +509,7 @@
                 console.log('222', $list.children[0])
                 if (/^image\/[jpeg|png|jpg|gif]/.test(fileType)) {
                     // $list.append('<li class="file-item"><img src="' + this.result + '" alt=""><span class="file-del"></span></li>')
-                    $updateBtn.before('<li class="file-item"><img src="' + this.result + '" alt=""><span class="file-del"><img src="images/remove.png" alt=""></span></li>')
+                    $updateBtn.before('<li class="file-item"><img src="' + this.result + '" alt=""><span class="file-del"><img src="images/remove.svg" alt=""></span></li>')
                 } else {
                     alert('请选择图片')
                 }
@@ -565,32 +565,33 @@
                 $errorMessageInput.css({ display: 'block' })
                 return false
             } else if (fileList.length > 0) {
+                 let formData = new FormData();
                 for (var i = 0, len = fileList.length; i < len; i++) {
-                    let formData = new FormData();
-               
-                    formData.append('file', fileList[i]);
-                    formData.append("suggestion", parmas.suggestion); 
-                    formData.append("phone", parmas.phone);
-    
-                    console.log('formData', formData.get("suggestion"))
-                     $.ajax({
-					     //要将静态html发布到站点才能访问API
-                         url: 'http://localhost:59739/Api/FeedBack/Add',
-                         type: 'post',
-                         processData: false,
-                         contentType: false,
-                         data: formData,
-                         success: function (data, statusText, headers) {
-                             debugger;
-                             if (data.success) {
-                                 alert("保存成功！")
-                             }
-                             else {
-                                 alert("保存失败！")
-                             }
-                         }
-                     })
+                    formData.append('file', fileList[i]);//将图片加入FormData
                 }
+                formData.append("suggestion", parmas.suggestion);
+                formData.append("phone", parmas.phone);
+
+                console.log('formData', formData.get("suggestion"))
+                $.ajax({
+                    //要将静态html发布到站点才能访问API
+                    url: 'http://localhost:8010/Api/FeedBack/Add',
+                    //url: 'http://localhost:59739/Api/FeedBack/Add',
+                    type: 'post',
+                    processData: false,
+                    contentType: false,//发送到服务器的数据类型
+                    //datatype:json  //服务器返回的数据类型
+                    data: formData,
+                    success: function (data, statusText, headers) {
+                        debugger;
+                        if (data.success) {
+                            alert("保存成功！")
+                        }
+                        else {
+                            alert("保存失败！")
+                        }
+                    }
+                })
 
             } else {
                 alert("请选择文件！")
