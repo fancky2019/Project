@@ -160,7 +160,7 @@
                                 <span class="imgUpdate">
                                     <img src="images/update.png" alt="">
                                 </span>
-
+                                <!--如果不限制图像的格式，可以写为：accept="image/*"。-->
                                 <input type="file" accept="image/*" id="choose-file" multiple>
                             </li>
                         </ul>
@@ -567,8 +567,11 @@
             } else if (fileList.length > 0) {
                  let formData = new FormData();
                 for (var i = 0, len = fileList.length; i < len; i++) {
+                    //把每个文件都加入key为file中，不能直接加数组进去
                     formData.append('file', fileList[i]);//将图片加入FormData
                 }
+                //formData.get("file");//返回key为file的第一个值
+                //formData.getAll("file");//返回key为file的所有值
                 formData.append("suggestion", parmas.suggestion);
                 formData.append("phone", parmas.phone);
 
