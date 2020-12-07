@@ -40,6 +40,7 @@ namespace NewClassesApi.Controllers
             //   HttpContext.HttpContext.Request.Headers["X-Real-IP"].FirstOrDefault();
             //var obj = this.HttpContext.Request;
             //MVC里获取
+            //this.Request.UserHostAddress
             //string IpA = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
             //string IpB = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
             //.NET CORE 获取ip地址
