@@ -33,6 +33,19 @@ namespace NewClassesApi.Controllers
 
             return $"Hello:{test}";
         }
+        [HttpGet("GetClientIpTest")]
+        public string GetClientIpTest()
+        {
+            //使用nginx代理后无法获取客户端地址。
+            //   HttpContext.HttpContext.Request.Headers["X-Real-IP"].FirstOrDefault();
+            //var obj = this.HttpContext.Request;
+            //MVC里获取
+            //string IpA = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            //string IpB = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+            //.NET CORE 获取ip地址
+            string ipaddress = this.HttpContext.Connection.RemoteIpAddress.ToString();
+            return ipaddress;
+        }
 
 
         [HttpGet("GetFeedBackList")]
@@ -55,7 +68,7 @@ namespace NewClassesApi.Controllers
             return null;
         }
 
-      
+
         [HttpPost("Add")]
         public MessageResult<FeedBack> Add()
         {
@@ -71,7 +84,7 @@ namespace NewClassesApi.Controllers
                 //{
                 //}
                 var extentsions = files.Select(p => Path.GetExtension(p.FileName).ToLower()).ToList();
-                if(!extentsions.Exists(p=>! imgExtensions.Contains(p)))
+                if (!extentsions.Exists(p => !imgExtensions.Contains(p)))
                 {
                     messageResult.Success = false;
                     messageResult.Message = "附件存在非图片文件。";
